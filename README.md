@@ -5,7 +5,7 @@
 Chef de projet 👤 :
 - HOLLEVILLE Thiméa
 
-Développeurs 👩‍💻 :
+Développeurs 👩‍💻 : (dt)
 - FABRE Loïc
 - HOSTACHE Guillaume
 
