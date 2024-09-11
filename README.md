@@ -12,6 +12,7 @@ Développeurs 👩‍💻 :
 Designers 🎨 :
 - BERNARAD Léo
 - PANIGHETTI Guillaume
+figma : https://www.figma.com/design/uv6n7JIztit5KtCwIKWraw/Untitled?t=UAteTKBX1H2Yf7Mg-0
 
 ## Contexte
 - Des personnes âgées proposent une chambre au jeune à louer éventuellement avec un échange de services
