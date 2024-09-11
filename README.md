@@ -6,14 +6,14 @@ UnCoinChezMoi
 Chef de projet 👤 :
 - HOLLEVILLE Thiméa
 
-Développeurs 👩‍💻 :
+Développeurs 👩‍💻 : (déterminer qui front qui back)
 - FABRE Loïc
 - HOSTACHE Guillaume
 
-Designers 🎨 :
+Designers 🎨 : 
 - BERNARAD Léo
 - PANIGHETTI Guillaume
-figma : https://www.figma.com/design/uv6n7JIztit5KtCwIKWraw/Untitled?t=UAteTKBX1H2Yf7Mg-0
+- Figma : https://www.figma.com/design/uv6n7JIztit5KtCwIKWraw/Untitled?t=UAteTKBX1H2Yf7Mg-0
 
 ## Contexte
 - Des personnes âgées proposent une chambre au jeune à louer éventuellement avec un échange de services
@@ -21,3 +21,7 @@ figma : https://www.figma.com/design/uv6n7JIztit5KtCwIKWraw/Untitled?t=UAteTKBX1
 - Le 1er contact a lieu par messagerie ou par téléphone
 - Les annonces sont vérifiées et peuvent recevoir des avis
 
+
+## Questionnaire
+- Avez-vous déjà loué un logement ? Avec le partageant avec le propriétaire ? Comment avez-vous vécu cette experience ?
+- Etes-vous propriétaire ? Si oui, seriez-vous prêt à louer votre logement pour permettre à des jeunes dans le besoin de trouver un endroit où s'installer ?
