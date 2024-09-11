@@ -1,4 +1,4 @@
-# TD gestion de projet - Logment intergénérationnel 🏠
+# TD gestion de projet - Logement intergénérationnel 🏠
 
 ## Équipe
 
