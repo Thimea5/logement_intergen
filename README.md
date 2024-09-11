@@ -1,4 +1,9 @@
 # logement_intergen
-Cours gestion de projet
+# TD gestion de projet
 
-BERNARAD Léo
+## Équipe
+- BERNARAD Léo
+- FABRE Loïc
+- HOLLEVILLE Thiméa
+- HOSTACHE Guillaume
+- PANIGHETTI Guillaume
