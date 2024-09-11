@@ -5,11 +5,11 @@
 Chef de projet 👤 :
 - HOLLEVILLE Thiméa
 
-Développeurs 👩‍💻 : (dt)
+Développeurs 👩‍💻 : (déterminer qui front qui back)
 - FABRE Loïc
 - HOSTACHE Guillaume
 
-Designers 🎨 : (déterminer qui travaille en front et back)
+Designers 🎨 : 
 - BERNARAD Léo
 - PANIGHETTI Guillaume
 - Figma : https://www.figma.com/design/uv6n7JIztit5KtCwIKWraw/Untitled?t=UAteTKBX1H2Yf7Mg-0
