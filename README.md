@@ -20,3 +20,7 @@ Designers 🎨 :
 - Le 1er contact a lieu par messagerie ou par téléphone
 - Les annonces sont vérifiées et peuvent recevoir des avis
 
+
+## Questionnaire
+- Avez-vous déjà loué un logement ? Avec le partageant avec le propriétaire ? Comment avez-vous vécu cette experience ?
+- Etes-vous propriétaire ? Si oui, seriez-vous prêt à louer votre logement pour permettre à des jeunes dans le besoin de trouver un endroit où s'installer ?
