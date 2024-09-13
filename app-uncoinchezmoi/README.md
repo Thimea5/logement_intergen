@@ -1,4 +1,25 @@
-# uncoinchezmoi
+# app-uncoinchezmoi
+
+TODO : faire un readme tout beau tout propre
+
+Stack Technologique : 
+front : VueJS
+back : PHP + MySql (bdd)
+
+
+liste des commandes faite :
+(le projet doit être sur wampserver, dans www/, c'est pour pouvoir héberger le back)
+npm create vue@latest
+cd front-end
+npm install
+npm install vuetify
+npm install @mdi/font
+npm install axios
+npm install vue-router
+
+lancer le projet en local, 
+npm run dev
+
 
 This template should help get you started developing with Vue 3 in Vite.
 
@@ -26,10 +47,4 @@ npm run dev
 
 ```sh
 npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
 ```
