@@ -5,6 +5,7 @@ import router from './router';
 
 // Importer Vuetify et les styles associés
 import { createVuetify } from 'vuetify';
+import { aliases, mdi } from 'vuetify/iconsets/mdi'
 import 'vuetify/styles'; // Importer les styles de base
 import '@mdi/font/css/materialdesignicons.css';
 

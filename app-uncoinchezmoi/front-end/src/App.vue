@@ -1,23 +1,20 @@
 <template>
   <v-app>
-    <!-- Barre de navigation Vuetify -->
-    <v-app-bar app class="d-flex bg-dark justify-content-between align-items-center">
-      <v-toolbar-title class="pl-5 w-25">Vue App</v-toolbar-title>
-      <v-toolbar-items class="d-flex justify-content-around w-25">
-        <v-btn text>
-          <router-link to="/">Accueil</router-link>
-        </v-btn>
-        <v-btn text>
-          <router-link to="/about">A propos</router-link>
-        </v-btn>
-        <v-btn text>
-          <router-link to="/users">Users</router-link>
-        </v-btn>
-        <v-btn text>
-          <router-link to="/login">Connexion</router-link>
-        </v-btn>
-      </v-toolbar-items>
-    </v-app-bar>
+    <header></header>
+    <input type="checkbox" id="openSideMenu" class="openSideMenu">
+    <label for="openSideMenu" class="menuIconToggle">
+      <div class="hamb-line dia part-1"></div>
+      <div class="hamb-line hor"></div>
+      <div class="hamb-line dia part-2"></div>
+    </label>
+    <a href="./login" class="nav-elem fa fa-solid fa-circle-user fa-xl"></a>
+    <nav>
+      <ul>
+        <li><a href="./">Accueil</a></li>
+        <li><a href="./about">À Propos</a></li>
+        <li><a href="./login">Connexion</a></li>
+      </ul>
+    </nav>
 
     <v-main>
       <router-view></router-view>
@@ -26,6 +23,9 @@
 </template>
 
 <script>
+
+import './assets/header.css';
+
 export default {
   name: 'App'
 }
