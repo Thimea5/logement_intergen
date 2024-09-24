@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : ven. 13 sep. 2024 à 11:27
+-- Généré le : mar. 24 sep. 2024 à 14:50
 -- Version du serveur : 8.3.0
 -- Version de PHP : 8.2.18
 
@@ -24,29 +24,45 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Structure de la table `users`
+-- Structure de la table `guest`
 --
 
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` int NOT NULL,
-  `firstname` varchar(64) DEFAULT NULL,
-  `lastname` varchar(64) DEFAULT NULL,
-  `username` varchar(256) DEFAULT NULL,
-  `email` varchar(128) DEFAULT NULL,
+DROP TABLE IF EXISTS `guest`;
+CREATE TABLE IF NOT EXISTS `guest` (
+  `id` int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+-- --------------------------------------------------------
+
 --
--- Déchargement des données de la table `users`
+-- Structure de la table `host`
 --
 
-INSERT INTO `users` (`id`, `firstname`, `lastname`, `username`, `email`) VALUES
-(1, 'Jean', 'Dupont', 'jean.dupont', 'jean.dupont@example.com'),
-(2, 'Marie', 'Martin', 'marie.martin', 'marie.martin@example.com'),
-(3, 'Pierre', 'Durand', 'pierre.durand', 'pierre.durand@example.com'),
-(4, 'Luc', 'Lefevre', 'luc.lefevre', 'luc.lefevre@example.com'),
-(5, 'Sophie', 'Bernard', 'sophie.bernard', 'sophie.bernard@example.com');
+DROP TABLE IF EXISTS `host`;
+CREATE TABLE IF NOT EXISTS `host` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `t_users_usr`
+--
+
+DROP TABLE IF EXISTS `t_users_usr`;
+CREATE TABLE IF NOT EXISTS `t_users_usr` (
+  `usr_id` int NOT NULL AUTO_INCREMENT,
+  `usr_firstname` varchar(64) DEFAULT NULL,
+  `usr_lastname` varchar(64) DEFAULT NULL,
+  `usr_age` int DEFAULT NULL,
+  `usr_email` varchar(128) DEFAULT NULL,
+  `usr_password` varchar(255) DEFAULT NULL,
+  `usr_birthdate` date DEFAULT NULL,
+  `usr_isActive` tinyint(1) NOT NULL,
+  PRIMARY KEY (`usr_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
