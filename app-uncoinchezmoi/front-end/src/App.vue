@@ -5,13 +5,16 @@
       <v-toolbar-title class="pl-5 w-25">Vue App</v-toolbar-title>
       <v-toolbar-items class="d-flex justify-content-around w-25">
         <v-btn text>
-          <router-link to="/">Home</router-link>
+          <router-link to="/">Accueil</router-link>
         </v-btn>
         <v-btn text>
-          <router-link to="/about">About</router-link>
+          <router-link to="/about">A propos</router-link>
         </v-btn>
         <v-btn text>
           <router-link to="/users">Users</router-link>
+        </v-btn>
+        <v-btn text>
+          <router-link to="/login">Connexion</router-link>
         </v-btn>
       </v-toolbar-items>
     </v-app-bar>
