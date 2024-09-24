@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     getUsers() {
-      axios.get('/api/users-test.php')
+      axios.get('/api/services/users-test.php')
         .then(response => {
           this.users = response.data;
         })

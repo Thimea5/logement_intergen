@@ -1,7 +1,7 @@
 <template>
-  <v-container>
-    <h1>Home Page</h1>
-    <p>Welcome to the home page!</p>
+  <v-container class="d-flex flex-column">
+    <h1 class="text-center">Un Coin Chez Moi</h1>
+    <p class="text-center">Bienvenue !</p>
   </v-container>
 </template>
 

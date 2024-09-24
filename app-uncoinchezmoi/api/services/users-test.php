@@ -3,10 +3,10 @@
     header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-    require 'config.php';
+    require '../model/users.php';
+    require '../model/config.php';
 
-    $query = $pdo->query("SELECT * FROM users");
-    $users = $query->fetchAll(PDO::FETCH_ASSOC);
+    $users = getUsers($pdo);
 
     echo json_encode($users);
 ?>
