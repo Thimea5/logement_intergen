@@ -10,36 +10,40 @@
         private $isActive;
 
         private $conn;
-        private $tableName = 't_users_usr';
 
         public function __construct($database) {
             $this->conn = $database;
         }
 
         public function getUsers() {
-            $sql = "SELECT * FROM ". $this->tableName ." ;";
+            $sql = "SELECT * FROM users;";
             $query = $this->conn->prepare($sql);
-            return $query->execute();
+            $query->execute();
+
+            return $query->fetchAll();
         }
 
         function getUsersByEmail($email) {
-            $sql = "SELECT * FROM t_users_usr WHERE email = :pEmail;";
+            $sql = "SELECT * FROM users WHERE email = :pEmail;";
             $query = $this->conn->prepare($sql);
             $query->bindParam("pEmail", $email);
-            return $query->execute();
+            $query->execute();
+
+            return $query->fetch(PDO::FETCH_ASSOC); 
         }
 
         function getUsersById($id) {
-            $sql = "SELECT * FROM t_users_usr WHERE id = :pId ;";
+            $sql = "SELECT * FROM users WHERE id = :pId;";
             $query = $this->conn->prepare($sql);
             $query->bindParam("pId", $id);
-            return $query->execute();
+            $query->execute();
+
+            return $query->fetch(PDO::FETCH_ASSOC); 
         }
 
-        function desactivateUserById($id) {
+        /*function desactivateUserById($id) {
             return ;
-        }
+        }*/
 
-        // TODO insert, etc.
     }
 ?>

@@ -25,7 +25,6 @@
 </template>
 
 <script>
-
-import "../assets/connect.css"
+    import "../assets/connect.css"
 
 </script>
