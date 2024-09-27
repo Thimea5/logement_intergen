@@ -3,7 +3,7 @@
         private $host = 'localhost';
         private $db = 'db-uncoinchezmoi';
         private $user = 'root';
-        private $password = ''; 
+        private $password = '';
         public $connection;
 
         public function connect() {

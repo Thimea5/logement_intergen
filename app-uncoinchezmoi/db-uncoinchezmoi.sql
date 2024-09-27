@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mar. 24 sep. 2024 à 14:50
+-- Généré le : ven. 27 sep. 2024 à 14:14
 -- Version du serveur : 8.3.0
 -- Version de PHP : 8.2.18
 
@@ -24,45 +24,35 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Structure de la table `guest`
+-- Structure de la table `users`
 --
 
-DROP TABLE IF EXISTS `guest`;
-CREATE TABLE IF NOT EXISTS `guest` (
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
   `id` int NOT NULL AUTO_INCREMENT,
+  `firstname` varchar(64) DEFAULT NULL,
+  `lastname` varchar(64) DEFAULT NULL,
+  `email` varchar(128) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `birthdate` date DEFAULT NULL,
+  `isActive` tinyint(1) NOT NULL,
+  `type` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
+) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Structure de la table `host`
+-- Déchargement des données de la table `users`
 --
 
-DROP TABLE IF EXISTS `host`;
-CREATE TABLE IF NOT EXISTS `host` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `t_users_usr`
---
-
-DROP TABLE IF EXISTS `t_users_usr`;
-CREATE TABLE IF NOT EXISTS `t_users_usr` (
-  `usr_id` int NOT NULL AUTO_INCREMENT,
-  `usr_firstname` varchar(64) DEFAULT NULL,
-  `usr_lastname` varchar(64) DEFAULT NULL,
-  `usr_age` int DEFAULT NULL,
-  `usr_email` varchar(128) DEFAULT NULL,
-  `usr_password` varchar(255) DEFAULT NULL,
-  `usr_birthdate` date DEFAULT NULL,
-  `usr_isActive` tinyint(1) NOT NULL,
-  PRIMARY KEY (`usr_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `password`, `birthdate`, `isActive`, `type`) VALUES
+(1, 'Alice', 'Dupont', 'alice.dupont@example.com', '$2y$10$3COtyn7Ui0d7CX.nfpaKH.AM5Dz7QtueM8tD6ckRENKQNoKI7LkdC', '1990-01-01', 1, 'admin'),
+(2, 'Bob', 'Martin', 'bob.martin@example.com', '$2y$10$3COtyn7Ui0d7CX.nfpaKH.AM5Dz7QtueM8tD6ckRENKQNoKI7LkdC', '1992-02-02', 1, 'user'),
+(3, 'Charlie', 'Durand', 'charlie.durand@example.com', '$2y$10$3COtyn7Ui0d7CX.nfpaKH.AM5Dz7QtueM8tD6ckRENKQNoKI7LkdC', '1988-03-03', 1, 'host'),
+(4, 'Diana', 'Petit', 'diana.petit@example.com', '$2y$10$3COtyn7Ui0d7CX.nfpaKH.AM5Dz7QtueM8tD6ckRENKQNoKI7LkdC', '1995-04-04', 1, 'guest'),
+(5, 'Ethan', 'Moreau', 'ethan.moreau@example.com', '$2y$10$3COtyn7Ui0d7CX.nfpaKH.AM5Dz7QtueM8tD6ckRENKQNoKI7LkdC', '1985-05-05', 1, 'admin'),
+(6, 'Fiona', 'Garnier', 'fiona.garnier@example.com', '$2y$10$3COtyn7Ui0d7CX.nfpaKH.AM5Dz7QtueM8tD6ckRENKQNoKI7LkdC', '1993-06-06', 1, 'user'),
+(7, 'Gabriel', 'Lefevre', 'gabriel.lefevre@example.com', '$2y$10$3COtyn7Ui0d7CX.nfpaKH.AM5Dz7QtueM8tD6ckRENKQNoKI7LkdC', '1987-07-07', 1, 'host'),
+(8, 'Hannah', 'David', 'hannah.david@example.com', '$2y$10$3COtyn7Ui0d7CX.nfpaKH.AM5Dz7QtueM8tD6ckRENKQNoKI7LkdC', '1991-08-08', 1, 'guest');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

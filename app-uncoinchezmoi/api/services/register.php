@@ -1,36 +1,45 @@
 <?php
     header("Access-Control-Allow-Origin: *");
-    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+    header("Access-Control-Allow-Methods: POST, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type, Authorization");
-
-    require '../model/config.php';
-    require '../model/userRepository.php';
     
-
-    //echo json_encode($users);
-
-    const PATTERN_EMAIL = "^[\w\-\.]+@([\w-]+\.)+[\w-]{2,}$"; // ? check en front
-
-    // Enregistre en base l'utilisateur
+    include_once '../config/database.php';
+    include_once '../model/user.php'; 
+    
     function register() {
-        // Recevoir tout les champs du formulaire
-        // TODO faire le insert
-    }
+        $data = json_decode(file_get_contents("php://input"));
+        //var_dump($data);
 
-    // 
-    function sendRegisterEmailWithCode($to) {
-        // TODO : change mail envoi, html body pour un peu de style du mail
-        $code = rand(100000, 999999);
+        if ($data === null) {
+            echo json_encode(["success" => false, "message" => "Aucune donnée reçue."]);
+            exit;
+        }
+            
+        $firstname = $data->firstname ?? '';
+        $lastname = $data->lastname ?? '';
+        $email = $data->mail ?? ''; 
+        $password = $data->password ?? '';
+        $birthdate = $data->birthdate ?? '';
+
+        if (empty($firstname) || empty($lastname) || empty($email) || empty($password) || empty($birthdate)) {
+            echo json_encode(['success' => false, 'message' => 'Tous les champs sont requis.']);
+            return;
+        }
+
+        $database = new Database(); 
+        $db = $database->connect();
         
-        $subject = "Verify your email adress";
-        $message =  "code : " + $code;
+        $passwordHashed = password_hash($password, PASSWORD_DEFAULT);
 
-        $headers = array(
-            'From' => 'guillaume.hostache@univ-lyon2.fr',
-            'Reply-To' => 'guillaume.hostache@univ-lyon2.fr',
-            'X-Mailer' => 'PHP/' . phpversion()
-        );
-
-        mail($to, $subject, $message, $headers);
+        $user = new User($db);
+        if ($user->insertUser($firstname, $lastname, $email, $passwordHashed, $birthdate) == true) {
+            echo json_encode(['success' => true, 'message' => 'Inscription réussie.']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Échec de l\'inscription.']);
+        }
     }
+
+    register();
+
+    // TODO : trouver une solution pour la double authentification, l'envoi de code pour confirmer l'inscription
 ?>
