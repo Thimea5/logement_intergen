@@ -5,9 +5,11 @@
                 <h2 class="mb-5">Inscription</h2>
                 <input type="email" v-model="mail" placeholder="Email" class="input-field" required>
 
-                <!--<button class="btn btn-primary w-50 mb-5 ml-auto" type="button" @click="sendCode">Envoyer code</button>-->
+                <button class="btn btn-primary w-50 ml-auto text-light" type="button" @click="sendCode">Envoyer code</button>
 
-                <div class="my-5">
+                <input class="input-field mt-2 w-25 ml-auto" v-model="code" type="text" name="code" id="code">
+
+                <div class="my-3">
                     <input type="text" v-model="firstname" placeholder="Prénom" class="input-field" required>
                     <input type="text" v-model="lastname" placeholder="Nom" class="input-field" required>
                     <input type="date" v-model="birthdate" class="w-50 input-field">
@@ -34,6 +36,7 @@ export default {
     data() {
         return {
             mail: '',
+            code: '',
             firstname: '',
             lastname: '',
             birthdate: '',
@@ -56,7 +59,8 @@ export default {
                     firstname: this.firstname,
                     lastname: this.lastname,
                     birthdate: this.birthdate,
-                    password: this.password
+                    password: this.password,
+                    submit: true
                 }, {
                     headers: {
                         'Content-Type': 'application/json'
@@ -67,6 +71,7 @@ export default {
                 if (response.data.success) {
                     alert('Inscription réussie !');
                     // TODO - Redirection
+                    window.location.replace("./");
                 } else {
                     alert(response.data.message || 'Échec de l\'inscription.');
                 }
@@ -77,8 +82,31 @@ export default {
         },
 
         async sendCode() {
+            if (this.mail == "") {
+                alert("veuillez renseigner une adresse mail");
+                return;
+            }
+            var code = Math.floor(1000 + Math.random() * 9000);
             // TODO: Voir pour la sécurité lors de l'inscription, redirection vers une page avec un numéro, envoie du mail
-            console.log("Envoyer le code de vérification par email");
+            console.log("Envoyer le code de vérification par email: "+code);
+
+            const response = await axios.post("/api/services/register", {
+                mail: this.mail,
+                code: this.code,
+                submit: false
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            console.log(response)
+
+            if (response.data.success) {
+                console.log('Inscription réussie !');
+            } else {
+                console.log(response.data.message || 'Échec de l\'envoie du code.');
+            }
         }
     }
 }

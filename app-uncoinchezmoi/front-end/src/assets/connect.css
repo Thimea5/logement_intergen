@@ -1,10 +1,11 @@
 /* ----- FORMS ----- */
 
 .container {
-    height: 85vh;
+    margin-top: 110px;
 }
 
 .form-container {
+    padding: 5%;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 20px 20px rgba(0, 0, 0, 0.1);
@@ -12,16 +13,16 @@
     width: 90%;
     border: solid cornflowerblue 1px;
     border-top-width: 5px;
+    height: fit-content;
 }
 
 form {
-    padding: 20px;
     box-sizing: border-box;
 }
 
 .input-field {
     width: 100%;
-    padding: 12px;
+    padding: 10px;
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;

@@ -14,7 +14,7 @@
     "verify": "^0.1.2",
     "vue": "^3.4.29",
     "vue-router": "^4.4.5",
-    "vuetify": "^3.7.1"
+    "vuetify": "^3.7.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.5",
