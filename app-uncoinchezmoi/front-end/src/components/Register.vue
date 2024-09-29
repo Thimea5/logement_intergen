@@ -5,9 +5,9 @@
                 <h2 class="mb-5">Inscription</h2>
                 <input type="email" v-model="mail" placeholder="Email" class="input-field" required>
 
-                <button class="btn btn-primary w-50 ml-auto text-light" type="button" @click="sendCode">Envoyer code</button>
+                <button class="btn btn-primary w-50 ml-auto text-light" type="button" @click="sendCode" disabled>Envoyer code</button>
 
-                <input class="input-field mt-2 w-25 ml-auto" v-model="code" type="text" name="code" id="code">
+                <input class="input-field mt-2 w-25 ml-auto" v-model="code" type="text" name="code" id="code" disabled>
 
                 <div class="my-3">
                     <input type="text" v-model="firstname" placeholder="Prénom" class="input-field" required>
@@ -53,6 +53,8 @@ export default {
                     alert('Les mots de passe ne correspondent pas.');
                     return;
                 }
+
+                const user = null;
                 
                 const response = await axios.post('/api/services/register.php', {
                     mail: this.mail,
@@ -65,16 +67,24 @@ export default {
                     headers: {
                         'Content-Type': 'application/json'
                     }
-                });
-                
-                //console.log(response.data);
-                if (response.data.success) {
-                    alert('Inscription réussie !');
-                    // TODO - Redirection
-                    window.location.replace("./");
-                } else {
-                    alert(response.data.message || 'Échec de l\'inscription.');
-                }
+                })
+                .then(
+                    alert('Inscription réussie !'),
+                    window.location.replace("./user-profile"),
+                    user = response.data['user-info'],
+                        
+                    // Envoi des infos de l'utilisateur dans le SessionStorage
+                    sessionStorage.setItem('user', JSON.stringify({
+                        id: user.id, 
+                        firstname: user.firstname,
+                        lastname: user.lastname,
+                        email: user.email,
+                        birthdate: user.birthdate,
+                        type: user.type
+                    }))
+                )
+                .catch((error) => alert(error))
+                console.log(response.data.success);
             } catch (error) {
                 console.error('Erreur lors de l\'inscription:', error);
                 alert('Une erreur est survenue, merci de réessayer.');
@@ -82,6 +92,8 @@ export default {
         },
 
         async sendCode() {
+            // à retirer pour implémenter la suite
+            return;
             if (this.mail == "") {
                 alert("veuillez renseigner une adresse mail");
                 return;
