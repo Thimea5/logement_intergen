@@ -4,6 +4,7 @@ import About from './components/About.vue';
 import UserList from './components/UserList.vue'; // Le composant pour la liste des utilisateurs
 import Login from './components/Login.vue';
 import Register from './components/Register.vue';
+import UserProfile from './components/UserProfile.vue'
 
 const routes = [
   {
@@ -30,6 +31,11 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: Register
+  }, 
+  {
+    path:'/user-profile',
+    name:'UserProfile',
+    component: UserProfile
   }
 ];
 

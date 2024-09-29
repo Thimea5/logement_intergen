@@ -38,12 +38,24 @@
                         }
                     });
                 
-                    // traitement de la réponse - juste une alerte pour le moment
+                    // traitement de la réponse
                     if (response.data.success) {
-                        alert(response.data.message);
-                        // TODO - redirection 
+                        const user = response.data['user-info'];
+                        
+                        // Envoi des infos de l'utilisateur dans le SessionStorage
+                        sessionStorage.setItem('user', JSON.stringify({
+                            id: user.id, 
+                            firstname: user.firstname,
+                            lastname: user.lastname,
+                            email: user.email,
+                            birthdate: user.birthdate,
+                            type: user.type
+                        }));
+
+                        // redirection avec Vue router
+                        this.$router.push('/user-profile');    
                     } else {
-                        // Afficher le message d'erreur si la connexion échoue
+                        // TODO avec UX : Une fois la charte graphique ok, mettre un joli message en rouge
                         console.log("ERREUR");
                         alert(response.data.message);
                     }

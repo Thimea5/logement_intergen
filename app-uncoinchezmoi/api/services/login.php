@@ -11,12 +11,12 @@
     // var_dump($data);
 
     if ($data === null) {
-        echo json_encode(["success" => false, "message" => "Aucune donnée reçue."]);
+        echo json_encode(["success" => false, "message" => "Aucune donnée reçue.", "user-info" => null]);
         exit;
     }
 
     if (!isset($data->email) || !isset($data->password)) {
-        echo json_encode(["success" => false, "message" => "Paramètres manquants."]);
+        echo json_encode(["success" => false, "message" => "Paramètres manquants.", "user-info" => null]);
         exit;
     }
 
@@ -31,15 +31,13 @@
     //var_dump($userData);
 
     if ($userData === false) {
-        echo json_encode(["success" => false, "message" => "Utilisateur non trouvé."]);
+        echo json_encode(["success" => false, "message" => "Utilisateur non trouvé.", "user-info" => null]);
         exit;
     } else {
-        // étape 2 - Vérification du mot de passe
-
         if (password_verify($data->password, $userData['password'])) {
-            echo json_encode(["success" => true, "message" => "Connexion réussie."]);
+            echo json_encode(["success" => true, "message" => "Connexion réussie.", "user-info" => $userData]);
         } else {
-            echo json_encode(["success" => false, "message" => "Mot de passe incorrect."]);
+            echo json_encode(["success" => false, "message" => "Mot de passe incorrect.", "user-info" => null]);
         }
     }
 ?>
