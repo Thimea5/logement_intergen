@@ -10,15 +10,14 @@
       <div id="profile">
         <a v-if="!isLoggedIn" href="./login" class="nav-elem fas fa-user" id="noLog"></a>
 
-        <a v-if="isLoggedIn" class="nav-elem dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
-          aria-haspopup="true" aria-expanded="false">
+        <a v-if="isLoggedIn" class="nav-elem dropdown-toggle" type="button" id="dropdownMenuButton"
+          data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fas fa-user"></i>
         </a>
 
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item d-flex justify-content-between align-items-center" href="./UserProfile">Profil <i class="fa-solid fa-user-gear"></i></a></li>
-          <li><a class="dropdown-item d-flex justify-content-between align-items-center" href="#">Deconnexion <i class="fa-solid fa-arrow-right-from-bracket"></i></a>
-          </li>
+          <li><a class="dropdown-item d-flex justify-content-between align-items-center" role="button" href="./user-profile">Profil <i class="fa-solid fa-user-gear"></i></a></li>
+          <li><a class="dropdown-item d-flex justify-content-between align-items-center" role="button" @click="logOut()">Deconnexion <i class="fa-solid fa-arrow-right-from-bracket"></i></a></li>
         </ul>
 
       </div>
@@ -53,6 +52,13 @@ export default {
       isLoggedIn: sessionStorage.getItem('user') != null
     };
   },
+  methods: {
+    logOut() {
+      sessionStorage.clear()
+
+      window.location.replace("./")
+    }
+  }
 
 }
 </script>

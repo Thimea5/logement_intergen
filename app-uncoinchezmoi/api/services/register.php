@@ -61,8 +61,6 @@
 
     $data = json_decode(file_get_contents("php://input"));
 
-    var_dump($data);
-
     if ($data === null) {
         echo json_encode(["success" => false, "message" => "Aucune donnée reçue."]);
         exit;

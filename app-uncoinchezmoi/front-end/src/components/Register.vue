@@ -54,9 +54,9 @@ export default {
                     return;
                 }
 
-                var user = null;
-                
-                const response = await axios.post('/api/services/register.php', {
+                let user = null;
+
+                await axios.post('/api/services/register.php', {
                     mail: this.mail,
                     firstname: this.firstname,
                     lastname: this.lastname,
@@ -67,24 +67,27 @@ export default {
                     headers: {
                         'Content-Type': 'application/json'
                     }
-                })
-                .then(
-                    user = response.data['user-info'],
-                    
-                        
-                    // Envoi des infos de l'utilisateur dans le SessionStorage
-                    sessionStorage.setItem('user', JSON.stringify({
-                        id: user.id, 
-                        firstname: user.firstname,
-                        lastname: user.lastname,
-                        email: user.email,
-                        birthdate: user.birthdate,
-                        type: user.type
-                    })),
-                    window.location.replace("./user-profile")
-                )
-                .catch((error) => alert(error))
-                console.log(response.data.success);
+                }).then(result => {
+                    console.log(result)
+                    // Blindage à revoir 
+                    if (result.status == 200) {
+                        if (result.data["success"]) {
+                            user = result.data["user-info"];
+
+                            // Envoi des infos de l'utilisateur dans le SessionStorage
+                            sessionStorage.setItem('user', JSON.stringify({
+                                id: user.id,
+                                firstname: user.firstname,
+                                lastname: user.lastname,
+                                email: user.email,
+                                birthdate: user.birthdate,
+                                type: user.type
+                            }));
+
+                            window.location.replace("./user-profile");
+                        }
+                    }
+                }).catch(error => console.error(error))
             } catch (error) {
                 console.error('Erreur lors de l\'inscription:', error);
                 alert('Une erreur est survenue, merci de réessayer.');
