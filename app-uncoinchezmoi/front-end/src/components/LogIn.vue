@@ -53,7 +53,7 @@
                         }));
 
                         // redirection avec Vue router
-                        this.$router.push('/user-profile');    
+                        window.location.replace("./user-profile")
                     } else {
                         // TODO avec UX : Une fois la charte graphique ok, mettre un joli message en rouge
                         console.log("ERREUR");

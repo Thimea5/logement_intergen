@@ -5,9 +5,9 @@
                 <h2 class="mb-5">Inscription</h2>
                 <input type="email" v-model="mail" placeholder="Email" class="input-field" required>
 
-                <button class="btn btn-primary w-50 ml-auto text-light" type="button" @click="sendCode" disabled>Envoyer code</button>
+                <button class="btn btn-primary w-50 ml-auto text-light" type="button" @click="sendCode">Envoyer code</button>
 
-                <input class="input-field mt-2 w-25 ml-auto" v-model="code" type="text" name="code" id="code" disabled>
+                <input class="input-field mt-2 w-25 ml-auto" v-model="code" type="text" name="code" id="code">
 
                 <div class="my-3">
                     <input type="text" v-model="firstname" placeholder="Prénom" class="input-field" required>
@@ -54,7 +54,7 @@ export default {
                     return;
                 }
 
-                const user = null;
+                var user = null;
                 
                 const response = await axios.post('/api/services/register.php', {
                     mail: this.mail,
@@ -69,9 +69,8 @@ export default {
                     }
                 })
                 .then(
-                    alert('Inscription réussie !'),
-                    window.location.replace("./user-profile"),
                     user = response.data['user-info'],
+                    
                         
                     // Envoi des infos de l'utilisateur dans le SessionStorage
                     sessionStorage.setItem('user', JSON.stringify({
@@ -81,7 +80,8 @@ export default {
                         email: user.email,
                         birthdate: user.birthdate,
                         type: user.type
-                    }))
+                    })),
+                    window.location.replace("./user-profile")
                 )
                 .catch((error) => alert(error))
                 console.log(response.data.success);
@@ -92,7 +92,6 @@ export default {
         },
 
         async sendCode() {
-            // à retirer pour implémenter la suite
             return;
             if (this.mail == "") {
                 alert("veuillez renseigner une adresse mail");

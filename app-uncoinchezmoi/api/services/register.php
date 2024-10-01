@@ -2,12 +2,11 @@
     header("Access-Control-Allow-Origin: *");
     header("Access-Control-Allow-Methods: POST, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type, Authorization");
-    
+
     include_once '../config/database.php';
     include_once '../model/user.php';
-    
-    // require '../vendor/autoload.php';
-    // use \Mailjet\Resources;
+
+    require '../vendor/autoload.php';    
     
     function register($firstname, $lastname, $email, $password, $birthdate) {
         
@@ -31,31 +30,33 @@
         }
     }
 
-    // function sendCode($email, $code) {
-        
-    //     $mj = new \Mailjet\Client('99a0a9863ce167e3afa60d76554a7370','446ae0bdd979777ea054dfa6e0eaf94d',true,['version' => 'v3.1']);
-    //     $body = [
-    //       'Messages' => [
-    //         [
-    //           'From' => [
-    //             'Email' => "loicfabre0702@gmail.com",
-    //             'Name' => "Loïc Fabre"
-    //           ],
-    //           'To' => [
-    //             [
-    //               'Email' => $email
-    //             ]
-    //           ],
-    //           'Subject' => "Greetings from Mailjet.",
-    //           'TextPart' => "My first Mailjet email",
-    //           'HTMLPart' => "<h3>Dear passenger 1, welcome to <a href='https://www.mailjet.com/'>Mailjet</a>!</h3><br />May the delivery force be with you!\n tiens, bouffe ce code $code",
-    //           'CustomID' => "AppGettingStartedTest"
-    //         ]
-    //       ]
-    //     ];
-    //     $response = $mj->post(Resources::$Email, ['body' => $body]);
-    //     $response->success() && var_dump($response->getData());
-    // }
+    function sendCode($email, $code) {
+        $mail = new PHPMailer(true);
+        $mail->SMTPDebug = 0;
+
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = "";
+        $mail->Password = "";
+        $mail->SMTPSecure = "ssl";
+        $mail->Port = 465;
+        $mail->From = "test@testmail.com";
+        $mail->FromName = "Letecode";
+
+        $mail->addAddress($email, "recipient name");
+        $mail->isHTML(true);
+        $mail->Subject = "Mail sent from php send mail script.";
+        $mail->Body = "<i>Text content from send mail.</i>";
+        $mail->AltBody = "This is the plain text version of the email content";
+
+        try {
+            $mail->send();
+            echo "Message has been sent successfully";
+        } catch (Exception $e) {
+            echo "Mailer Error: " . $mail->ErrorInfo;
+        }
+    }
 
 
     $data = json_decode(file_get_contents("php://input"));
