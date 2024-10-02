@@ -5,10 +5,12 @@
 
 Chef de projet 👤 :
 - HOLLEVILLE Thiméa
+- GARMASSI Siwar
 
 Développeurs 👩‍💻 : (déterminer qui front qui back)
 - FABRE Loïc
 - HOSTACHE Guillaume
+- BEN CHEIKHI Ayoub
 
 Designers 🎨 : 
 - BERNARAD Léo
