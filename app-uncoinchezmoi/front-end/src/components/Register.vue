@@ -50,7 +50,7 @@ export default {
             try {
                 // Vérification confirmation mot de passe
                 if (this.password !== this.passwordConf) {
-                    alert('Les mots de passe ne correspondent pas.');
+                    alert('Les mots de passe ne correspondent pas.'); 
                     return;
                 }
 
