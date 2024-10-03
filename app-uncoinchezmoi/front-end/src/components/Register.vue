@@ -30,6 +30,8 @@
 import axios from 'axios';
 import "../assets/connect.css";
 
+var code = Math.floor(1000 + Math.random() * 9000);
+
 export default {
     name: 'Register',
 
@@ -51,6 +53,12 @@ export default {
                 // Vérification confirmation mot de passe
                 if (this.password !== this.passwordConf) {
                     alert('Les mots de passe ne correspondent pas.'); 
+                    return;
+                }
+
+                if (this.code != code) {
+                    alert('Mauvaise saisie du code de validation. ');
+                    console.log("eh oh")
                     return;
                 }
 
@@ -95,33 +103,43 @@ export default {
         },
 
         async sendCode() {
-            return;
+
             if (this.mail == "") {
-                alert("veuillez renseigner une adresse mail");
+                alert("Veuillez renseigner une adresse mail");
+                // simpleAlert("Attention !", "veuillez renseigner une adresse mail"); A utiliser si alertPal configuré
                 return;
             }
-            var code = Math.floor(1000 + Math.random() * 9000);
-            // TODO: Voir pour la sécurité lors de l'inscription, redirection vers une page avec un numéro, envoie du mail
+            
             console.log("Envoyer le code de vérification par email: "+code);
 
-            const response = await axios.post("/api/services/register", {
-                mail: this.mail,
-                code: this.code,
-                submit: false
-            }, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+            return;
+            emailjs.init({
+                publicKey: 'gH39qa5yQWVo_b1pQ',
             });
+            
+            var templateParams = {
+                to_email: this.mail,
+                to_name: this.mail,
+                message: code
+            };
 
-            console.log(response)
-
-            if (response.data.success) {
-                console.log('Inscription réussie !');
-            } else {
-                console.log(response.data.message || 'Échec de l\'envoie du code.');
-            }
+            emailjs.send('service_bkoff5o', 'template_gx7o92j', templateParams).then(
+                (response) => {
+                    console.log('SUCCESS!', response.status, response.text);
+                },
+                (error) => {
+                    console.log('FAILED...', error);
+                },
+            );
         }
     }
+}
+
+function simpleAlert(title, description) {
+    Alertpal.alert({
+        title: title,
+        description: description,
+        cancel: "Ok"
+    });
 }
 </script>
