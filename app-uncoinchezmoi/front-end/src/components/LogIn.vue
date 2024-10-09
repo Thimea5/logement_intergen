@@ -2,14 +2,14 @@
     <div class="container d-flex align-items-center">
         <div class="form-container m-auto">
             <form @submit.prevent="handleLogin" class="d-flex flex-column">
-                <h2 class="mb-5">Connexion</h2>
-                <input type="email" v-model="email" placeholder="Email" class="input-field" required>
-                <input type="password" v-model="password" placeholder="Mot de passe" class="input-field" required>
-                <button class="btn btn-primary mb-3" type="submit">Se connecter</button>
-                <p>Vous n'avez pas de compte ? <a href="./register">S'inscrire</a></p>
-            </form>
-        </div>
+              <h2 class="mb-5">Connexion</h2>
+              <input type="email" v-model="email" placeholder="Email" class="input-field" required>
+              <input type="password" v-model="password" placeholder="Mot de passe" class="input-field" required>
+              <button class="btn btn-primary mb-3" type="submit">Se connecter</button>
+              <p>Vous n'avez pas de compte ? <a href="./register">S'inscrire</a></p>
+        </form>
     </div>
+  </div>
 </template>
 
 <script>

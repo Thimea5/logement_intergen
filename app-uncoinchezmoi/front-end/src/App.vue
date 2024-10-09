@@ -1,69 +1,65 @@
 <template>
   <v-app>
-    <header>
-      <input type="checkbox" id="openSideMenu" class="openSideMenu">
-      <label for="openSideMenu" class="menuIconToggle">
-        <div class="hamb-line dia part-1"></div>
-        <div class="hamb-line hor"></div>
-        <div class="hamb-line dia part-2"></div>
-      </label>
-      <div id="profile">
-        <a v-if="!isLoggedIn" href="./login" class="nav-elem fas fa-user" id="noLog"></a>
+    <v-app-bar app color="primary" dark>
+      <v-menu transition="slide-x-transition">
+        <template v-slot:activator="{ props }">
+          <v-btn icon="mdi-dots-vertical" variant="text" v-bind="props"></v-btn>
+        </template>
 
-        <a v-if="isLoggedIn" class="nav-elem dropdown-toggle" type="button" id="dropdownMenuButton"
-          data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="fas fa-user"></i>
-        </a>
+        <!-- Contenu du menu déroulant -->
+        <v-list>
+          <v-list-item @click="goToHomePage()">
+            <v-list-item-title>Accueil</v-list-item-title>
+          </v-list-item>
+          <v-list-item @click="goToAboutPage()">
+            <v-list-item-title>About</v-list-item-title>
+          </v-list-item>
+          <v-list-item @click="goToRegisterPage()">
+            <v-list-item-title>Inscription</v-list-item-title>
+          </v-list-item>
+          <v-list-item @click="goToLoginPage()">
+            <v-list-item-title>Connexion</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+      
+      <v-spacer></v-spacer>
 
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item d-flex justify-content-between align-items-center" role="button" href="./user-profile">Profil <i class="fa-solid fa-user-gear"></i></a></li>
-          <li><a class="dropdown-item d-flex justify-content-between align-items-center" role="button" @click="logOut()">Deconnexion <i class="fa-solid fa-arrow-right-from-bracket"></i></a></li>
-        </ul>
+      <v-btn icon>
+        <i class="fa-solid fa-circle-user"></i>
+      </v-btn>
+    </v-app-bar>
 
-      </div>
-
-
-      <nav>
-        <ul>
-          <li><a href="./">Accueil</a></li>
-          <li><a href="./about">À Propos</a></li>
-          <li><a href="./login">Connexion</a></li>
-        </ul>
-      </nav>
-    </header>
-
-    <v-main>
-      <router-view></router-view>
-    </v-main>
+    <router-view></router-view>
   </v-app>
 </template>
 
 <script>
+  export default {
+    name: 'App',
 
-import './assets/header.css';
-
-console.log("tamer: "+sessionStorage.getItem('user'))
-
-export default {
-  name: 'App',
-
-  data() {
-    return {
-      isLoggedIn: sessionStorage.getItem('user') != null
-    };
-  },
-  methods: {
-    logOut() {
-      sessionStorage.clear()
-
-      window.location.replace("./")
+    methods: {
+      goToHomePage() {
+        window.location.replace("/");
+        //this.$router.push("/");
+      },
+      goToLoginPage() {
+        //this.$router.push("/login");
+        window.location.replace("/login");
+      },
+      goToRegisterPage() { 
+        window.location.replace("/register");
+        //this.$router.push("/register");
+      },
+      goToAboutPage() {
+        window.location.replace("/about");
+        //this.$router.push("/about");
+      }
     }
   }
-
-}
 </script>
 
 <style>
-
- 
+  /* Ajouté ici du style css dans la vue si besoin, 
+  le mieux reste de faire un fichier à part dans les assets/ */
 </style>

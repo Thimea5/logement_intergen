@@ -1,23 +1,26 @@
 import { createApp } from 'vue';
 import App from './App.vue';
-import axios from 'axios';
-import router from './router';
+import axios from 'axios'; // import pour les requêtes
+import router from './router'; // import pour la gestion des routes
+import { createVuetify } from 'vuetify'; // Import pour vuetify...
+import { aliases, mdi } from 'vuetify/iconsets/mdi';
+import 'vuetify/styles';
+import '@mdi/font/css/materialdesignicons.css'; 
 
-// Importer Vuetify et les styles associés
-import { createVuetify } from 'vuetify';
-import { aliases, mdi } from 'vuetify/iconsets/mdi'
-import 'vuetify/styles'; // Importer les styles de base
-import '@mdi/font/css/materialdesignicons.css';
-
-// Créer l'instance Vuetify
 const vuetify = createVuetify({
-  // Tu peux ici configurer les options de Vuetify si besoin
-  
+  icons: {
+    defaultSet: 'mdi',
+    aliases,
+    sets: {
+      mdi,
+    },
+  },
 });
 
 const app = createApp(App);
 
-app.use(router); // Utiliser le routeur
-app.use(vuetify); // Utiliser Vuetify
+// Utilisation des plugins importés
+app.use(router);
+app.use(vuetify);
 
 app.mount('#app');

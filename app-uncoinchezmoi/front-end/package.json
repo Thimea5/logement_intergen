@@ -12,6 +12,7 @@
     "@mdi/font": "^7.4.47",
     "axios": "^1.7.7",
     "verify": "^0.1.2",
+    "vite-plugin-vuetify": "^2.0.4",
     "vue": "^3.4.29",
     "vue-router": "^4.4.5",
     "vuetify": "^3.7.2"

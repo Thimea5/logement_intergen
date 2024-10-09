@@ -1,7 +1,7 @@
 <template>
     <div class="container d-flex align-items-center">
         <div class="form-container m-auto">
-            <h1 class="text-center">Bienvenu {{ user.firstname }}</h1>
+            <h1 class="text-center">Bienvenue {{ user.firstname }}</h1>
             <p class="text-center">Bienvenue sur la page de user Profile !</p>
 
             <p>Informations sur l'utilisateur connecté :</p>
