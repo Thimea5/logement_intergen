@@ -4,6 +4,7 @@ import About from './components/About.vue';
 import Login from './components/LogIn.vue';
 import Register from './components/Register.vue';
 import UserProfile from './components/UserProfile.vue'
+import mentionsLegales from './components/icons/mentionesLegales.vue';
 
 const routes = [
   {
@@ -30,6 +31,11 @@ const routes = [
     path:'/user-profile',
     name:'UserProfile',
     component: UserProfile
+  }
+  ,  {
+    path:'/mentions-legales',
+    name:'mentionsLegales',
+    component: mentionsLegales
   }
 ];
 

@@ -20,6 +20,9 @@
           <v-list-item @click="goToLoginPage()">
             <v-list-item-title>Connexion</v-list-item-title>
           </v-list-item>
+          <v-list-item @click="goToMentions()">
+            <v-list-item-title>Mentions Legales</v-list-item-title>
+          </v-list-item>
         </v-list>
       </v-menu>
       
@@ -54,6 +57,9 @@
       goToAboutPage() {
         window.location.replace("/about");
         //this.$router.push("/about");
+      },
+      goToMentions() {
+        window.location.replace("/mentions-legales");
       }
     }
   }
