@@ -1,69 +1,96 @@
 <template>
-    <div class="container d-flex align-items-center">
-        <div class="form-container m-auto">
-            <form @submit.prevent="handleLogin" class="d-flex flex-column">
-              <h2 class="mb-5">Connexion</h2>
-              <input type="email" v-model="email" placeholder="Email" class="input-field" required>
-              <input type="password" v-model="password" placeholder="Mot de passe" class="input-field" required>
-              <button class="btn btn-primary mb-3" type="submit">Se connecter</button>
-              <p>Vous n'avez pas de compte ? <a href="./register">S'inscrire</a></p>
-        </form>
-    </div>
-  </div>
+  <v-main>
+    <v-container>
+      <v-card>
+        <v-card-title class="headline">Bienvenue chez vous</v-card-title>
+        <v-card-text>
+          <v-form @submit.prevent="handleLogin">
+            <div class="input-container">
+              <label for="email" class="custom-label">Mail</label>
+              <v-text-field 
+								id="email" v-model="email" placeholder="Entrez votre email" required type="email" outlined bg-color="#E6CDB5">
+                <!--<template v-slot:append>
+                  <v-icon>mdi-email</v-icon>
+                </template>-->
+              </v-text-field>
+            </div>
+
+            <div class="input-container">
+              <label for="password" class="custom-label">Mot de passe</label>
+              <v-text-field 
+								id="password" v-model="password" placeholder="Entrez votre mot de passe" required type="password" outlined bg-color="#E6CDB5">
+                <!--<template v-slot:append>
+                  <v-icon>mdi-lock</v-icon>
+                </template>-->
+              </v-text-field>
+            </div>
+
+            <v-btn type="submit" color="#E6CDB5" class="mb-3 float-right">Connexion</v-btn>
+            <!--<p> Vous n'avez pas de compte ? <a href="./register">S'inscrire</a></p>-->
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </v-container>
+  </v-main>
 </template>
 
 <script>
-    import "../assets/connect.css";
-    import axios from 'axios';
+	import axios from 'axios';
+	import { useUserStore } from '../stores/userStore';
 
-    export default {
-        name: 'Login',
+	export default {
+		name: 'Login',
 
-        data() {
-            return {
-                email: '',
-                password: ''
-            }
-        },
+		data() {
+			return {
+			email: '',
+			password: ''
+			}
+		},
 
-        methods: {
-            async handleLogin() {
-                try {
-                    const response = await axios.post('/api/services/login.php', {
-                        email: this.email,
-                        password: this.password
-                    }, {
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    });
-                
-                    // traitement de la réponse
-                    if (response.data.success) {
-                        const user = response.data['user-info'];
-                        
-                        // Envoi des infos de l'utilisateur dans le SessionStorage
-                        sessionStorage.setItem('user', JSON.stringify({
-                            id: user.id, 
-                            firstname: user.firstname,
-                            lastname: user.lastname,
-                            email: user.email,
-                            birthdate: user.birthdate,
-                            type: user.type
-                        }));
+		setup() {
+			const userStore = useUserStore();
+			return { userStore };
+		},
 
-                        
-                        window.location.replace("./")
-                    } else {
-                        // TODO avec UX : Une fois la charte graphique ok, mettre un joli message en rouge
-                        console.log("ERREUR");
-                        alert(response.data.message);
-                    }
-                } catch (error) {
-                    console.error('Erreur lors de la connexion', error);
-                    alert('Une erreur est survenue, merci de réessayer.');
-                }
-            }
-        }
-    }
+		methods: {
+			handleLogin() {
+				axios.post('/api/services/login.php', {
+					email: this.email,
+					password: this.password
+				}, {
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				}).then(result => {
+					if (result.status == 200 && result.data["success"]) {
+						console.log("Connexion faite !");
+						const user = result.data['user-info'];
+							this.userStore.setUser({
+								id: user.id,
+								firstname: user.firstname,
+								lastname: user.lastname,
+								email: user.email,
+								birthdate: user.birthdate,
+								type: user.type
+						});
+
+						this.$router.push('/');
+					}
+				}).catch(error => console.error(error));
+			}
+		}
+	}
 </script>
+
+<style>
+	.input-container {
+		margin-bottom: 16px;
+	}
+
+	.custom-label {
+		display: block;
+		margin-bottom: 4px;
+		font-weight: bold;
+	}
+</style>

@@ -1,27 +1,32 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
+    <v-app-bar app color="#61442D" dark>
       <v-menu transition="slide-x-transition">
         <template v-slot:activator="{ props }">
           <v-btn icon="mdi-dots-vertical" variant="text" v-bind="props"></v-btn>
         </template>
 
-        <!-- Contenu du menu déroulant -->
         <v-list>
-          <v-list-item @click="goToHomePage()">
+          <v-list-item @click="navigate('/')">
             <v-list-item-title>Accueil</v-list-item-title>
           </v-list-item>
-          <v-list-item @click="goToAboutPage()">
+          <v-list-item @click="navigate('/about')">
             <v-list-item-title>About</v-list-item-title>
           </v-list-item>
-          <v-list-item @click="goToRegisterPage()">
+          <v-list-item @click="navigate('/register')" v-if="!userStore.isAuthenticated">
             <v-list-item-title>Inscription</v-list-item-title>
           </v-list-item>
-          <v-list-item @click="goToLoginPage()">
+          <v-list-item @click="navigate('/login')" v-if="!userStore.isAuthenticated">
             <v-list-item-title>Connexion</v-list-item-title>
           </v-list-item>
-          <v-list-item @click="goToMentions()">
-            <v-list-item-title>Mentions Legales</v-list-item-title>
+          <v-list-item @click="navigate('/user-profile')" v-if="userStore.isAuthenticated">
+            <v-list-item-title>Informations</v-list-item-title>
+          </v-list-item>
+          <v-list-item @click="navigate('/home-search')" v-if="userStore.isAuthenticated">
+            <v-list-item-title>Recherche</v-list-item-title>
+          </v-list-item>
+          <v-list-item @click="navigate('/legal-notices')">
+            <v-list-item-title>Mentions Légales</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -38,30 +43,26 @@
 </template>
 
 <script>
+  import { useUserStore } from './stores/userStore';
+
   export default {
     name: 'App',
 
+    data() {
+      return {
+        userStore: useUserStore() 
+      };
+    },
+
+    mounted() {
+      this.userStore.loadUserFromSession(); 
+    },
+
     methods: {
-      goToHomePage() {
-        window.location.replace("/");
-        //this.$router.push("/");
-      },
-      goToLoginPage() {
-        //this.$router.push("/login");
-        window.location.replace("/login");
-      },
-      goToRegisterPage() { 
-        window.location.replace("/register");
-        //this.$router.push("/register");
-      },
-      goToAboutPage() {
-        window.location.replace("/about");
-        //this.$router.push("/about");
-      },
-      goToMentions() {
-        window.location.replace("/mentions-legales");
+      navigate(path) {
+        this.$router.push(path);
       }
-    }
+    },
   }
 </script>
 

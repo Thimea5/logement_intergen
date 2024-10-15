@@ -11,15 +11,7 @@
       <v-card v-if="isLoggedIn" class="welcome-card" outlined>
         <h4>Réparation en cours</h4>
         <br />
-        <v-row>
-          <v-col>
-            <v-btn @click="goToUserProfile()" color="primary">Informations User</v-btn>
-          </v-col>
-          <v-spacer></v-spacer>
-          <v-col>
-            <v-btn @click="logOut()" color="primary">Déconnexion</v-btn>
-          </v-col>
-        </v-row>
+        <v-btn @click="logOut()" color="primary">Déconnexion</v-btn> 
       </v-card>
     </v-container>
   </v-main>
@@ -48,9 +40,6 @@
 
         window.location.replace("/");
         //this.$router.push("/");
-      },
-      goToUserProfile() {
-        window.location.replace("/user-profile")
       }
     }
 

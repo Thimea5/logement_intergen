@@ -2,9 +2,9 @@
 
 ## Stack Technique 
 
-Front-end : VueJS (+ Vuetify/Bootstrap, Vue Router, Axios, etc.)
+Front-end : VueJS (+ Vuetify/Bootstrap, Vue Router, Axios, Pinia, MailJS etc.)
 
-Back-end : Php (natif, composer pour mailjet, etc.) + MySql
+Back-end : Php (natif, composer si besoin, etc.) + MySql
 
 ## Aide Git
 
@@ -42,6 +42,7 @@ npm install @mdi/font
 npm install axios
 npm install vue-router
 npm install vite-plugin-vuetify
+npm install pinia
 ```
 
 ```sh 

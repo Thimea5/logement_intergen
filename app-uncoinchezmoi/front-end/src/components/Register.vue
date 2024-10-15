@@ -1,145 +1,168 @@
 <template>
-    <div class="container d-flex align-items-center">
-        <div class="form-container m-auto">
-            <form @submit.prevent="handleRegister" class="d-flex flex-column">
-                <h2 class="mb-5">Inscription</h2>
-                <input type="email" v-model="mail" placeholder="Email" class="input-field" required>
+  <v-main>
+    <v-container>
+      <h1>Un Coin Chez Moi</h1>
+      <v-card>
+        <v-card-title class="headline">Inscription</v-card-title>
+        <v-card-text>
+          <v-form @submit.prevent="handleRegisterFormStep">
+            <template v-if="step === 1">
+              <v-text-field 
+                v-model="firstname" label="Prénom" required bg-color="#E6CDB5">
+							</v-text-field>
 
-                <button class="btn btn-primary w-50 ml-auto text-light" type="button" @click="sendCode">Envoyer code</button>
+              <v-text-field 
+                v-model="lastname" label="Nom" required bg-color="#E6CDB5">
+							</v-text-field>
 
-                <input class="input-field mt-2 w-25 ml-auto" v-model="code" type="text" name="code" id="code">
+              <v-text-field 
+                v-model="mail" label="Email" required type="email" bg-color="#E6CDB5">
+							</v-text-field>
 
-                <div class="my-3">
-                    <input type="text" v-model="firstname" placeholder="Prénom" class="input-field" required>
-                    <input type="text" v-model="lastname" placeholder="Nom" class="input-field" required>
-                    <input type="date" v-model="birthdate" class="w-50 input-field">
-                </div>
+              <v-text-field 
+                v-model="birthdate" label="Date de naissance" type="date" required bg-color="#E6CDB5">
+							</v-text-field>
 
-                <input type="password" v-model="password" placeholder="Mot de passe" class="input-field" required>
-                <input type="password" v-model="passwordConf" placeholder="Confirmation" class="input-field" required>
+              <v-text-field 
+                v-model="password" label="Mot de passe" required type="password" bg-color="#E6CDB5">
+							</v-text-field>
 
-                <button class="btn btn-primary mb-3">S'inscrire</button>
+              <v-text-field 
+                v-model="passwordConf" label="Confirmation" required type="password" bg-color="#E6CDB5">
+							</v-text-field>
 
-                <p>Déjà inscrit ? <a href="./login">Se connecter</a></p>
-            </form>
-        </div>
-    </div>
+              <v-radio-group v-model="userType" required>
+                <v-radio label="Propriétaire" value="proprietaire"></v-radio>
+                <v-radio label="Locataire" value="locataire"></v-radio>
+              </v-radio-group>
+
+              <v-btn class="mb-3 float-right" color="#E6CDB5" type="submit">
+                Suivant
+              </v-btn>
+            </template>
+
+            <template v-else-if="step === 2">
+              <v-text-field 
+                v-model="code" label="Code de validation" required type="text" bg-color="#E6CDB5">
+							</v-text-field>
+
+              <v-btn class="mb-3 float-right" color="#E6CDB5" type="submit">
+								Valider
+              </v-btn>
+            </template>
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </v-container>
+  </v-main>
 </template>
 
 <script>
-import axios from 'axios';
-import "../assets/connect.css";
+	import axios from 'axios';
 
-var code = Math.floor(1000 + Math.random() * 9000);
+	let code = Math.floor(1000 + Math.random() * 9000);
 
-export default {
-    name: 'Register',
+	export default {
+		name: 'Register',
 
-    data() {
-        return {
-            mail: '',
-            code: '',
-            firstname: '',
-            lastname: '',
-            birthdate: '',
-            password: '',
-            passwordConf: ''
-        }
-    },
+		data() {
+			return {
+				step: 1, // Variable de gestion de l'étape dans le formulaire
+				mail: '',
+				code: '',
+				firstname: '',
+				lastname: '',
+				birthdate: '',
+				password: '',
+				passwordConf: '',
+				userType: 'locataire' // par défaut, utilisateur de type locataire
+			}
+		},
 
-    methods: {
-        async handleRegister() {
-            try {
-                // Vérification confirmation mot de passe
-                if (this.password !== this.passwordConf) {
-                    alert('Les mots de passe ne correspondent pas.'); 
-                    return;
-                }
+		methods: {
+			handleRegisterFormStep() {
+				// TODO Guillaume : découper le formulaire
+				if (this.step === 1) {
+					if (this.firstname && this.lastname && this.mail && this.birthdate && this.password && this.passwordConf) {
+						if (this.password !== this.passwordConf) {
+							alert('Les mots de passe ne correspondent pas.'); 
+							return;
+						} else {
+							this.sendCode();
+							this.step = 2; 
+						}
+					} else {
+						alert('Veuillez remplir tout les champs  !');
+						return;
+					}
+				} else if (this.step === 2) {
+					if (Number(this.code) !== code) {
+						alert('Mauvaise saisie du code de validation.');
+						return;
+					}
 
-                if (this.code != code) {
-                    alert('Mauvaise saisie du code de validation. ');
-                    console.log("eh oh")
-                    return;
-                }
+					this.registerUser(); // Inscription en base
+					// TODO : ajouter les autres formulaires Proprio et Locataire et ajouté la redirection vers eux
+				}
+			},
 
-                let user = null;
+			sendCode() {
+				if (this.mail === "") {
+					alert("Veuillez renseigner une adresse mail");
+					// simpleAlert("Attention !", "veuillez renseigner une adresse mail"); A utiliser si alertPal configuré
+					return;
+				}
 
-                await axios.post('/api/services/register.php', {
-                    mail: this.mail,
-                    firstname: this.firstname,
-                    lastname: this.lastname,
-                    birthdate: this.birthdate,
-                    password: this.password,
-                    submit: true
-                }, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }).then(result => {
-                    console.log(result)
-                    // Blindage à revoir 
-                    if (result.status == 200) {
-                        if (result.data["success"]) {
-                            user = result.data["user-info"];
+				console.log("Envoyer le code de vérification par email: " + code);
 
-                            // Envoi des infos de l'utilisateur dans le SessionStorage
-                            sessionStorage.setItem('user', JSON.stringify({
-                                id: user.id,
-                                firstname: user.firstname,
-                                lastname: user.lastname,
-                                email: user.email,
-                                birthdate: user.birthdate,
-                                type: user.type
-                            }));
+				//return;
+				emailjs.init({
+					publicKey: 'gH39qa5yQWVo_b1pQ',
+				});
 
-                            window.location.replace("./user-profile");
-                        }
-                    }
-                }).catch(error => console.error(error))
-            } catch (error) {
-                console.error('Erreur lors de l\'inscription:', error);
-                alert('Une erreur est survenue, merci de réessayer.');
-            }
-        },
+				var templateParams = {
+					to_email: this.mail,
+					to_name: this.mail,
+					message: code
+				};
 
-        async sendCode() {
+				emailjs.send('service_bkoff5o', 'template_gx7o92j', templateParams).then(
+					(response) => {
+						console.log('SUCCESS !', response.status, response.text);
+					}, (error) => {
+						console.log('FAILED...', error);
+					}
+				);
+			},
 
-            if (this.mail == "") {
-                alert("Veuillez renseigner une adresse mail");
-                // simpleAlert("Attention !", "veuillez renseigner une adresse mail"); A utiliser si alertPal configuré
-                return;
-            }
-            
-            console.log("Envoyer le code de vérification par email: "+code);
+			registerUser() {
+				axios.post('/api/services/register.php', {
+					mail: this.mail,
+					firstname: this.firstname,
+					lastname: this.lastname,
+					birthdate: this.birthdate,
+					password: this.password,
+					userType: this.userType,
+					submit: true
+				}, {
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				}).then(result => {
+					if (result.status == 200 && result.data["success"]) {
+						console.log("l'utilisateur est bien crée en base")
+						this.$router.push("/login"); 
+					}
+				}).catch(error => console.error(error));
+			}
+		}
+	}
 
-            return;
-            emailjs.init({
-                publicKey: 'gH39qa5yQWVo_b1pQ',
-            });
-            
-            var templateParams = {
-                to_email: this.mail,
-                to_name: this.mail,
-                message: code
-            };
-
-            emailjs.send('service_bkoff5o', 'template_gx7o92j', templateParams).then(
-                (response) => {
-                    console.log('SUCCESS!', response.status, response.text);
-                },
-                (error) => {
-                    console.log('FAILED...', error);
-                },
-            );
-        }
-    }
-}
-
-function simpleAlert(title, description) {
+	function simpleAlert(title, description) {
     Alertpal.alert({
         title: title,
         description: description,
         cancel: "Ok"
     });
-}
+	}	
 </script>

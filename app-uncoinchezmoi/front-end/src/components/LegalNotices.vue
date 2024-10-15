@@ -23,7 +23,7 @@
   
   <script>
   export default {
-    name: 'mentionsLegales'
+    name: 'legalNotices'
   };
   </script>
   
