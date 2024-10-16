@@ -37,7 +37,6 @@
         exit;
     }
 
-            
     $firstname = $data->firstname ?? NULL;
     $lastname = $data->lastname ?? NULL;
     $email = $data->mail ?? NULL;
@@ -49,16 +48,6 @@
     $maritalStatus = $data->maritalStatus ?? NULL;
 
     $submit = $data->submit ?? '';
-
-    var_dump($firstname);
-    var_dump($lastname);
-    var_dump($email);
-    var_dump($code);
-    var_dump($password);
-    var_dump($birthdate);
-    var_dump($genre);
-    var_dump($tel);
-    var_dump($maritalStatus);
 
     if ($submit) {
         register($firstname, $lastname, $email, $password, $birthdate, $genre, $tel, $maritalStatus);

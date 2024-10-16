@@ -80,13 +80,14 @@
 						alert('Mauvaise saisie du code de validation.');
 						return;
 					}
-
+					console.log("ici");
 					this.registerUser(); // Inscription en base
 					// TODO : ajouter les autres formulaires Proprio et Locataire et ajouté la redirection vers eux
 				}
 			},
 
 			sendCode() {
+				console.log("sendcode");
 				if (this.mail === "") {
 					alert("Veuillez renseigner une adresse mail");
 					// simpleAlert("Attention !", "veuillez renseigner une adresse mail"); A utiliser si alertPal configuré
@@ -116,9 +117,11 @@
 			},
 
 			registerUser() {
+				console.log("registerser");
 				axios.post('/api/services/register.php', {
 					mail: this.mail,
 					password: this.password,
+					code: this.code,
 					submit: true
 				}, {
 					headers: {

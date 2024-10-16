@@ -57,6 +57,7 @@
 
 		methods: {
 			handleLogin() {
+				console.log("handleLogin");
 				axios.post('/api/services/login.php', {
 					email: this.email,
 					password: this.password
@@ -80,11 +81,10 @@
 						this.loadPostsData();
 					}
 				}).catch(error => console.error(error));
-
-				
 			},
 
 			loadPostsData() {
+				console.log("loadPostsData");
 				this.listPost.loadPosts();
 				console.log(this.listPost.listHost)
 				this.$router.push('/');

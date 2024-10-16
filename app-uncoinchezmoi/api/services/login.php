@@ -34,6 +34,7 @@
         echo json_encode(["success" => false, "message" => "Utilisateur non trouvé.", "user-info" => null]);
         exit;
     } else {
+        //var_dump(password_verify($data->password, $userData['password']));
         if (password_verify($data->password, $userData['password'])) {
             echo json_encode(["success" => true, "message" => "Connexion réussie.", "user-info" => $userData]);
         } else {
