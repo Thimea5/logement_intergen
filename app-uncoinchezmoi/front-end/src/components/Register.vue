@@ -8,19 +8,7 @@
           <v-form @submit.prevent="handleRegisterFormStep">
             <template v-if="step === 1">
               <v-text-field 
-                v-model="firstname" label="Prénom" required bg-color="#E6CDB5">
-							</v-text-field>
-
-              <v-text-field 
-                v-model="lastname" label="Nom" required bg-color="#E6CDB5">
-							</v-text-field>
-
-              <v-text-field 
                 v-model="mail" label="Email" required type="email" bg-color="#E6CDB5">
-							</v-text-field>
-
-              <v-text-field 
-                v-model="birthdate" label="Date de naissance" type="date" required bg-color="#E6CDB5">
 							</v-text-field>
 
               <v-text-field 
@@ -30,11 +18,6 @@
               <v-text-field 
                 v-model="passwordConf" label="Confirmation" required type="password" bg-color="#E6CDB5">
 							</v-text-field>
-
-              <v-radio-group v-model="userType" required>
-                <v-radio label="Propriétaire" value="proprietaire"></v-radio>
-                <v-radio label="Locataire" value="locataire"></v-radio>
-              </v-radio-group>
 
               <v-btn class="mb-3 float-right" color="#E6CDB5" type="submit">
                 Suivant
@@ -70,9 +53,6 @@
 				step: 1, // Variable de gestion de l'étape dans le formulaire
 				mail: '',
 				code: '',
-				firstname: '',
-				lastname: '',
-				birthdate: '',
 				password: '',
 				passwordConf: '',
 				userType: 'locataire' // par défaut, utilisateur de type locataire
@@ -83,7 +63,7 @@
 			handleRegisterFormStep() {
 				// TODO Guillaume : découper le formulaire
 				if (this.step === 1) {
-					if (this.firstname && this.lastname && this.mail && this.birthdate && this.password && this.passwordConf) {
+					if (this.mail && this.password && this.passwordConf) {
 						if (this.password !== this.passwordConf) {
 							alert('Les mots de passe ne correspondent pas.'); 
 							return;
@@ -138,11 +118,7 @@
 			registerUser() {
 				axios.post('/api/services/register.php', {
 					mail: this.mail,
-					firstname: this.firstname,
-					lastname: this.lastname,
-					birthdate: this.birthdate,
 					password: this.password,
-					userType: this.userType,
 					submit: true
 				}, {
 					headers: {

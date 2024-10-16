@@ -86,8 +86,10 @@
 
 			loadPostsData() {
 				this.listPost.loadPosts();
+				console.log(this.listPost.listHost)
 				this.$router.push('/');
 			}
+
 		}
 	}
 </script>

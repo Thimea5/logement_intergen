@@ -7,12 +7,12 @@
     include_once '../model/user.php';
   
     
-    function register($firstname, $lastname, $email, $password, $birthdate) {
+    function register($firstname, $lastname, $email, $password, $birthdate, $genre, $tel, $maritalStatus) {
         
-        if (empty($firstname) || empty($lastname) || empty($email) || empty($password) || empty($birthdate)) {
-            echo json_encode(['success' => false, 'message' => 'Tous les champs sont requis.']);
-            return;
-        }
+        // if (empty($firstname) || empty($lastname) || empty($email) || empty($password) || empty($birthdate)) {
+        //     echo json_encode(['success' => false, 'message' => 'Tous les champs sont requis.']);
+        //     return;
+        // }
 
         $database = new Database();
         $db = $database->connect();
@@ -21,7 +21,7 @@
 
         $user = new User($db);
 
-        if ($user->insertUser($firstname, $lastname, $email, $passwordHashed, $birthdate)) {
+        if ($user->insertUser($email, $passwordHashed, $firstname, $lastname,  $birthdate, $genre, $tel, $maritalStatus)) {
           $userData = $user->getUsersByEmail($email);
             echo json_encode(['success' => true, 'message' => 'Inscription réussie.', "user-info" => $userData]);
         } else {
@@ -36,17 +36,32 @@
         echo json_encode(["success" => false, "message" => "Aucune donnée reçue."]);
         exit;
     }
+
             
-    $firstname = $data->firstname ?? '';
-    $lastname = $data->lastname ?? '';
-    $email = $data->mail ?? '';
-    $code = $data->code ?? '';
-    $password = $data->password ?? '';
-    $birthdate = $data->birthdate ?? '';
+    $firstname = $data->firstname ?? NULL;
+    $lastname = $data->lastname ?? NULL;
+    $email = $data->mail ?? NULL;
+    $code = $data->code ?? NULL;
+    $password = $data->password ?? NULL;
+    $birthdate = $data->birthdate ?? NULL;
+    $genre = $data->genre ?? NULL;
+    $tel = $data->tel ?? NULL;
+    $maritalStatus = $data->maritalStatus ?? NULL;
+
     $submit = $data->submit ?? '';
 
+    var_dump($firstname);
+    var_dump($lastname);
+    var_dump($email);
+    var_dump($code);
+    var_dump($password);
+    var_dump($birthdate);
+    var_dump($genre);
+    var_dump($tel);
+    var_dump($maritalStatus);
+
     if ($submit) {
-        register($firstname, $lastname, $email, $password, $birthdate);
+        register($firstname, $lastname, $email, $password, $birthdate, $genre, $tel, $maritalStatus);
     } 
 
 ?>
