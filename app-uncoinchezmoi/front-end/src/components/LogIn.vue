@@ -37,20 +37,22 @@
 <script>
 	import axios from 'axios';
 	import { useUserStore } from '../stores/userStore';
+	import { useListPostStore } from '../stores/listPostStore';
 
 	export default {
 		name: 'Login',
 
 		data() {
 			return {
-			email: '',
-			password: ''
+				email: '',
+				password: ''
 			}
 		},
 
 		setup() {
 			const userStore = useUserStore();
-			return { userStore };
+			const listPost = useListPostStore();
+			return { userStore, listPost };
 		},
 
 		methods: {
@@ -66,18 +68,25 @@
 					if (result.status == 200 && result.data["success"]) {
 						console.log("Connexion faite !");
 						const user = result.data['user-info'];
-							this.userStore.setUser({
-								id: user.id,
-								firstname: user.firstname,
-								lastname: user.lastname,
-								email: user.email,
-								birthdate: user.birthdate,
-								type: user.type
+						this.userStore.setUser({
+							id: user.id,
+							firstname: user.firstname,
+							lastname: user.lastname,
+							email: user.email,
+							birthdate: user.birthdate,
+							type: user.type
 						});
 
-						this.$router.push('/');
+						this.loadPostsData();
 					}
 				}).catch(error => console.error(error));
+
+				
+			},
+
+			loadPostsData() {
+				this.listPost.loadPosts();
+				this.$router.push('/');
 			}
 		}
 	}
