@@ -111,12 +111,12 @@ export default {
     filterPost() {
       this.loading = true;
 
-      this.cardList = this.listPostStore.listPost.map((listing, index) => {
+      this.cardList = this.listPost.map((listing, index) => {
         return {
           id: listing.id,
-          address: this.listPostStore.listHost[index]?.address,
-          city: this.listPostStore.listHost[index]?.city,
-          postalCode: this.listPostStore.listHost[index]?.postalCode,
+          address: this.listHost[index]?.address,
+          city: this.listHost[index]?.city,
+          postalCode: this.listHost[index]?.postalCode,
           available: listing.available
         };
       }).filter((item) => {
