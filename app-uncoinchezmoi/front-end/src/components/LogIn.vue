@@ -37,7 +37,6 @@
 <script>
 	import axios from 'axios';
 	import { useUserStore } from '../stores/userStore';
-	import { useListPostStore } from '../stores/listPostStore';
 
 	export default {
 		name: 'Login',
@@ -51,8 +50,7 @@
 
 		setup() {
 			const userStore = useUserStore();
-			const listPost = useListPostStore();
-			return { userStore, listPost };
+			return { userStore };
 		},
 
 		methods: {
@@ -78,17 +76,11 @@
 							type: user.type
 						});
 
-						this.loadPostsData();
+						this.$router.push('/');
 					}
 				}).catch(error => console.error(error));
 			},
 
-			loadPostsData() {
-				console.log("loadPostsData");
-				this.listPost.loadPosts();
-				console.log(this.listPost.listHost)
-				this.$router.push('/');
-			}
 
 		}
 	}

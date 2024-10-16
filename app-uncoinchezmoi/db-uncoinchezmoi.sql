@@ -43,13 +43,6 @@ CREATE TABLE IF NOT EXISTS `guest` (
 -- Déchargement des données de la table `guest`
 --
 
-INSERT INTO `guest` (`id`, `photo`, `prix_max`, `shopping`, `gardening`, `chores`, `description`) VALUES
-(1, 'photo1.jpg', 500, 1, 0, 1, 'Cherche un logement avec jardin et qui accepte les animaux.'),
-(2, 'photo2.jpg', 600, 0, 1, 0, 'Préférerais un endroit calme, idéal pour les promenades.'),
-(3, 'photo3.jpg', 450, 1, 1, 1, 'Urgent : Je recherche un logement pour quelques mois.'),
-(4, 'photo4.jpg', 700, 0, 0, 1, 'Je suis une personne propre et respectueuse, cherche une chambre à louer.'),
-(5, 'photo5.jpg', 550, 1, 0, 0, 'Logement pour personne seule, avec accès à internet.');
-
 -- --------------------------------------------------------
 
 --
@@ -66,26 +59,15 @@ CREATE TABLE IF NOT EXISTS `host` (
   `lng` double NOT NULL,
   `photo` varchar(155) NOT NULL,
   `type_logement` varchar(20) NOT NULL,
-  `handicap` tinyint(1) DEFAULT '0',
-  `smoking` tinyint(1) DEFAULT '0',
-  `pets` tinyint(1) DEFAULT '0',
   `shopping` tinyint(1) DEFAULT '0',
   `gardening` tinyint(1) DEFAULT '0',
   `chores` tinyint(1) DEFAULT '0',
-  `price` double NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `host`
 --
-
-INSERT INTO `host` (`id`, `city`, `postal_code`, `address`, `lat`, `lng`, `photo`, `type_logement`, `handicap`, `smoking`, `pets`, `shopping`, `gardening`, `chores`, `price`) VALUES
-(1, 'Paris', '75001', '10 Rue de Rivoli', 48.860846, 2.341308, 'host_photo1.jpg', 'appartement', 0, 1, 0, 1, 0, 1, 1500),
-(2, 'Lyon', '69001', '5 Place Bellecour', 45.757813, 4.832013, 'host_photo2.jpg', 'chambre', 0, 0, 1, 0, 1, 0, 800),
-(3, 'Marseille', '13001', '20 Rue de la République', 43.296482, 5.36978, 'host_photo3.jpg', 'maison', 0, 1, 1, 0, 0, 1, 1200),
-(4, 'Nice', '06000', '15 Promenade des Anglais', 43.6954, 7.27332, 'host_photo4.jpg', 'studio', 0, 0, 0, 1, 0, 0, 900),
-(5, 'Bordeaux', '33000', '3 Rue Sainte-Catherine', 44.837139, -0.58064, 'host_photo5.jpg', 'appartement', 0, 1, 1, 0, 1, 0, 1100);
 
 -- --------------------------------------------------------
 
@@ -96,6 +78,11 @@ INSERT INTO `host` (`id`, `city`, `postal_code`, `address`, `lat`, `lng`, `photo
 DROP TABLE IF EXISTS `post`;
 CREATE TABLE IF NOT EXISTS `post` (
   `id` int NOT NULL AUTO_INCREMENT,
+  `handicap` tinyint(1) DEFAULT '0',
+  `smoking` tinyint(1) DEFAULT '0',
+  `pets` tinyint(1) DEFAULT '0',
+  `description` TEXT NOT NULL,
+  `price` double NOT NULL,
   `available` tinyint(1) DEFAULT NULL,
   `id_host` int DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -105,13 +92,6 @@ CREATE TABLE IF NOT EXISTS `post` (
 --
 -- Déchargement des données de la table `post`
 --
-
-INSERT INTO `post` (`id`, `available`, `id_host`) VALUES
-(1, 1, 1),
-(2, 1, 2),
-(3, 1, 3),
-(4, 1, 4),
-(5, 1, 5);
 
 -- --------------------------------------------------------
 
@@ -149,12 +129,43 @@ CREATE TABLE IF NOT EXISTS `users` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=50 DEFAULT CHARSET=latin1;
 
+-- Insertion de données dans la table `guest`
+INSERT INTO `guest` (`photo`, `prix_max`, `shopping`, `gardening`, `chores`, `description`) VALUES
+('photo1.jpg', 150.00, 1, 0, 1, 'Invité sympathique, aime le jardinage.'),
+('photo2.jpg', 200.00, 0, 1, 0, 'Amateur de shopping, toujours prêt à aider.'),
+('photo3.jpg', 100.00, 1, 1, 1, 'Jeune professionnel, très respectueux des lieux.'),
+('photo4.jpg', 175.00, 0, 0, 1, 'Passionné par la cuisine et les tâches ménagères.'),
+('photo5.jpg', 250.00, 1, 1, 0, 'Voyageur expérimenté, respectueux des règles.');
+
+-- Insertion de données dans la table `host`
+INSERT INTO `host` (`city`, `postal_code`, `address`, `lat`, `lng`, `photo`, `type_logement`, `shopping`, `gardening`, `chores`) VALUES
+('Paris', '75001', '123 Rue de Rivoli', 48.8566, 2.3522, 'host1.jpg', 'Appartement', 1, 0, 0),
+('Lyon', '69001', '456 Rue de la République', 45.7640, 4.8357, 'host2.jpg', 'Maison', 0, 1, 1),
+('Marseille', '13001', '789 Rue Saint-Ferréol', 43.2965, 5.3698, 'host3.jpg', 'Loft', 1, 0, 1),
+('Nice', '06000', '321 Promenade des Anglais', 43.7102, 7.2620, 'host4.jpg', 'Villa', 0, 1, 0),
+('Toulouse', '31000', '654 Avenue de la République', 43.6045, 1.4442, 'host5.jpg', 'Appartement', 1, 1, 1);
+
+-- Insertion de données dans la table `post`
+INSERT INTO `post` (`handicap`, `smoking`, `pets`, `description`, `price`, `available`, `id_host`) VALUES
+(0, 1, 0, 'Chambre confortable en plein centre-ville.', 80.00, 1, 1),
+(1, 0, 1, 'Studio avec accès pour personnes à mobilité réduite.', 100.00, 1, 2),
+(0, 0, 1, 'Appartement avec animaux de compagnie autorisés.', 120.00, 0, 3),
+(0, 1, 0, 'Chambre avec balcon et vue sur la mer.', 150.00, 1, 4),
+(1, 0, 1, 'Logement adapté avec jardin.', 90.00, 1, 5);
+
+-- Insertion de données dans la table `reservation`
+INSERT INTO `reservation` (`id_post`, `id_guest`) VALUES
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5);
+
+
 --
 -- Déchargement des données de la table `users`
 --
 
-INSERT INTO `users` (`id`, `mail`, `password`, `firstname`, `lastname`, `birthdate`, `genre`, `tel`, `marital_status`, `active`, `role`) VALUES
-(49, 'ghostache.contact@gmail.com', '$2y$10$7WJcYcZES0bo/qUA1aaOIOWMRSG21mWMHe3wWTZ1mLOGdqdMyj10u', NULL, NULL, NULL, NULL, NULL, NULL, 1, 'user');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

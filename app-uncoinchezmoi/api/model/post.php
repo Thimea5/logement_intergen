@@ -1,8 +1,13 @@
 <?php
   class Post {
-    protected $id;
-    protected $idHost;
-    protected $isAvailable;
+    private $id;
+    private $idHost;
+    private $handicap;
+    private $smoking;
+    private $pets;
+    private $description;
+    private $price;
+    private $isAvailable;
 
     private $conn;
 

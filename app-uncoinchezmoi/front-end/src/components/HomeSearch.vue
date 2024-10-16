@@ -39,27 +39,29 @@
 </template>
 
 <script>
-import { useListPostStore } from '../stores/listPostStore';
+import axios from 'axios';
 
 export default {
   name: 'HomeSearch',
 
   data() {
     return {
-      search: '',    
-      loading: false,     
-      cardList: []              
+      listHost: [],
+      listPost: [],
+      search: '', 
+      loading: false,
+      cardList: []
     };
   },
 
   setup() {
-    const listPostStore = useListPostStore();
-    return { listPostStore }; 
   },
 
-  mounted() {
-    let lh = this.listPostStore.listHost;
-    let lp = this.listPostStore.listPost;
+  async mounted() {
+    await this.loadPosts();
+
+    let lh = this.listHost;
+    let lp = this.listPost;
 
     this.cardList = []; // Réinitialiser cardList
 
@@ -75,6 +77,37 @@ export default {
   },
 
   methods: {
+    async loadPosts() {
+      await axios.get('/api/services/postsManager.php', {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then(result => {
+        if (result.status === 200 && result.data["success"]) {
+          const res = result.data["posts"];
+          
+          this.listPost = [];
+          this.listHost = [];
+          for (let i = 0; i < res.length; i++) {
+            this.listPost.push({
+              id: res[i]["id"],
+              available: res[i]["available"]
+            });
+
+            this.listHost.push({
+              idHost: res[i]["id_host"],
+              address: res[i]["address"],
+              city: res[i]["city"],
+              postalCode: res[i]["postal_code"]
+            });
+          }
+        }
+        
+      }).catch(error => {
+        console.log(error);
+      });
+    },
+
     filterPost() {
       this.loading = true;
 

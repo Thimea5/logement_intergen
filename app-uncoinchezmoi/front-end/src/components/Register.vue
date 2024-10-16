@@ -80,7 +80,7 @@
 						alert('Mauvaise saisie du code de validation.');
 						return;
 					}
-					console.log("ici");
+					// console.log("ici");
 					this.registerUser(); // Inscription en base
 					// TODO : ajouter les autres formulaires Proprio et Locataire et ajouté la redirection vers eux
 				}
