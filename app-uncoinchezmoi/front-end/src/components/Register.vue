@@ -118,7 +118,9 @@
 
 			registerUser() {
 				console.log("registerser");
-				axios.post('/api/services/register.php', {
+				const apiUrl = import.meta.env.VITE_API_URL;
+				console.log(apiUrl);
+				axios.post(apiUrl+'/services/register.php', {
 					mail: this.mail,
 					password: this.password,
 					code: this.code,

@@ -55,8 +55,10 @@
 
 		methods: {
 			handleLogin() {
+				const apiUrl = import.meta.env.VITE_API_URL;
+				console.log(apiUrl);
 				console.log("handleLogin");
-				axios.post('/api/services/login.php', {
+				axios.post(apiUrl+'/services/login.php', {
 					email: this.email,
 					password: this.password
 				}, {

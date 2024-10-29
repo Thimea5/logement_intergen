@@ -1,9 +1,9 @@
 <?php
     class Database {
-        private $host = 'localhost';
-        private $db = 'db-uncoinchezmoi';
-        private $user = 'root';
-        private $password = '';
+        private $host = 'mysql-uccm-user.alwaysdata.net';
+        private $db = 'uccm-user_db-uncoinchezmoi';
+        private $user = 'uccm-user';
+        private $password = '@Citron&69';
         public $connection;
 
         public function connect() {

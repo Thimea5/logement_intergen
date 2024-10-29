@@ -10,7 +10,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost/logement_intergen/app-uncoinchezmoi/api',
+        target: 'https://api.uncoinchezmoi.live/api',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },

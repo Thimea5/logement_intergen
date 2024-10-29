@@ -78,7 +78,9 @@ export default {
 
   methods: {
     async loadPosts() {
-      await axios.get('/api/services/postsManager.php', {
+      const apiUrl = import.meta.env.VITE_API_URL;
+			console.log(apiUrl);
+      await axios.get(apiUrl+'/services/postsManager.php', {
         headers: {
           'Content-Type': 'application/json'
         }
