@@ -43,10 +43,20 @@ npm install axios
 npm install vue-router
 npm install vite-plugin-vuetify
 npm install pinia
+npm install jwt-decode
+
+
+composer require firebase/php-jwt
+composer require vlucas/phpdotenv
+
 ```
 
 ```sh 
+# côté front-end, 
 npm run dev # lancement du projet en local (port 5173 par défaut)
+
+# côté back-end,
+composer install
 ```
 
 ## Documentations

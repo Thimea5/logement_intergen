@@ -4,19 +4,23 @@
     header("Access-Control-Allow-Headers: Content-Type, Authorization");
     header("Content-Type: application/json; charset=UTF-8");
 
+    require '../vendor/autoload.php'; 
     include_once '../config/database.php';
     include_once '../model/user.php';
 
-    $data = json_decode(file_get_contents("php://input"));
-    // var_dump($data);
+    use Firebase\JWT\JWT;
+
+    $secretKey ='uR7o^a#xP9kDfJbLqZ2w@vT5kLmX3mZ4'; 
+    
+    $data = json_decode(file_get_contents("php://input"));    
 
     if ($data === null) {
-        echo json_encode(["success" => false, "message" => "Aucune donnée reçue.", "user-info" => null]);
+        echo json_encode(["success" => false, "message" => "Aucune donnée reçue."]);
         exit;
     }
 
     if (!isset($data->email) || !isset($data->password)) {
-        echo json_encode(["success" => false, "message" => "Paramètres manquants.", "user-info" => null]);
+        echo json_encode(["success" => false, "message" => "Paramètres manquants."]);
         exit;
     }
 
@@ -31,14 +35,24 @@
     //var_dump($userData);
 
     if ($userData === false) {
-        echo json_encode(["success" => false, "message" => "Utilisateur non trouvé.", "user-info" => null]);
+        echo json_encode(["success" => false, "message" => "Utilisateur non trouvé."]);
         exit;
     } else {
         //var_dump(password_verify($data->password, $userData['password']));
         if (password_verify($data->password, $userData['password'])) {
-            echo json_encode(["success" => true, "message" => "Connexion réussie.", "user-info" => $userData]);
+            $payload = [
+                'iat' => time(), 
+                'exp' => time() + (60 * 60), // 1 heure
+                'usr-id' => $userData['id'], 
+                'usr-mail' => $userData['mail']
+            ];
+
+            $jwt = JWT::encode($payload, $secretKey, 'HS256');
+
+            echo json_encode(["success" => true, "message" => "Connexion réussie.", "token" => $jwt, "user-info" => $userData]);
+            
         } else {
-            echo json_encode(["success" => false, "message" => "Mot de passe incorrect.", "user-info" => null]);
+            echo json_encode(["success" => false, "message" => "Mot de passe incorrect."]);
         }
     }
 ?>

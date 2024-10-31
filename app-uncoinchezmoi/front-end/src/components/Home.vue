@@ -30,7 +30,7 @@
     },
 
     mounted() {
-      console.log("CHECK UTILISATEUR : " + sessionStorage.getItem('user'));
+      //console.log("CHECK UTILISATEUR : " + sessionStorage.getItem('user'));
       //console.log(this.isLoggedIn); 
     },
 

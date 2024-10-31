@@ -68,5 +68,15 @@
             return $query->execute();
         }
 
+        public function updatePassword($email, $password) {
+            $sql = "UPDATE users SET `password` = :pPassword WHERE mail = :pMail;";
+
+            $query = $this->conn->prepare($sql);
+            $query->bindParam("pMail", $email);
+            $query->bindParam("pPassword", $password);
+
+            return $query->execute();
+        }
+
     }
 ?>
