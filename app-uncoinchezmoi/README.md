@@ -1,6 +1,6 @@
 # app-uncoinchezmoi
 
-## Stack Technique 
+## Stack Technique
 
 Front-end : VueJS (+ Vuetify/Bootstrap, Vue Router, Axios, Pinia, MailJS etc.)
 
@@ -27,10 +27,10 @@ git fetch
 git pull origin <branch_name>
 
 git checkout <branch_name>
-git checkout -b <branch_name> # le -b permet de créer la branche 
+git checkout -b <branch_name> # le -b permet de créer la branche
 ```
 
-## Mémo commande 
+## Mémo commande
 
 ```sh
 # le projet doit être sur wampserver, dans www/ (c'est pour pouvoir héberger la partie back-end)
@@ -44,6 +44,7 @@ npm install vue-router
 npm install vite-plugin-vuetify
 npm install pinia
 npm install jwt-decode
+npm install leaflet ?
 
 
 composer require firebase/php-jwt
@@ -51,8 +52,8 @@ composer require vlucas/phpdotenv
 
 ```
 
-```sh 
-# côté front-end, 
+```sh
+# côté front-end,
 npm run dev # lancement du projet en local (port 5173 par défaut)
 
 # côté back-end,
