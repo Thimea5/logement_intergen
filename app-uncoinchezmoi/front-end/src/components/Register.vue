@@ -1,11 +1,9 @@
 <template>
 	<v-main>
 		<v-container class="h-100 p-3">
-			<v-alert class="position-absolute right-0 mr-3" :v-model="alert"></v-alert>
 			<div class="h-100">
 				<div class="h-100">
-					<v-form class="h-100 mt-auto d-flex flex-column justify-content-between"
-						@submit.prevent="handleRegisterFormStep">
+					<v-form class="h-100 mt-auto d-flex flex-column justify-content-between">
 						<div>
 							<v-btn icon="mdi-keyboard-backspace" variant="plain" size="x-large"></v-btn>
 							<h1 class="headline text-center">Inscription</h1>
@@ -87,10 +85,24 @@
 										</v-text-field>
 									</div>
 
-									<v-btn class="w-100 rounded-pill mb-5"
-										color="#8DA399"
+									<div>
+										<v-radio-group inline v-model="user.gender">
+											<v-radio label="Femme" value="F"></v-radio>
+											<v-radio label="Homme" value="M"></v-radio>
+										</v-radio-group>
+									</div>
+
+									<div>
+										<v-radio-group inline v-model="user.maritalStatus">
+											<v-radio label="Célibataire" value="single"></v-radio>
+											<v-radio label="Marié(e)" value="married"></v-radio>
+										</v-radio-group>
+									</div>
+
+									<v-btn class="w-100 rounded-pill mb-5" color="#8DA399"
 										@click="validateStep2()">Etape
-										suivante</v-btn>
+										suivante
+									</v-btn>
 								</v-card>
 							</v-dialog>
 						</template>
@@ -107,13 +119,14 @@
 
 									<v-btn-toggle
 										class="h-100 d-flex flex-column justify-content-center align-items-center"
-										v-model="userType" mandatory color="#E6CDB5">
+										v-model="user.type" mandatory color="#E6CDB5">
 										<v-btn class="w-100 h-25 m-3 rounded-xl" value="guest" selected> Locataire
 										</v-btn>
 										<v-btn class="w-100 h-25 m-3 rounded-xl" value="host"> Propriétaire </v-btn>
 									</v-btn-toggle>
 
-									<v-btn class="w-100 rounded-pill mb-5" color="#4F685D" @click="">S'inscrire</v-btn>
+									<v-btn class="w-100 rounded-pill mb-5" color="#4F685D"
+										@click="registerUser()">S'inscrire</v-btn>
 								</v-card>
 							</v-dialog>
 						</template>
@@ -138,6 +151,8 @@ export default {
 	},
 	data() {
 		return {
+			users: [],
+
 			emailRules: [
 				value => (!value || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value)) || "L'adresse mail est invalide."
 			],
@@ -165,14 +180,30 @@ export default {
 				lastName: '',
 				birthDate: null,
 				telephone: '',
-				type: ''
+				genre: '',
+				maritalStatus: '',
+				type: 'guest'
 			},
 
-			userType: 'guest' // par défaut, utilisateur de type locataire
 		}
 	},
 
+	mounted() {
+		this.getAllUsers()
+	},
+
 	methods: {
+		getAllUsers() {
+			const apiUrl = import.meta.env.VITE_API_URL;
+			axios.get(apiUrl + '/services/userList.php')
+				.then(response => {
+					this.users = response.data;
+				})
+				.catch(error => {
+					console.error('Erreur lors de la récupération des utilisateurs:', error);
+				});
+		},
+
 		toggleMarker(i) {
 			this.marker[i] = !this.marker[i]
 		},
@@ -252,49 +283,25 @@ export default {
 				return;
 			}
 
-			// Si toutes les validations sont OK, passer à l'étape suivante
 			this.step3 = true;
-		}
-,
-
-		handleRegisterFormStep() {
-			if (this.step === 1) {
-				if (this.mail && this.password && this.passwordConf) {
-					if (this.password !== this.passwordConf) {
-						alert('Les mots de passe ne correspondent pas.');
-						return;
-					} else {
-						this.step = 2;
-					}
-				} else {
-					alert('Veuillez remplir tout les champs  !');
-					return;
-				}
-			} else if (this.step === 2) {
-				if (Number(this.code) !== code) {
-					alert('Mauvaise saisie du code de validation.');
-					return;
-				}
-				// console.log("ici");
-				this.registerUser(); // Inscription en base
-				// TODO : ajouter les autres formulaires Proprio et Locataire et ajouté la redirection vers eux
-			}
 		},
 
 		sendCode() {
+			if (this.users.includes(this.user.mail)) {
+				alert('Cette adresse mail est déjà utilisée')
+				return
+			}
 			this.panel = 'otpShow'
 
 			this.startChrono()
 
 			if (this.user.mail === "") {
 				alert("Veuillez renseigner une adresse mail");
-				// simpleAlert("Attention !", "veuillez renseigner une adresse mail"); A utiliser si alertPal configuré
 				return;
 			}
 
 			console.log("Envoyer le code de vérification par email: " + code);
 
-			//return;
 			emailjs.init({
 				publicKey: 'gH39qa5yQWVo_b1pQ',
 			});
@@ -315,22 +322,30 @@ export default {
 		},
 
 		registerUser() {
-			console.log("registerser");
-			axios.post('/api/services/register.php', {
-				mail: this.mail,
-				password: this.password,
-				code: this.code,
-				submit: true
+			const apiUrl = import.meta.env.VITE_API_URL;
+			axios.post(apiUrl + '/services/register.php', {
+				mail: this.user.mail,
+				password: this.user.password,
+				firstName: this.user.firstName,
+				lastName: this.user.lastName,
+				birthDate: this.user.birthDate,
+				telephone: this.user.telephone,
+				genre: this.user.genre,
+				maritalStatus: this.user.maritalStatus,
+				type: this.user.type
 			}, {
 				headers: {
 					'Content-Type': 'application/json'
 				}
 			}).then(result => {
 				if (result.status == 200 && result.data["success"]) {
-					console.log("l'utilisateur est bien crée en base")
+					console.log("L'utilisateur est bien créé en base");
 					this.$router.push("/login");
 				}
-			}).catch(error => console.error(error));
+			}).catch(error => {
+				console.error(error);
+			});
+
 		}
 	}
 }
@@ -339,11 +354,5 @@ function _(id) {
 	return document.querySelector("#" + id)
 }
 
-function simpleAlert(title, description) {
-	Alertpal.alert({
-		title: title,
-		description: description,
-		cancel: "Ok"
-	});
-}	
+
 </script>

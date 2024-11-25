@@ -1,56 +1,43 @@
 <?php
-    header("Access-Control-Allow-Origin: *");
-    header("Access-Control-Allow-Methods: POST, OPTIONS");
-    header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-    include_once '../config/database.php';
-    include_once '../model/user.php';
-  
-    
-    function register($firstname, $lastname, $email, $password, $birthdate, $genre, $tel, $maritalStatus) {
-        
-        // if (empty($firstname) || empty($lastname) || empty($email) || empty($password) || empty($birthdate)) {
-        //     echo json_encode(['success' => false, 'message' => 'Tous les champs sont requis.']);
-        //     return;
-        // }
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-        $database = new Database();
-        $db = $database->connect();
-        
-        $passwordHashed = password_hash($password, PASSWORD_DEFAULT);
+include_once '../config/database.php';
+include_once '../model/user.php';
 
-        $user = new User($db);
+$database = new Database();
+$db = $database->connect();
 
-        if ($user->insertUser($email, $passwordHashed, $firstname, $lastname,  $birthdate, $genre, $tel, $maritalStatus)) {
-          $userData = $user->getUsersByEmail($email);
-            echo json_encode(['success' => true, 'message' => 'Inscription réussie.', "user-info" => $userData]);
-        } else {
-            echo json_encode(['success' => false, 'message' => 'Échec de l\'inscription.', "user-info" => null]);
-        }
-    }
+$user = new User($db);
 
+$data = json_decode(file_get_contents('php://input'), true);
 
-    $data = json_decode(file_get_contents("php://input"));
+// Vérifiez si les données ont bien été décodées
+if ($data === null) {
+    echo json_encode(['error' => 'Données invalides']);
+    exit;
+}
 
-    if ($data === null) {
-        echo json_encode(["success" => false, "message" => "Aucune donnée reçue."]);
-        exit;
-    }
+// Extraire les données du tableau associatif
+$mail = $data['mail'] ?? '';
+$password = $data['password'] ?? '';
+$firstName = $data['firstName'] ?? '';
+$lastName = $data['lastName'] ?? '';
+$birthDate = $data['birthDate'] ?? null;
+$telephone = $data['telephone'] ?? '';
+$genre = $data['genre'] ?? '';
+$maritalStatus = $data['maritalStatus'] ?? '';
+$type = $data['type'] ?? 'guest';
 
-    $firstname = $data->firstname ?? NULL;
-    $lastname = $data->lastname ?? NULL;
-    $email = $data->mail ?? NULL;
-    $code = $data->code ?? NULL;
-    $password = $data->password ?? NULL;
-    $birthdate = $data->birthdate ?? NULL;
-    $genre = $data->genre ?? NULL;
-    $tel = $data->tel ?? NULL;
-    $maritalStatus = $data->maritalStatus ?? NULL;
+$passwordHashed = password_hash($password, PASSWORD_DEFAULT);
 
-    $submit = $data->submit ?? '';
+if ($user->insertUser($mail, $passwordHashed, $firstName, $lastName, $birthDate, $genre, $telephone, $maritalStatus)) {
+    echo json_encode(["success" => true, "message" => "Inscription réussie."]);
+} else {
+    echo json_encode(["success" => false, "message" => "Inscription ratée."]);
+}
 
-    if ($submit) {
-        register($firstname, $lastname, $email, $password, $birthdate, $genre, $tel, $maritalStatus);
-    } 
 
 ?>
