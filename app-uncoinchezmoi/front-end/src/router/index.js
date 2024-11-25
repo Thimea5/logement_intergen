@@ -9,12 +9,26 @@ import ErrorPage from '../components/Error.vue';
 import HomeSearch from '../components/HomeSearch.vue';
 import LegalNotices from '../components/LegalNotices.vue';
 import ForgotPasswordForm from '../components/ForgotPasswordForm.vue';
+import MapComponent from '../components/MapComponent.vue'
+import MapComponent2 from '../components/MapComponent2.vue'
 
 const routes = [
     {
         path: '/',
         name: 'Home',
         component: Home,
+        meta: { requiresAuth: false }
+    },
+    {
+        path: '/map',
+        name: 'map',
+        component: MapComponent,
+        meta: { requiresAuth: false }
+    },
+    {
+        path: '/map2',
+        name: 'map2',
+        component: MapComponent2,
         meta: { requiresAuth: false }
     },
     {
@@ -51,7 +65,7 @@ const routes = [
         path: '/home-search',
         name: 'HomeSearch',
         component: HomeSearch,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: false }
     },
     {
         path: '/legal-notices',

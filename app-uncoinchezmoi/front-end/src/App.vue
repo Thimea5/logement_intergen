@@ -30,6 +30,12 @@
                     <v-list-item @click="navigate('/legal-notices')">
                         <v-list-item-title>Mentions Légales</v-list-item-title>
                     </v-list-item>
+                    <v-list-item @click="navigate('/map')">
+                        <v-list-item-title>La carte map</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="navigate('/map2')">
+                        <v-list-item-title>La carte map2</v-list-item-title>
+                    </v-list-item>
                 </v-list>
             </v-menu>
         </v-app-bar>

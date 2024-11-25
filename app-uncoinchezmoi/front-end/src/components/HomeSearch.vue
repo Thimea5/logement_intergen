@@ -80,6 +80,7 @@ export default {
     async loadPosts() {
       const apiUrl = import.meta.env.VITE_API_URL;
 			console.log(apiUrl);
+      //'
       await axios.get(apiUrl+'/services/postsManager.php', {
         headers: {
           'Content-Type': 'application/json'
@@ -87,9 +88,10 @@ export default {
       }).then(result => {
         if (result.status === 200 && result.data["success"]) {
           const res = result.data["posts"];
-          
           this.listPost = [];
           this.listHost = [];
+          console.log("hello ")
+          console.log(res.length)
           for (let i = 0; i < res.length; i++) {
             this.listPost.push({
               id: res[i]["id"],

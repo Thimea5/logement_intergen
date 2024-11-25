@@ -14,7 +14,7 @@
   $postModel = new Post($db);
 
   $posts = $postModel->getPostsWithHostInformations();
-
+  echo $posts;
   //var_dump($posts);
 
   if ($posts) {

@@ -7,6 +7,7 @@ import { createVuetify } from 'vuetify'; // import pour vuetify...
 import { aliases, mdi } from 'vuetify/iconsets/mdi';
 import 'vuetify/styles';
 import '@mdi/font/css/materialdesignicons.css'; 
+import 'leaflet/dist/leaflet.css'
 
 const vuetify = createVuetify({
   icons: {
