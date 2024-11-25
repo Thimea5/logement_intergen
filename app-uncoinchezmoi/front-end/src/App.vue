@@ -4,7 +4,7 @@
             <v-menu transition="slide-x-transition">
                 <template v-slot:activator="{ props }">
                     <v-btn icon v-bind="props">
-                        <img src="../dark-favicon.ico" alt="Icon" style=" width: 28px;height: 28px;"/>
+                        <img src="../public/dark-favicon.ico" alt="Icon" style=" width: 28px;height: 28px;"/>
                     </v-btn>
                 </template>
 
