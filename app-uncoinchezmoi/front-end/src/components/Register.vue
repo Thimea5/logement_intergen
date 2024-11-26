@@ -12,7 +12,7 @@
 						<div>
 							<label class="custom-label mb-3" for="email">Adresse Email</label>
 							<v-text-field id="email" rounded="pill" clearable variant="solo-filled" v-model="user.mail"
-								:rules="emailRules" @input="validate()" required>
+								:rules="[rules.email, rules.emailExists, rules.required]" @input="validate()">
 							</v-text-field>
 
 							<div class="text-end">
@@ -24,7 +24,8 @@
 							<v-expansion-panels class="my-5" v-model="panel" flat>
 								<v-expansion-panel value="otpShow">
 									<v-expansion-panel-text>
-										<v-otp-input v-model="user.code" :error="otpError" @input="validateOtp()">
+										<v-otp-input v-model="user.code" :error="otpError" @input="validateOtp()"
+											:rules="[rules.codeMatch]">
 										</v-otp-input>
 									</v-expansion-panel-text>
 								</v-expansion-panel>
@@ -34,14 +35,14 @@
 							<v-text-field id="pwd" autocomplete="nope" :type="marker[0] ? 'password' : 'text'"
 								rounded="pill" clearable variant="solo-filled" v-model="user.password"
 								:append-inner-icon="marker[0] ? 'mdi-eye-off' : 'mdi-eye'"
-								@click:append-inner="toggleMarker(0)">
+								@click:append-inner="toggleMarker(0)" :rules="[rules.required]">
 							</v-text-field>
 
 							<label class="custom-label mb-3" for="pwdConf">Confirmez votre mot de passe</label>
 							<v-text-field id="pwdConf" autocomplete="none" :type="marker[1] ? 'password' : 'text'"
 								rounded="pill" clearable variant="solo-filled" v-model="user.passwordConf"
 								:append-inner-icon="marker[1] ? 'mdi-eye-off' : 'mdi-eye'"
-								@click:append-inner="toggleMarker(1)">
+								@click:append-inner="toggleMarker(1)" :rules="[rules.required, rules.passwordsMatch]">
 							</v-text-field>
 						</div>
 
@@ -57,18 +58,18 @@
 										<h1 class="headline text-center">Inscription</h1>
 										<p>Renseignez les informations de votre profil</p>
 									</div>
-									<div>
+									<div class="d-flex flex-column justify-content-around">
 										<div class="d-flex justify-content-around">
 											<div class="w-100 mr-5">
 												<label class="custom-label mb-3" for="lName">Nom</label>
 												<v-text-field id="lName" type="text" rounded="pill" clearable
-													variant="solo-filled" v-model="user.lastName">
+													variant="solo-filled" v-model="user.lastName" :rules="[rules.required]">
 												</v-text-field>
 											</div>
 											<div class="w-100 ml-5">
 												<label class="custom-label mb-3" for="fName">Prénom</label>
 												<v-text-field id="fName" type="text" rounded="pill" clearable
-													variant="solo-filled" v-model="user.firstName">
+													variant="solo-filled" v-model="user.firstName" :rules="[rules.required]">
 												</v-text-field>
 											</div>
 										</div>
@@ -76,28 +77,31 @@
 										<label class="custom-label mb-3" for="bDate">Date de naissance</label>
 										<v-date-input id="bDate" rounded clearable variant="solo-filled"
 											v-model="user.birthDate" prepend-icon=""
-											append-inner-icon="mdi-calendar-month">
+											append-inner-icon="mdi-calendar-month" :rules="[rules.required]">
 										</v-date-input>
 
 										<label class="custom-label mb-3" for="tel">N° Téléphone</label>
 										<v-text-field id="tel" rounded="pill" clearable variant="solo-filled"
-											v-model="user.telephone">
+											v-model="user.telephone" :rules="[rules.required]">
 										</v-text-field>
+
+										<div class="d-flex w-100">
+											<div class="d-flex flex-column w-50 mr-2">
+												<label class="custom-label mb-3" for="gender">Genre</label>
+												<v-select v-model="user.gender" rounded="pill" variant="solo-filled"
+													:items="genders" item-title="text" item-value="value" :rules="[rules.required]">
+												</v-select>
+											</div>
+											<div class="d-flex flex-column w-50 ml-2">
+												<label class="custom-label mb-3" for="marital">Statut marital</label>
+												<v-select id="marital" v-model="user.maritalStatus" rounded="pill"
+													variant="solo-filled" :items="status" item-title="text"
+													item-value="value" :rules="[rules.required]">
+												</v-select>
+											</div>
+										</div>
 									</div>
 
-									<div>
-										<v-radio-group inline v-model="user.gender">
-											<v-radio label="Femme" value="F"></v-radio>
-											<v-radio label="Homme" value="M"></v-radio>
-										</v-radio-group>
-									</div>
-
-									<div>
-										<v-radio-group inline v-model="user.maritalStatus">
-											<v-radio label="Célibataire" value="single"></v-radio>
-											<v-radio label="Marié(e)" value="married"></v-radio>
-										</v-radio-group>
-									</div>
 
 									<v-btn class="w-100 rounded-pill mb-5" color="#8DA399"
 										@click="validateStep2()">Etape
@@ -153,9 +157,39 @@ export default {
 		return {
 			users: [],
 
-			emailRules: [
-				value => (!value || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value)) || "L'adresse mail est invalide."
+			genders: [
+				{
+					text: "Homme",
+					value: "H"
+				},
+				{
+					text: "Femme",
+					value: "F"
+				},
+				{
+					text: "Autre",
+					value: "N/A"
+				},
 			],
+
+			status: [
+				{
+					text: "Célibataire",
+					value: "single"
+				},
+				{
+					text: "Marié(e)",
+					value: "married"
+				},
+			],
+
+			rules: {
+				required: value => !!value || 'Ce champ est requis',
+				email: value => (!value || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value)) || "L'adresse mail est invalide.",
+				emailExists: value => !this.users.includes(value) || 'Cette adresse est déjà utilisée',
+				passwordsMatch: value => value === this.user.password || 'Les mots de passe ne correspondent pas',
+				codeMatch: value => value === code || 'Code de vérification incorrect'
+			},
 
 			step2: false,
 			step3: false,
@@ -170,7 +204,6 @@ export default {
 
 			marker: [true, true],
 
-			step: 1, // Variable de gestion de l'étape dans le formulaire
 			user: {
 				mail: '',
 				code: '',
@@ -180,7 +213,7 @@ export default {
 				lastName: '',
 				birthDate: null,
 				telephone: '',
-				genre: '',
+				gender: '',
 				maritalStatus: '',
 				type: 'guest'
 			},
@@ -245,50 +278,48 @@ export default {
 		},
 
 		validateStep1() {
-			if (!(this.user.mail && this.user.password && this.user.passwordConf)) {
-				alert('Veuillez remplir tout les champs  !')
-				return
-			}
+			// if (!(this.user.mail && this.user.password && this.user.passwordConf)) {
+			// 	alert('Veuillez remplir tout les champs  !')
+			// 	return
+			// }
 
-			if (this.user.password != this.user.passwordConf) {
-				alert('Les mots de passe ne correspondent pas.')
-				return
-			}
+			// if (this.user.password != this.user.passwordConf) {
+			// 	alert('Les mots de passe ne correspondent pas.')
+			// 	return
+			// }
 
-			if (this.user.code != code) {
-				alert('Code de verification incorrect')
-				return
-			}
+			// if (this.user.code != code) {
+			// 	alert('Code de verification incorrect')
+			// 	return
+			// }
 
 			this.step2 = true
 		},
 
 		validateStep2() {
-			
-			if (!(this.user.lastName && this.user.firstName && this.user.birthDate && this.user.telephone)) {
-				alert('Veuillez remplir tous les champs !');
-				return;
-			}
+			// if (!(this.user.lastName && this.user.firstName && this.user.birthDate && this.user.telephone)) {
+			// 	alert('Veuillez remplir tous les champs !');
+			// 	return;
+			// }
 
-			const phoneRegex = /^[0-9]{10}$/;
-			if (!phoneRegex.test(this.user.telephone)) {
-				alert('Veuillez entrer un numéro de téléphone valide (10 chiffres).');
-				return;
-			}
+			// const phoneRegex = /^[0-9]{10}$/;
+			// if (!phoneRegex.test(this.user.telephone)) {
+			// 	alert('Veuillez entrer un numéro de téléphone valide (10 chiffres).');
+			// 	return;
+			// }
 
-			const birthDate = new Date(this.user.birthDate);
-			const today = new Date();
-			if (birthDate >= today) {
-				alert('La date de naissance ne peut pas être dans le futur.');
-				return;
-			}
+			// const birthDate = new Date(this.user.birthDate);
+			// const today = new Date();
+			// if (birthDate >= today) {
+			// 	alert('La date de naissance ne peut pas être dans le futur.');
+			// 	return;
+			// }
 
 			this.step3 = true;
 		},
 
 		sendCode() {
 			if (this.users.includes(this.user.mail)) {
-				alert('Cette adresse mail est déjà utilisée')
 				return
 			}
 			this.panel = 'otpShow'
@@ -330,7 +361,7 @@ export default {
 				lastName: this.user.lastName,
 				birthDate: this.user.birthDate,
 				telephone: this.user.telephone,
-				genre: this.user.genre,
+				gender: this.user.gender,
 				maritalStatus: this.user.maritalStatus,
 				type: this.user.type
 			}, {

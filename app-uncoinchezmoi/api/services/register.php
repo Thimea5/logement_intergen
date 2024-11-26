@@ -27,13 +27,13 @@ $firstName = $data['firstName'] ?? '';
 $lastName = $data['lastName'] ?? '';
 $birthDate = $data['birthDate'] ?? null;
 $telephone = $data['telephone'] ?? '';
-$genre = $data['genre'] ?? '';
+$gender = $data['gender'] ?? '';
 $maritalStatus = $data['maritalStatus'] ?? '';
 $type = $data['type'] ?? 'guest';
 
 $passwordHashed = password_hash($password, PASSWORD_DEFAULT);
 
-if ($user->insertUser($mail, $passwordHashed, $firstName, $lastName, $birthDate, $genre, $telephone, $maritalStatus)) {
+if ($user->insertUser($mail, $passwordHashed, $firstName, $lastName, $birthDate, $gender, $telephone, $maritalStatus)) {
     echo json_encode(["success" => true, "message" => "Inscription réussie."]);
 } else {
     echo json_encode(["success" => false, "message" => "Inscription ratée."]);
