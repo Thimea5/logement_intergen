@@ -4,7 +4,7 @@
     <v-toolbar dense class="custom-toolbar">
       <v-text-field
         v-model="searchQuery"
-        prepend-icon="mdi-filter"
+        prepend-icon="mdi-tune"
         append-icon="mdi-magnify"
         hide-details
         single-line
