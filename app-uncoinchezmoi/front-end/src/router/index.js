@@ -6,7 +6,6 @@ import Login from "../components/LogIn.vue";
 import Register from "../components/Register.vue";
 import UserProfile from "../components/UserProfile.vue";
 import ErrorPage from "../components/Error.vue";
-import HomeSearch from "../components/HomeSearch.vue";
 import LegalNotices from "../components/LegalNotices.vue";
 import ForgotPasswordForm from "../components/ForgotPasswordForm.vue";
 import MapComponent from "../components/MapComponent.vue";
@@ -59,12 +58,6 @@ const routes = [
     path: "/error",
     name: "ErrorPage",
     component: ErrorPage,
-    meta: { requiresAuth: false },
-  },
-  {
-    path: "/home-search",
-    name: "HomeSearch",
-    component: HomeSearch,
     meta: { requiresAuth: false },
   },
   {

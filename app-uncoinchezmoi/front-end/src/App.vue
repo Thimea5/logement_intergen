@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar :elevation="0">
+    <v-app-bar :elevation="0" v-if="userStore.isAuthenticated">
       <v-menu transition="slide-x-transition">
         <template v-slot:activator="{ props }">
           <v-btn icon v-bind="props">
@@ -12,20 +12,11 @@
           <v-list-item @click="navigate('/')">
             <v-list-item-title>Accueil</v-list-item-title>
           </v-list-item>
-          <v-list-item @click="navigate('/about')">
-            <v-list-item-title>About</v-list-item-title>
-          </v-list-item>
           <v-list-item @click="navigate('/register')" v-if="!userStore.isAuthenticated">
             <v-list-item-title>Inscription</v-list-item-title>
           </v-list-item>
           <v-list-item @click="navigate('/login')" v-if="!userStore.isAuthenticated">
             <v-list-item-title>Connexion</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="navigate('/user-profile')" v-if="userStore.isAuthenticated">
-            <v-list-item-title>Informations</v-list-item-title>
-          </v-list-item>
-          <v-list-item @click="navigate('/home-search')" v-if="userStore.isAuthenticated">
-            <v-list-item-title>Recherche</v-list-item-title>
           </v-list-item>
           <v-list-item @click="navigate('/legal-notices')">
             <v-list-item-title>Mentions Légales</v-list-item-title>
@@ -33,6 +24,7 @@
         </v-list>
       </v-menu>
     </v-app-bar>
+
     <router-view></router-view>
 
     <v-bottom-navigation v-if="userStore.isAuthenticated" color="indigo">

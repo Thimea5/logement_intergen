@@ -15,6 +15,7 @@
         <v-card-title class="headline">A propos de vous</v-card-title>
         <v-card-text>TODO ici</v-card-text>
       </v-card>
+      <v-btn @click="logOut()" color="primary">Déconnexion</v-btn>
     </v-container>
   </v-main>
 </template>
@@ -27,6 +28,14 @@ export default {
     return {
       user: JSON.parse(sessionStorage.getItem("user")) || {},
     };
+  },
+  methods: {
+    logOut() {
+      sessionStorage.clear();
+
+      window.location.replace("/");
+      //this.$router.push("/");
+    },
   },
 };
 </script>

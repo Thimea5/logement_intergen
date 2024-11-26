@@ -38,6 +38,8 @@ export const useListPostStore = defineStore("listPost", {
                   longitude: res[i]["lng"],
                   type_logement: res[i]["type_logement"],
                   price: res[i]["price"],
+                  size: res[i]["size"],
+                  img: res[i]["photo"],
                 });
               }
 

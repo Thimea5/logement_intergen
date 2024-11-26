@@ -1,7 +1,11 @@
+<!--TODO ANNONCE RECHERCHE : 
+ faire du style sur l'affichage de la pop-up, changer le lien si 
+ dans getimageSrc, ajouter l'image d'erreur, demandé aux ux
+-->
 <template>
   <v-main>
     <!-- Barre de recherche -->
-    <v-toolbar dense class="custom-toolbar">
+    <v-toolbar class="custom-toolbar">
       <v-text-field
         v-model="searchQuery"
         prepend-icon="mdi-tune"
@@ -10,32 +14,27 @@
         single-line
         placeholder="Rechercher un lieu..."
         class="custom-text-field"
-        @click:prepend="navigate"
+        @click:prepend="navigate('/advanced-search')"
         @click:append="sampleSearch"
         @keydown.enter.prevent="sampleSearch"
       ></v-text-field>
     </v-toolbar>
 
     <!-- Carte -->
-    <l-map
-      style="height: 100%"
-      :zoom="zoom"
-      ref="mapRef"
-      :center="this.center"
-      :options="{ zoomControl: false }"
-      @update:bounds="fetchNearbyPosts"
-    >
-      <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
-      <l-control-zoom position="bottomleft"></l-control-zoom>
+    <l-map :zoom="zoom" :center="center" style="height: 100%" ref="mapRef" @update:bounds="refreshMapWithNearPosts">
+      <!-- Tuiles -->
+      <l-tile-layer :url="tileLayerUrl" :attribution="attribution" ref="tileLayer" />
+      <l-tile-layer :url="satelliteUrl" :attribution="attribution" ref="satelliteLayer" />
+      <l-tile-layer :url="openStreetMapUrl" :attribution="attribution" ref="openStreetMapLayer" />
+      <l-tile-layer :url="streetUrl" :attribution="attribution" ref="streetLayer" />
 
       <!-- Marqueurs -->
-      <l-marker v-for="post in this.filteredPosts" :key="post.id" :lat-lng="[post.latitude, post.longitude]">
+      <l-marker v-for="post in filteredPosts" :key="post.id" :lat-lng="[post.latitude, post.longitude]">
         <l-popup>
-          <div>
-            <strong>{{ post.city }} - {{ post.type_logement }}</strong>
-            <p>{{ post.address }}</p>
-            <p>Prix : {{ post.price }}€/mois</p>
-          </div>
+          <strong>{{ post.type_logement }} - {{ (post.size === null ? 0 : post.size) + "m²" }}</strong>
+          <p>{{ post.address }} - {{ post.postalCode }} - {{ post.city }}</p>
+          <img :src="getImageSrc(post.img)" alt="Aucune image disponible" style="width: 80%; height: 50%" />
+          <p>Prix : {{ post.price }}€/mois</p>
         </l-popup>
       </l-marker>
     </l-map>
@@ -43,136 +42,126 @@
 </template>
 
 <script>
-import { LMap, LTileLayer, LControlZoom, LMarker, LPopup } from "@vue-leaflet/vue-leaflet";
-import { useListPostStore } from "../stores/listPostStore"; // Import du store Pinia
+import { useListPostStore } from "../stores/listPostStore";
+import { LMap, LTileLayer, LControlLayers, LMarker, LPopup } from "@vue-leaflet/vue-leaflet";
+import L from "leaflet";
 
 export default {
+  name: "Carte",
   components: {
     LMap,
     LTileLayer,
-    LControlZoom,
+    LControlLayers,
     LMarker,
     LPopup,
   },
 
   data() {
     return {
-      url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      attribution: '&copy; <a target="_blank" href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-      zoom: 12,
-      center: [45.764043, 4.835659],
       searchQuery: "",
       filteredPosts: [],
+      previousBounds: null,
+      zoom: 12,
+      center: [45.764043, 4.835659], // Position de départ à Lyon
+      tileLayerUrl: "https://api.maptiler.com/maps/basic/256/{z}/{x}/{y}.png?key=aRVKZ0fk9aEUzL9b5GZs",
+      satelliteUrl: "https://api.maptiler.com/maps/hybrid/256/{z}/{x}/{y}.jpg?key=aRVKZ0fk9aEUzL9b5GZs",
+      openStreetMapUrl: "https://api.maptiler.com/maps/openstreetmap/256/{z}/{x}/{y}.jpg?key=aRVKZ0fk9aEUzL9b5GZs",
+      streetUrl: "https://api.maptiler.com/maps/streets-v2/256/{z}/{x}/{y}.png?key=aRVKZ0fk9aEUzL9b5GZs",
+      attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> contributors',
     };
   },
 
-  /* asynchrone obligatoire ici */
-  async mounted() {
-    const postStore = useListPostStore();
+  /* On est obligé de passé en Asynchrone ici, sinon, les données ne chargent pas (carte + annonces) */
+  mounted() {
+    this.$nextTick(() => {
+      setTimeout(() => {
+        const map = this.$refs.mapRef.leafletObject;
+        if (map) {
+          // Positionnement du zoom-control en bas à gauche
+          map.zoomControl.setPosition("bottomleft");
 
-    if (!postStore.isLoaded) {
-      postStore.loadPosts();
-    }
+          // création et application des calques (tuiles)
+          this.tileLayer = L.tileLayer(this.tileLayerUrl, {
+            attribution: this.attribution,
+          });
+          this.satelliteLayer = L.tileLayer(this.satelliteUrl, {
+            attribution: this.attribution,
+          });
+          this.openStreetMapLayer = L.tileLayer(this.openStreetMapUrl, {
+            attribution: this.attribution,
+          });
 
-    await this.waitUntil(() => postStore.isLoaded);
+          this.streetLayer = L.tileLayer(this.streetUrl, {
+            attribution: this.attribution,
+          });
 
-    this.fetchNearbyPosts(null);
+          const layers = {
+            "Carte de base": this.tileLayer,
+            "Vue satellite": this.satelliteLayer,
+            "OpenStreetMap vue": this.openStreetMapLayer,
+            "Street Vue": this.streetLayer,
+          };
+
+          L.control.layers(layers).addTo(map);
+
+          this.tileLayer.addTo(map);
+          this.refreshMapWithNearPosts(map.getBounds());
+        }
+      }, 100); // Délai de 100ms pour s'assurer que la carte est prête
+    });
   },
 
   methods: {
+    navigate(pPath) {
+      this.$router.push(pPath);
+    },
+
     sampleSearch() {
+      console.log("sampleSearch");
       /* Méthode pour la recherche simple en fonction de l'adresse, la ville, le code postal */
 
       // filtre recherche
-      const inputQuery = this.searchQuery.trim().toLowerCase();
-      const p = useListPostStore();
-      this.filteredPosts = p.listHost.filter((ph) => {
+      const query = this.searchQuery.trim().toLowerCase();
+      if (query.length == 0) return;
+
+      const ps = useListPostStore();
+      this.filteredPosts = ps.listHost.filter((ph) => {
         return (
-          ph.address.toLowerCase().includes(inputQuery) ||
-          ph.city.toLowerCase().includes(inputQuery) ||
-          ph.postalCode.toLowerCase().includes(inputQuery)
+          ph.address.toLowerCase().includes(query) ||
+          ph.city.toLowerCase().includes(query) ||
+          ph.postalCode.toLowerCase().includes(query)
         );
       });
 
-      // calcul et déplacement du centre de la carte
-      let moyenneLatitude = 0;
-      let moyenneLongitude = 0;
-      for (let i = 0; i < this.filteredPosts.length; i++) {
-        moyenneLatitude += this.filteredPosts[i].latitude;
-        moyenneLongitude += this.filteredPosts[i].longitude;
-      }
-
-      this.$refs.mapRef.leafletObject.setView(
-        [moyenneLatitude / this.filteredPosts.length, moyenneLongitude / this.filteredPosts.length],
-        12
-      );
-
-      this.fetchNearbyPosts(null);
-    },
-
-    async geocodeLocation(query) {
-      // Utilisation de l'api : https://adresse.data.gouv.fr/api-doc/adresse
-      const apiUrl = `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}`;
-      try {
-        const response = await fetch(apiUrl);
-        const results = await response.json();
-
-        if (results.features && results.features.length > 0) {
-          const { geometry, properties } = results.features[0];
-          return {
-            lat: geometry.coordinates[1],
-            lng: geometry.coordinates[0],
-            label: properties.label,
-          };
+      if (this.filteredPosts.length > 0) {
+        // calcul et déplacement du centre de la carte
+        let moyenneLatitude = 0;
+        let moyenneLongitude = 0;
+        for (let i = 0; i < this.filteredPosts.length; i++) {
+          moyenneLatitude += this.filteredPosts[i].latitude;
+          moyenneLongitude += this.filteredPosts[i].longitude;
         }
-      } catch (error) {
-        console.error("Erreur de géocodage avec adresse.data.gouv.fr :", error);
-      }
-      return null;
-    },
 
-    waitUntil(conditionFn, interval = 100) {
-      return new Promise((resolve) => {
-        const checkCondition = () => {
-          if (conditionFn()) {
-            resolve();
-          } else {
-            setTimeout(checkCondition, interval);
-          }
-        };
-        checkCondition();
-      });
-    },
-
-    fetchNearbyPosts(pBounds) {
-      if (pBounds === null) {
-        pBounds = {
-          _southWest: {
-            lat: this.center[0] - 0.1,
-            lng: this.center[1] - 0.1,
-          },
-          _northEast: {
-            lat: this.center[0] + 0.1,
-            lng: this.center[1] + 0.1,
-          },
-        };
-      }
-
-      const { _southWest, _northEast } = pBounds;
-      const p = useListPostStore();
-
-      this.filteredPosts = p.listHost.filter((ph) => {
-        return (
-          _southWest.lat < ph.latitude &&
-          ph.latitude < _northEast.lat &&
-          _southWest.lng < ph.longitude &&
-          ph.longitude < _northEast.lng
+        this.$refs.mapRef.leafletObject.setView(
+          [moyenneLatitude / this.filteredPosts.length, moyenneLongitude / this.filteredPosts.length],
+          12
         );
-      });
+      }
     },
 
-    navigate() {
-      this.$router.push("/advanced-search");
+    getImageSrc(pImgPath) {
+      try {
+        return new URL(`/src/assets/img/${pImgPath}`, import.meta.url).href;
+      } catch (error) {
+        console.error("Erreur lors du chargement de l'image :", error);
+        return new URL(`/src/assets/img/error.jpg`, import.meta.url).href;
+      }
+    },
+
+    refreshMapWithNearPosts(pBounds) {
+      // on les chargent toutes d'un coup, c'est pas fou, mais ça passe
+      const ps = useListPostStore();
+      this.filteredPosts = ps.listHost;
     },
   },
 };
@@ -182,9 +171,9 @@ export default {
 .custom-toolbar {
   position: absolute;
   top: 10%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 40px);
+  left: 0%;
+  transform: translateX(5%);
+  width: calc(100% - 100px);
   background-color: white;
   border-radius: 8px;
   z-index: 1000;
@@ -192,6 +181,6 @@ export default {
 
 .custom-text-field {
   flex: 1;
-  margin: 0 8px;
+  margin: 0;
 }
 </style>
