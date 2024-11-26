@@ -1,29 +1,38 @@
 <template>
-  <div class="container d-flex align-items-center">
-    <div class="form-container m-auto">
-      <h1 class="text-center">Bienvenue {{ user.firstname }}</h1>
-      <p class="text-center">Bienvenue sur la page de user Profile !</p>
+  <v-main>
+    <v-container class="d-flex flex-column">
+      <h1>{{ this.user.firstname }} {{ user.lastname }}</h1>
+      <v-card>
+        <v-card-text>Coordonnées : </v-card-text>
+        <ul>
+          <li>Téléphone : {{ user.telephone }}</li>
+          <li>Adresse mail : {{ user.mail }}</li>
+        </ul>
+        <v-card-text>Identité vérifié ?</v-card-text>
+      </v-card>
 
-      <p>Informations sur l'utilisateur connecté :</p>
-      <ul>
-        <li v-for="(value, key) in user" :key="key">
-          {{ key }} : {{ value }}
-        </li>
-      </ul>
-    </div>
-  </div>
+      <v-card>
+        <v-card-title class="headline">A propos de vous</v-card-title>
+        <v-card-text>TODO ici</v-card-text>
+      </v-card>
+    </v-container>
+  </v-main>
 </template>
 
 <script>
-  import "../assets/connect.css";
+export default {
+  name: "UserProfile",
 
-  export default {
-    name: 'UserProfile',
-
-    data() {
-      return {
-        user: JSON.parse(sessionStorage.getItem('user')) || {}
-      };
-    }
-  }
+  data() {
+    return {
+      user: JSON.parse(sessionStorage.getItem("user")) || {},
+    };
+  },
+};
 </script>
+
+<style>
+.full-height {
+  min-height: 100vh;
+}
+</style>
