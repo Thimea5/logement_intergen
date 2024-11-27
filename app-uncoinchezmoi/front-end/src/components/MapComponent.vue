@@ -5,20 +5,18 @@
 <template>
   <v-main>
     <!-- Barre de recherche -->
-    <v-toolbar class="custom-toolbar">
-      <v-text-field
-        v-model="searchQuery"
-        prepend-icon="mdi-tune"
-        append-icon="mdi-magnify"
-        hide-details
-        single-line
-        placeholder="Rechercher un lieu..."
-        class="custom-text-field"
-        @click:prepend="navigate('/advanced-search')"
-        @click:append="sampleSearch"
-        @keydown.enter.prevent="sampleSearch"
-      ></v-text-field>
-    </v-toolbar>
+    <v-text-field
+      v-model="searchQuery"
+      prepend-inner-icon="mdi-tune"
+      append-inner-icon="mdi-magnify"
+      hide-details
+      single-line
+      placeholder="Rechercher un lieu..."
+      class="custom-toolbar"
+      @click:prepend-inner="navigate('/advanced-search')"
+      @click:append-inner="sampleSearch"
+      @keydown.enter.prevent="sampleSearch"
+    ></v-text-field>
 
     <!-- Carte -->
     <l-map :zoom="zoom" :center="center" style="height: 100%" ref="mapRef" @update:bounds="refreshMapWithNearPosts">
@@ -33,7 +31,12 @@
         <l-popup>
           <strong>{{ post.type_logement }} - {{ (post.size === null ? 0 : post.size) + "m²" }}</strong>
           <p>{{ post.address }} - {{ post.postalCode }} - {{ post.city }}</p>
-          <img :src="getImageSrc(post.img)" alt="Aucune image disponible" style="width: 80%; height: 50%" />
+          <img
+            :src="getImageSrc(post.img, post.idHost)"
+            alt="Aucune image disponible"
+            style="width: 80%; height: 50%"
+            @click="goToPostDetails(post)"
+          />
           <p>Prix : {{ post.price }}€/mois</p>
         </l-popup>
       </l-marker>
@@ -149,9 +152,13 @@ export default {
       }
     },
 
-    getImageSrc(pImgPath) {
+    goToPostDetails(listing) {
+      this.$router.push({ name: "PostDetails", params: { id: listing.idHost } });
+    },
+
+    getImageSrc(pImgPath, pIndex) {
       try {
-        return new URL(`/src/assets/img/${pImgPath}`, import.meta.url).href;
+        return new URL(`/src/assets/img/${pImgPath}/host_photo${pIndex}_1.jpg`, import.meta.url).href;
       } catch (error) {
         console.error("Erreur lors du chargement de l'image :", error);
         return new URL(`/src/assets/img/error.jpg`, import.meta.url).href;
@@ -170,17 +177,12 @@ export default {
 <style scoped>
 .custom-toolbar {
   position: absolute;
-  top: 10%;
-  left: 0%;
-  transform: translateX(5%);
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
   width: calc(100% - 100px);
   background-color: white;
   border-radius: 8px;
   z-index: 1000;
-}
-
-.custom-text-field {
-  flex: 1;
-  margin: 0;
 }
 </style>

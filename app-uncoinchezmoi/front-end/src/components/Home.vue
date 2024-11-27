@@ -41,11 +41,12 @@
       <p class="recommended-text" style="margin-top: 20px">Recommandées pour vous</p>
 
       <!-- Affichage des cartes de logement (le contenu sera ajouté plus tard) -->
+      <!-- Affichage des cartes de logement (le contenu sera ajouté plus tard) -->
       <div v-if="listDisplay.length === 0">Aucune annonce trouvée pour le moment</div>
       <div v-else>
         <v-row>
           <v-col v-for="listing in listDisplay" :key="listing.id" cols="12" sm="6" md="4">
-            <v-card>
+            <v-card @click="goToPostDetails(listing)">
               <v-img :src="getImageSrc(listing.img)">
                 <v-btn icon color="red" rounded="circle" class="favorite-btn">
                   <v-icon>mdi-heart</v-icon>
@@ -85,7 +86,7 @@ export default {
         ps.loadPosts();
       }
 
-      // C'est un peu long au chargement, mais j'ai pas trové de solution pour l'instant
+      // C'est un peu long au chargement, mais j'ai pas trouvé de solution pour l'instant
       await this.waitUntil(() => ps.isLoaded);
 
       this.listDisplay = ps.listHost.reverse();
@@ -93,9 +94,14 @@ export default {
   },
 
   methods: {
+    goToPostDetails(listing) {
+      this.$router.push({ name: "PostDetails", params: { id: listing.idHost } });
+    },
+
     getImageSrc(pImgPath) {
       try {
-        return new URL(`/src/assets/img/${pImgPath}`, import.meta.url).href;
+        return new URL(`/src/assets/img/${pImgPath}/host_photo${pImgPath[pImgPath.length - 1]}_1.jpg`, import.meta.url)
+          .href;
       } catch (error) {
         console.error("Erreur lors du chargement de l'image :", error);
         return new URL(`/src/assets/img/error.jpg`, import.meta.url).href;

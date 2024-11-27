@@ -10,6 +10,7 @@ import LegalNotices from "../components/LegalNotices.vue";
 import ForgotPasswordForm from "../components/ForgotPasswordForm.vue";
 import MapComponent from "../components/MapComponent.vue";
 import AdvancedSearch from "../components/AdvancedSearch.vue";
+import PostDetails from "../components/PostDetails.vue";
 
 const routes = [
   {
@@ -40,6 +41,13 @@ const routes = [
     path: "/login",
     name: "Login",
     component: Login,
+    meta: { requiresAuth: false },
+  },
+  {
+    path: "/post-details/:id",
+    name: "PostDetails",
+    component: PostDetails,
+    props: true,
     meta: { requiresAuth: false },
   },
   {
@@ -74,7 +82,7 @@ const routes = [
   },
   {
     /* Note : le '*' n'est plus reconnu sur vue-router 4... 
-        Définition d'une route générale pour rediriger toutes les routes non définies vers /error */
+    Définition d'une route générale pour rediriger toutes les routes non définies vers /error */
     path: "/:pathMatch(.*)*",
     redirect: "/error",
   },
