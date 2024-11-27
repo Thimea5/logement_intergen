@@ -1,5 +1,8 @@
 <template>
   <v-main>
+    <v-app-bar :elevation="0">
+      <v-btn icon="mdi-keyboard-backspace" variant="plain" size="x-large" @click="goBack()"></v-btn>
+    </v-app-bar>
     <v-container class="d-flex flex-column justify-center full-height">
       <h1 class="headline mb-5 title">Mentions légales</h1>
       <h2 class="sub_title">Editions</h2>
@@ -100,6 +103,11 @@
 <script>
 export default {
   name: "legalNotices",
+  methods: {
+    goBack() {
+      this.$router.go(-1);
+    },
+  },
 };
 </script>
 

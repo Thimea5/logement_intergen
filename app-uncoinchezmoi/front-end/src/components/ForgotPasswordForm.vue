@@ -1,38 +1,65 @@
 <template>
-  <v-container>
-    <div class="wrapper">
-      <h3 class="headline mt-5 mb-5 title">Mot de passe oublié</h3>
-      <v-form ref="form" @submit.prevent="handlePasswordReset">
-        <v-text-field v-model="mail" label="Adresse e-mail" type="email" :rules="[rules.required]" rounded="pill"
-          variant="solo-filled" append-inner-icon="mdi-email" @input="validate()"></v-text-field>
+  <v-main>
+    <v-container>
+      <div class="wrapper">
+        <v-app-bar :elevation="0">
+          <v-btn icon="mdi-keyboard-backspace" variant="plain" size="x-large" @click="goBack()"></v-btn>
+        </v-app-bar>
+        <h3 class="headline mt-5 mb-5 title">Mot de passe oublié</h3>
+        <v-form ref="form" @submit.prevent="handlePasswordReset">
+          <v-text-field
+            v-model="mail"
+            label="Adresse e-mail"
+            type="email"
+            :rules="[rules.required]"
+            rounded="pill"
+            variant="solo-filled"
+            append-inner-icon="mdi-email"
+            @input="validate()"
+          ></v-text-field>
 
-        <v-btn class="w-100 rounded-pill mb-5" color="#8DA399" @click="handleSendCode" :disabled="disabled">
-          {{ sendCodeLabel }}
-        </v-btn>
+          <v-btn class="w-100 rounded-pill mb-5" color="#8DA399" @click="handleSendCode" :disabled="disabled">
+            {{ sendCodeLabel }}
+          </v-btn>
 
-        <v-expansion-panels class="my-5" v-model="panel" flat>
-          <v-expansion-panel value="otpShow">
-            <v-expansion-panel-text>
-              <v-otp-input v-model="userCode" :error="otpError" @input="validateOtp()" :rules="[rules.codeMatch]">
-              </v-otp-input>
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-expansion-panels>
-      </v-form>
+          <v-expansion-panels class="my-5" v-model="panel" flat>
+            <v-expansion-panel value="otpShow">
+              <v-expansion-panel-text>
+                <v-otp-input v-model="userCode" :error="otpError" @input="validateOtp()" :rules="[rules.codeMatch]">
+                </v-otp-input>
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </v-form>
 
-      <v-form v-if="codeSent" @submit.prevent="handlePasswordReset">
-        <v-text-field v-model="newPassword" label="Nouveau mot de passe" type="password" rounded="pill"
-          variant="solo-filled" append-inner-icon="mdi-lock-reset" :rules="[rules.required]"></v-text-field>
+        <v-form v-if="codeSent" @submit.prevent="handlePasswordReset">
+          <v-text-field
+            v-model="newPassword"
+            label="Nouveau mot de passe"
+            type="password"
+            rounded="pill"
+            variant="solo-filled"
+            append-inner-icon="mdi-lock-reset"
+            :rules="[rules.required]"
+          ></v-text-field>
 
-        <v-text-field v-model="confirmPassword" label="Confirmer le mot de passe" type="password" rounded="pill"
-          variant="solo-filled" append-inner-icon="mdi-lock-check"
-          :rules="[rules.required, rules.passwordsMatch]"></v-text-field>
+          <v-text-field
+            v-model="confirmPassword"
+            label="Confirmer le mot de passe"
+            type="password"
+            rounded="pill"
+            variant="solo-filled"
+            append-inner-icon="mdi-lock-check"
+            :rules="[rules.required, rules.passwordsMatch]"
+          ></v-text-field>
 
-        <v-btn class="w-100 rounded-pill mb-5" color="#8DA399" @click="handlePasswordReset"> Réinitialiser le mot de
-          passe </v-btn>
-      </v-form>
-    </div>
-  </v-container>
+          <v-btn class="w-100 rounded-pill mb-5" color="#8DA399" @click="handlePasswordReset">
+            Réinitialiser le mot de passe
+          </v-btn>
+        </v-form>
+      </div>
+    </v-container>
+  </v-main>
 </template>
 
 <script>
@@ -47,11 +74,12 @@ export default {
       generatedCode: Math.floor(100000 + Math.random() * 900000),
 
       rules: {
-        required: value => !!value || 'Ce champ est requis',
-        email: value => (!value || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value)) || "L'adresse mail est invalide.",
-        emailExists: value => !this.users.includes(value) || 'Cette adresse est déjà utilisée',
-        passwordsMatch: value => value === this.newPassword || 'Les mots de passe ne correspondent pas',
-        codeMatch: value => value === generatedCode || 'Code de vérification incorrect'
+        required: (value) => !!value || "Ce champ est requis",
+        email: (value) =>
+          !value || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) || "L'adresse mail est invalide.",
+        emailExists: (value) => !this.users.includes(value) || "Cette adresse est déjà utilisée",
+        passwordsMatch: (value) => value === this.newPassword || "Les mots de passe ne correspondent pas",
+        codeMatch: (value) => value === generatedCode || "Code de vérification incorrect",
       },
 
       sendCodeLabel: "Envoyer le code de vérification",
@@ -69,18 +97,19 @@ export default {
   },
 
   mounted() {
-		this.getAllUsers()
-	},
+    this.getAllUsers();
+  },
 
   methods: {
     getAllUsers() {
       const apiUrl = import.meta.env.VITE_API_URL;
-      axios.get(apiUrl + '/services/userList.php')
-        .then(response => {
+      axios
+        .get(apiUrl + "/services/userList.php")
+        .then((response) => {
           this.users = response.data;
         })
-        .catch(error => {
-          console.error('Erreur lors de la récupération des utilisateurs:', error);
+        .catch((error) => {
+          console.error("Erreur lors de la récupération des utilisateurs:", error);
         });
     },
 
@@ -92,8 +121,11 @@ export default {
       }
     },
 
+    goBack() {
+      this.$router.go(-1);
+    },
+
     validateOtp() {
-      
       if (this.userCode.length == 6) {
         if (this.userCode == this.generatedCode) {
           // console.log("OTP valide : ", this.userCode, this.generatedCode);
@@ -155,7 +187,6 @@ export default {
     },
 
     handlePasswordReset() {
-
       const apiUrl = import.meta.env.VITE_API_URL;
       axios
         .post(
@@ -183,4 +214,14 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+@font-face {
+  font-family: "GillSansMT";
+  src: url("../assets/fonts/gill-sans-mt-regular.ttf") format("truetype");
+  font-style: normal;
+}
+
+* {
+  font-family: "GillSansMT", sans-serif;
+}
+</style>

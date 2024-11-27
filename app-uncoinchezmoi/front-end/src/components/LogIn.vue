@@ -1,4 +1,8 @@
 <template>
+  <v-app-bar :elevation="0">
+    <v-btn icon="mdi-keyboard-backspace" variant="plain" size="x-large" @click="goBack()"></v-btn>
+  </v-app-bar>
+
   <v-container class="d-flex align-center justify-center full-height">
     <div class="login-wrapper">
       <h1 class="headline mt-5 mb-5 title">BON RETOUR CHEZ TOIT</h1>
@@ -94,6 +98,9 @@ export default {
   },
 
   methods: {
+    goBack() {
+      this.$router.go(-1);
+    },
     handleLogin() {
       const apiUrl = import.meta.env.VITE_API_URL;
       axios
