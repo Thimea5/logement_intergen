@@ -1,8 +1,8 @@
 <template>
-  <v-app>
+  <v-app class="custom-application">
     <router-view></router-view>
 
-    <v-bottom-navigation v-if="userStore.isAuthenticated" color="indigo">
+    <v-bottom-navigation v-if="userStore.isAuthenticated">
       <v-btn @click="navigate('/')">
         <v-icon>
           <img src="../public/dark-favicon.ico" alt="Icon" style="width: 16px; height: 16px" />
@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import "./assets/style.css";
 import { useUserStore } from "./stores/userStore";
 
 export default {
@@ -49,8 +50,3 @@ export default {
   },
 };
 </script>
-
-<style>
-/* Ajouté ici du style css dans la vue si besoin, 
-  le mieux reste de faire un fichier à part dans les assets/ */
-</style>

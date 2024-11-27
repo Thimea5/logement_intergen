@@ -1,65 +1,66 @@
 <template>
   <v-main>
-    <!-- Partie non authentifiée -->
+    <!-- Section sans connexion -->
     <v-container v-if="!isLoggedIn" class="d-flex flex-column justify-center align-center" style="height: 100vh">
-      <!-- Logo centré en haut -->
-      <img src="../assets/logo.png" alt="Logo Application" class="logo" />
+      <img src="../assets/logo.png" alt="Logo de l'application" class="home-logo" />
 
-      <!-- Conteneur des boutons de connexion et d'inscription -->
-      <div class="d-flex justify-space-between align-center" style="width: 100%; margin-top: 20px">
-        <!-- Bouton S'inscrire à gauche -->
-        <v-btn @click="navigate('/register')" color="primary" class="mx-2" style="flex: 1"> S'inscrire </v-btn>
-
-        <!-- Bouton Se connecter à droite -->
-        <v-btn @click="navigate('/login')" color="secondary" class="mx-2" style="flex: 1"> Se connecter </v-btn>
+      <div class="d-flex align-center" style="width: 100%">
+        <v-btn @click="navigate('/register')" color="#8DA399" style="flex: 1; margin-right: 5px"> S'inscrire </v-btn>
+        <v-btn @click="navigate('/login')" color="#8DA399" style="flex: 1; margin-left: 5px"> Se connecter </v-btn>
       </div>
 
-      <!-- Lien vers les mentions légales centré -->
-      <router-link to="/legal-notices" class="legal-link" style="margin-top: 20px; text-align: center"
-        >Mentions légales</router-link
-      >
+      <router-link to="/legal-notices" class="home-link"> Mentions légales </router-link>
     </v-container>
 
-    <!-- Partie authentifiée -->
+    <!-- Section avec connexion-->
     <v-container v-if="isLoggedIn" class="d-flex flex-column justify-center">
-      <!-- Logo plus petit et centré en haut -->
-      <img src="../assets/logo.png" alt="Logo Application" class="logo-small" />
+      <img src="../assets/logo.png" alt="Logo de l'application" class="home-small-logo" />
 
-      <!-- Conteneur des boutons Mon logement et Favoris -->
-      <div class="d-flex justify-space-between align-center" style="width: 100%; margin-top: 20px">
-        <!-- Bouton Mon logement à gauche -->
-        <v-btn @click="navigate('/my-property')" color="primary" class="mx-2" style="flex: 1"> Mon logement </v-btn>
-
-        <!-- Bouton Favoris à droite -->
-        <v-btn @click="navigate('/favorites')" color="secondary" class="mx-2" style="flex: 1">
+      <div class="d-flex justify-space-between align-center" style="width: 100%">
+        <v-btn @click="navigate('/TODO_ICI')" color="primary" style="flex: 1; margin-right: 5px"> Mon logement </v-btn>
+        <v-btn @click="navigate('/TODO_ICI')" color="secondary" style="flex: 1; margin-left: 5px">
           Favoris
           <v-icon>mdi-heart</v-icon>
         </v-btn>
       </div>
 
-      <!-- Texte Recommandées pour vous à gauche -->
-      <p class="recommended-text" style="margin-top: 20px">Recommandées pour vous</p>
+      <h4 style="margin-top: 5%">Recommandées pour vous</h4>
 
       <!-- Affichage des cartes de logement (le contenu sera ajouté plus tard) -->
-      <!-- Affichage des cartes de logement (le contenu sera ajouté plus tard) -->
-      <div v-if="listDisplay.length === 0">Aucune annonce trouvée pour le moment</div>
-      <div v-else>
-        <v-row>
-          <v-col v-for="listing in listDisplay" :key="listing.id" cols="12" sm="6" md="4">
-            <v-card @click="goToPostDetails(listing)">
-              <v-img :src="getImageSrc(listing.img)">
-                <v-btn icon color="red" rounded="circle" class="favorite-btn">
-                  <v-icon>mdi-heart</v-icon>
-                </v-btn>
-              </v-img>
-              <v-card-title>{{ listing.address }}</v-card-title>
-              <v-card-subtitle>{{ listing.city }} - {{ listing.postalCode }}</v-card-subtitle>
-              <v-card-text>
-                <p>Disponibilité: {{ listing.available }}</p>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
+      <div>
+        <!-- Partie v-if -->
+        <v-card v-if="listDisplay.length === 0" class="bg-blue-grey-lighten-4">
+          <v-card-title>Aucune annonce trouvée pour le moment</v-card-title>
+          <v-card-text>
+            <p>Essayez de modifier vos critères de recherche.</p>
+          </v-card-text>
+        </v-card>
+
+        <!-- Partie v-else -->
+        <div v-else>
+          <v-row>
+            <v-col v-for="elt in listDisplay" :key="elt.id" cols="12" sm="6" md="4">
+              <v-card @click="goToPostDetails(elt)" class="bg-blue-grey-lighten-4">
+                <v-img :src="getImageSrc(elt.img)">
+                  <v-btn
+                    icon
+                    color="white"
+                    rounded="circle"
+                    class="position-absolute top-0 right-0 m-1"
+                    @click.stop="addFavouritesPost(elt.idHost)"
+                  >
+                    <v-icon>mdi-heart</v-icon>
+                  </v-btn>
+                </v-img>
+                <v-card-title>{{ elt.address }}</v-card-title>
+                <v-card-subtitle>{{ elt.city }} - {{ elt.postalCode }}</v-card-subtitle>
+                <v-card-text>
+                  <p>Disponibilité: {{ elt.available }}</p>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+        </div>
       </div>
     </v-container>
   </v-main>
@@ -82,20 +83,18 @@ export default {
     if (this.isLoggedIn) {
       const ps = useListPostStore();
 
-      if (!ps.isLoaded) {
-        ps.loadPosts();
-      }
+      if (!ps.isLoaded) ps.loadPosts();
 
       // C'est un peu long au chargement, mais j'ai pas trouvé de solution pour l'instant
       await this.waitUntil(() => ps.isLoaded);
 
-      this.listDisplay = ps.listHost.reverse();
+      this.listDisplay = ps.listHost;
     }
   },
 
   methods: {
-    goToPostDetails(listing) {
-      this.$router.push({ name: "PostDetails", params: { id: listing.idHost } });
+    goToPostDetails(pPost) {
+      this.$router.push({ name: "PostDetails", params: { id: pPost.idHost } });
     },
 
     getImageSrc(pImgPath) {
@@ -103,10 +102,10 @@ export default {
         return new URL(`/src/assets/img/${pImgPath}/host_photo${pImgPath[pImgPath.length - 1]}_1.jpg`, import.meta.url)
           .href;
       } catch (error) {
-        console.error("Erreur lors du chargement de l'image :", error);
         return new URL(`/src/assets/img/error.jpg`, import.meta.url).href;
       }
     },
+
     waitUntil(conditionFn, interval = 100) {
       return new Promise((resolve) => {
         const checkCondition = () => {
@@ -119,6 +118,7 @@ export default {
         checkCondition();
       });
     },
+
     navigate(path) {
       this.$router.push(path);
     },
@@ -127,81 +127,25 @@ export default {
 </script>
 
 <style scoped>
-.favorite-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: white; /* Optionnel : Couleur blanche pour le fond */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optionnel : Petit ombrage */
-}
-
-/* Style pour le logo dans la partie non authentifiée */
-.logo {
-  width: 60%;
+.home-logo {
+  width: 50%;
   height: auto;
   margin-top: 0;
-  margin-bottom: 75%;
+  margin-bottom: 100%;
+}
+.home-link {
+  margin-top: 20px;
+  text-align: center;
+  text-decoration: none;
+  color: black;
 }
 
-/* Style pour le logo dans la partie authentifiée (plus petit) */
-.logo-small {
+.home-small-logo {
   width: 20%;
   height: auto;
   margin-top: 0;
   margin-bottom: 5%;
   margin-left: auto;
   margin-right: auto;
-}
-
-/* Personnalisation des boutons */
-.v-btn {
-  width: 48%; /* Occupe 48% de la largeur disponible, ce qui permet d'ajouter un espace entre les deux */
-  font-weight: bold;
-  padding: 10px 20px;
-}
-
-.v-btn.primary {
-  background-color: #1976d2; /* Bleu clair pour "Mon logement" */
-  color: white;
-}
-
-.v-btn.secondary {
-  background-color: #ff5722; /* Orange pour "Favoris" */
-  color: white;
-}
-
-/* Texte Recommandées pour vous */
-.recommended-text {
-  font-size: 18px;
-  font-weight: bold;
-  color: #333;
-}
-
-/* Style pour le lien Mentions légales */
-.legal-link {
-  color: #6200ee; /* Couleur violette */
-  font-size: 14px;
-  text-decoration: none;
-}
-
-.legal-link:hover {
-  text-decoration: underline;
-}
-
-/* Centrer tout dans le conteneur */
-.d-flex {
-  display: flex;
-}
-
-.justify-center {
-  justify-content: center;
-}
-
-.align-center {
-  align-items: center;
-}
-
-.justify-space-between {
-  justify-content: space-between;
 }
 </style>

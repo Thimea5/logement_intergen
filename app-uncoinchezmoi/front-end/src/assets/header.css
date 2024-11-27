@@ -1,4 +1,4 @@
-/* ----- HEADER ----- */
+/* ----- HEADER ----- 
 
 header {
     margin: 0;
@@ -177,4 +177,4 @@ input[type=checkbox]:checked~.menuIconToggle>.dia.part-2 {
         width: 100%;
         transform: translateX(-100%);
     }
-}
+}*/

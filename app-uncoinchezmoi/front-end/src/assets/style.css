@@ -1,4 +1,4 @@
-/* color palette from <https://github.com/vuejs/theme> */
+/* color palette from <https://github.com/vuejs/theme> 
 :root {
   --vt-c-white: #ffffff;
   --vt-c-white-soft: #f8f8f8;
@@ -21,7 +21,7 @@
   --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
 }
 
-/* semantic color variables for this project */
+/* semantic color variables for this project 
 :root {
   --color-background: var(--vt-c-black);
   --color-background-soft: var(--vt-c-black-soft);
@@ -83,4 +83,33 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+*/
+/* juste le style général qui s'applique à tout les niveaux/éléments de notre application */
+@font-face {
+  font-family: "GillSansMT";
+  src: url("../assets/fonts/gill-sans-mt-regular.ttf") format("truetype");
+  font-style: normal;
+}
+
+* {
+  font-family: "GillSansMT", sans-serif;
+}
+
+.custom-application {
+  margin: 0;
+  padding: 0;
+  background-color: rgb(255, 255, 255) !important;
+}
+
+/* barre de recherche pour la carte */
+.custom-toolbar {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 100px);
+  background-color: rgba(255, 255, 255, 0.738);
+  border-radius: 8px;
+  z-index: 1000;
 }

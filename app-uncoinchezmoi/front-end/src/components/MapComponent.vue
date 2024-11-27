@@ -1,7 +1,3 @@
-<!--TODO ANNONCE RECHERCHE : 
- faire du style sur l'affichage de la pop-up, changer le lien si 
- dans getimageSrc, ajouter l'image d'erreur, demandé aux ux
--->
 <template>
   <v-main>
     <!-- Barre de recherche -->
@@ -120,7 +116,6 @@ export default {
     },
 
     sampleSearch() {
-      console.log("sampleSearch");
       /* Méthode pour la recherche simple en fonction de l'adresse, la ville, le code postal */
 
       // filtre recherche
@@ -160,7 +155,6 @@ export default {
       try {
         return new URL(`/src/assets/img/${pImgPath}/host_photo${pIndex}_1.jpg`, import.meta.url).href;
       } catch (error) {
-        console.error("Erreur lors du chargement de l'image :", error);
         return new URL(`/src/assets/img/error.jpg`, import.meta.url).href;
       }
     },
@@ -173,16 +167,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.custom-toolbar {
-  position: absolute;
-  top: 15%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 100px);
-  background-color: white;
-  border-radius: 8px;
-  z-index: 1000;
-}
-</style>
