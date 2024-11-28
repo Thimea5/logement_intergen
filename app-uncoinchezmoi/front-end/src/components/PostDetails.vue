@@ -41,18 +41,30 @@
         </v-card>
 
         <v-card class="styled-card p-3">
-          <v-card-title>Commentaires & Avis</v-card-title>
-          <v-cols v-for="comment in comments" :key="comment.id" cols="12" sm="6" md="4">
-            <v-card class="styled-card m-2">
-              <v-card-title>Quentin</v-card-title>
-              <v-card-text>BLALBLALA - {{ comment.id }}</v-card-text>
-            </v-card>
-          </v-cols>
+          <v-card-title class="text-h5 font-weight-bold">Commentaires & Avis</v-card-title>
+          <v-row>
+            <v-col v-if="comments.length == 0">
+              <v-card class="styled-card m-2" color="red">
+                <v-card-title class="text-h6 font-weight-bold">Aucun Commentaire</v-card-title>
+              </v-card>
+            </v-col>
+            <v-col v-else v-for="comment in comments" :key="comment.id" cols="12" sm="6" md="4">
+              <v-card class="styled-card m-2" color="red">
+                <v-card-title class="text-h6 font-weight-bold">{{
+                  comment.author == " " ? "Anonyme" : comment.author
+                }}</v-card-title>
+                <v-card-subtitle class="text-caption grey--text">{{ formatDate(comment.createdAt) }}</v-card-subtitle>
+                <v-card-text class="mt-2">
+                  <p>{{ comment.text }}</p>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
         </v-card>
 
         <div class="button-container">
           <v-btn color="primary" @click="contactHost()">Contacter le propriétaire</v-btn>
-          <v-btn color="secondary" @click="commentPostById(post.id)">Laissez un commentaire</v-btn>
+          <v-btn color="secondary" @click="commentPostById(post.idHost)">Laissez un commentaire</v-btn>
           <v-btn color="error" @click="reportPostById(post.id)">Signalez l'annonce</v-btn>
         </div>
       </v-row>
@@ -77,13 +89,14 @@
 <script>
 import { useListPostStore } from "../stores/listPostStore";
 import { useRoute } from "vue-router";
+import axios from "axios";
 
 export default {
   data() {
     return {
       post: null,
       imgList: [],
-      comments: [{ id: 0 }, { id: 5 }],
+      comments: [],
       currentImageIndex: 0,
       zoomDialog: false,
     };
@@ -103,12 +116,51 @@ export default {
       }
     }
 
-    console.log(this.post);
+    // Chargement des commentaires du post
+    const apiUrl = import.meta.env.VITE_API_URL;
+    axios
+      .get(apiUrl + "/services/commentsManager.php", {
+        params: {
+          id: this.post.idHost,
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((result) => {
+        if (result.status === 200 && result.data["success"]) {
+          const res = result.data["comments"];
+          for (let i = 0; i < res.length; i++) {
+            this.comments.push({
+              id: res[i]["com_id"],
+              text: res[i]["com_text"],
+              createdAt: res[i]["com_createdAt"],
+              author: res[i]["nameAuthor"],
+            });
+          }
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    this.comments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   },
 
   methods: {
+    formatDate(date) {
+      const options = {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      };
+      return new Date(date).toLocaleDateString("fr-FR", options).replace(":", "h");
+    },
+
     commentPostById(postId) {
-      console.log("TODO comment");
+      this.$router.push({ name: "NewComment", params: { id: postId } });
     },
 
     reportPostById(postId) {

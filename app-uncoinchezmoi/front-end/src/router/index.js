@@ -11,6 +11,8 @@ import ForgotPasswordForm from "../components/ForgotPasswordForm.vue";
 import MapComponent from "../components/MapComponent.vue";
 import AdvancedSearch from "../components/AdvancedSearch.vue";
 import PostDetails from "../components/PostDetails.vue";
+import NewComment from "../components/NewComment.vue";
+import MessageComponent from "../components/MessageComponent.vue";
 
 const routes = [
   {
@@ -18,6 +20,19 @@ const routes = [
     name: "Home",
     component: Home,
     meta: { requiresAuth: false },
+  },
+  {
+    path: "/messages",
+    name: "MessageComponent",
+    component: MessageComponent,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/new-comment:id",
+    name: "NewComment",
+    component: NewComment,
+    meta: { requiresAuth: true },
+    props: true,
   },
   {
     path: "/advanced-search",
@@ -29,7 +44,7 @@ const routes = [
     path: "/map",
     name: "map",
     component: MapComponent,
-    meta: { requiresAuth: false },
+    meta: { requiresAuth: true },
   },
   {
     path: "/about",
@@ -48,7 +63,7 @@ const routes = [
     name: "PostDetails",
     component: PostDetails,
     props: true,
-    meta: { requiresAuth: false },
+    meta: { requiresAuth: true },
   },
   {
     path: "/register",
