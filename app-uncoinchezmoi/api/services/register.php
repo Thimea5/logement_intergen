@@ -6,21 +6,23 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 include_once '../config/database.php';
 include_once '../model/user.php';
+include_once '../model/host.php';
+include_once '../model/guest.php';
 
 $database = new Database();
 $db = $database->connect();
 
 $user = new User($db);
+$host = new Host($db);
+$guest = new Guest($db);
 
 $data = json_decode(file_get_contents('php://input'), true);
 
-// Vérifiez si les données ont bien été décodées
 if ($data === null) {
     echo json_encode(['error' => 'Données invalides']);
     exit;
 }
 
-// Extraire les données du tableau associatif
 $mail = $data['mail'] ?? '';
 $password = $data['password'] ?? '';
 $firstName = $data['firstName'] ?? '';
@@ -33,11 +35,48 @@ $type = $data['type'] ?? 'guest';
 
 $passwordHashed = password_hash($password, PASSWORD_DEFAULT);
 
-if ($user->insertUser($mail, $passwordHashed, $firstName, $lastName, $birthDate, $gender, $telephone, $maritalStatus)) {
-    echo json_encode(["success" => true, "message" => "Inscription réussie."]);
+$userRegistered = registerUser($user, $mail, $passwordHashed, $firstName, $lastName, $birthDate, $gender, $telephone, $maritalStatus);
+
+if ($userRegistered) {
+    $hostCreated = createHostIfNeeded($host, $type);
+    
+    $guestCreated = createGuestIfNeeded($guest, $type);
+
+    if ($hostCreated || $guestCreated) {
+        $message = '';
+        if ($type === 'host') {
+            $message = "Inscription réussie et hôte créé avec des valeurs NULL.";
+        } elseif ($type === 'guest') {
+            $message = "Inscription réussie et invité créé avec des valeurs NULL.";
+        } else {
+            $message = "Inscription réussie.";
+        }
+        echo json_encode(["success" => true, "message" => $message]);
+    } else {
+        echo json_encode(["success" => false, "message" => "L'inscription de l'utilisateur a réussi, mais la création de l'hôte ou de l'invité a échoué."]);
+    }
 } else {
     echo json_encode(["success" => false, "message" => "Inscription ratée."]);
 }
 
 
-?>
+function registerUser($user, $mail, $passwordHashed, $firstName, $lastName, $birthDate, $gender, $telephone, $maritalStatus)
+{
+    return $user->insertUser($mail, $passwordHashed, $firstName, $lastName, $birthDate, $gender, $telephone, $maritalStatus);
+}
+
+function createHostIfNeeded($host, $type)
+{
+    if ($type === 'host') {
+        return $host->insertHost();
+    }
+    return true;
+}
+
+function createGuestIfNeeded($guest, $type)
+{
+    if ($type === 'guest') {
+        return $guest->insertGuest();
+    }
+    return true;
+}
