@@ -23,6 +23,7 @@ if ($data === null) {
     exit;
 }
 
+$id;
 $mail = $data['mail'] ?? '';
 $password = $data['password'] ?? '';
 $firstName = $data['firstName'] ?? '';
@@ -35,12 +36,13 @@ $type = $data['type'] ?? 'guest';
 
 $passwordHashed = password_hash($password, PASSWORD_DEFAULT);
 
-$userRegistered = registerUser($user, $mail, $passwordHashed, $firstName, $lastName, $birthDate, $gender, $telephone, $maritalStatus);
+$userRegistered = registerUser($user, $mail, $passwordHashed, $firstName, $lastName, $birthDate, $gender, $telephone, $maritalStatus, $type);
 
-if ($userRegistered) {
-    $hostCreated = createHostIfNeeded($host, $type);
+if ($userRegistered["status"]) {
+    $id = $userRegistered["id"];
+    $hostCreated = createHostIfNeeded($id, $host, $type);
     
-    $guestCreated = createGuestIfNeeded($guest, $type);
+    $guestCreated = createGuestIfNeeded($id, $guest, $type);
 
     if ($hostCreated || $guestCreated) {
         $message = '';
@@ -60,23 +62,23 @@ if ($userRegistered) {
 }
 
 
-function registerUser($user, $mail, $passwordHashed, $firstName, $lastName, $birthDate, $gender, $telephone, $maritalStatus)
+function registerUser($user, $mail, $passwordHashed, $firstName, $lastName, $birthDate, $gender, $telephone, $maritalStatus, $role)
 {
-    return $user->insertUser($mail, $passwordHashed, $firstName, $lastName, $birthDate, $gender, $telephone, $maritalStatus);
+    return $user->insertUser($mail, $passwordHashed, $firstName, $lastName, $birthDate, $gender, $telephone, $maritalStatus, $role);
 }
 
-function createHostIfNeeded($host, $type)
+function createHostIfNeeded($id, $host, $type)
 {
     if ($type === 'host') {
-        return $host->insertHost();
+        return $host->insertHost($id);
     }
     return true;
 }
 
-function createGuestIfNeeded($guest, $type)
+function createGuestIfNeeded($id, $guest, $type)
 {
     if ($type === 'guest') {
-        return $guest->insertGuest();
+        return $guest->insertGuest($id);
     }
     return true;
 }

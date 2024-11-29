@@ -52,10 +52,12 @@
             return $query->execute(); // Retourne un boolean
         }
 
-        public function insertUser($email, $password, $firstname, $lastname, $birthdate, $genre, $tel, $maritalStatus) {
-            $sql = "INSERT INTO users (mail, password, firstname, lastname, birthdate, genre, tel, marital_status, active, role) 
-                    VALUES (:pEmail, :pPassword, :pFirstname, :pLastname, :pBirthdate, :pGenre, :pTel, :pMaritalStatus, 1, 'user');";
+        public function insertUser($email, $password, $firstname, $lastname, $birthdate, $genre, $tel, $maritalStatus, $role) {
+            $sql = "INSERT INTO users (mail, password, firstname, lastname, birthdate, genre, tel, marital_status, active, role)
+                    VALUES (:pEmail, :pPassword, :pFirstname, :pLastname, :pBirthdate, :pGenre, :pTel, :pMaritalStatus, 1, :pRole);";
+
             $query = $this->conn->prepare($sql);
+
             $query->bindParam("pEmail", $email);
             $query->bindParam("pPassword", $password);
             $query->bindParam("pFirstname", $firstname);
@@ -64,8 +66,10 @@
             $query->bindParam("pGenre", $genre);
             $query->bindParam("pTel", $tel);
             $query->bindParam("pMaritalStatus", $maritalStatus);
+            $query->bindParam("pRole", $role);
+
         
-            return $query->execute();
+            return ["status" => $query->execute(), "id" => $this->conn->lastInsertId()];
         }
 
         public function updatePassword($email, $password) {

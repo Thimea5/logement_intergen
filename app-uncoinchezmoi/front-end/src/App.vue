@@ -14,11 +14,13 @@
         Rechercher
       </v-btn>
       <v-btn @click="navigate('/messages')">
-        <v-icon class="fa-solid fa-comments"></v-icon>
+        <v-icon class="fa-regular fa-comments"></v-icon>
         Messages
       </v-btn>
       <v-btn @click="navigate('/user-profile')">
-        <v-icon>mdi-account</v-icon>
+        <v-badge dot color="red" v-if="!isComplete">
+          <v-icon>mdi-account-outline</v-icon>
+        </v-badge>
         Profil
       </v-btn>
     </v-bottom-navigation>
@@ -28,6 +30,7 @@
 <script>
 import "./assets/style.css";
 import { useUserStore } from "./stores/userStore";
+import { useListPostStore } from "./stores/listPostStore";
 
 export default {
   name: "App",
@@ -36,16 +39,45 @@ export default {
     return {
       userStore: useUserStore(),
       isHomePage: true,
+      isComplete: null,
+      isLoggedIn: sessionStorage.getItem("user") != null,
     };
   },
 
-  mounted() {
+  async mounted() {
+    if (this.isLoggedIn) {
+      const ps = useListPostStore();
+
+      if (!ps.isLoaded) ps.loadPosts();
+
+      // C'est un peu long au chargement, mais j'ai pas trouvé de solution pour l'instant
+      await this.waitUntil(() => ps.isLoaded);
+
+      this.listDisplay = ps.listHost;
+
+      console.log(this.listDisplay)
+    }
+
     this.userStore.loadUserFromSession();
+    this.isComplete = this.userStore.user.complete
   },
 
   methods: {
     navigate(path) {
       this.$router.push(path);
+    },
+
+    waitUntil(conditionFn, interval = 100) {
+      return new Promise((resolve) => {
+        const checkCondition = () => {
+          if (conditionFn()) {
+            resolve();
+          } else {
+            setTimeout(checkCondition, interval);
+          }
+        };
+        checkCondition();
+      });
     },
   },
 };

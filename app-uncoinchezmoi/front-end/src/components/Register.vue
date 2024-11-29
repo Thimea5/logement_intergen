@@ -445,9 +445,12 @@ export default {
           }
         )
         .then((result) => {
+          console.log(result)
           if (result.status == 200 && result.data["success"]) {
             console.log("L'utilisateur est bien créé en base");
             this.$router.push("/login");
+          } else {
+            console.log("raté")
           }
         })
         .catch((error) => {

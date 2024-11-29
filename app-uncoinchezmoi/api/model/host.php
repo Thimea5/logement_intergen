@@ -35,11 +35,13 @@
 
         public function insertHost($id)
         {
-            $sql = "INSERT INTO host (id, city, postal_code, adress, lat, lng, photo, type_logement, handicap, smoking, pets, shopping, gardening, chores, price, size)
-                        VALUES (:pId, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);";
+            $photoPath = "host_photo".$id;
+            $sql = "INSERT INTO host (id, city, postal_code, address, lat, lng, cheminPhoto, type_logement, handicap, smoking, pets, shopping, gardening, chores, price, size, nbPhoto)
+                        VALUES (:pId, NULL, NULL, NULL, NULL, NULL, :pPhotoPath, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0);";
 
             $query = $this->conn->prepare($sql);
             $query->bindParam("pId", $id);
+            $query->bindParam("pPhotoPath", $photoPath);
 
             return $query->execute();
         }
@@ -53,6 +55,7 @@
                         WHERE id = :pId;";
 
             $query = $this->conn->prepare($sql);
+            
             $query->bindParam("pId", $id);
             $query->bindParam("pCity", $city);
             $query->bindParam("pPostalCode", $postal_code);

@@ -79,16 +79,13 @@ export default {
     };
   },
 
-  async mounted() {
+  mounted() {
     if (this.isLoggedIn) {
-      const ps = useListPostStore();
-
-      if (!ps.isLoaded) ps.loadPosts();
-
-      // C'est un peu long au chargement, mais j'ai pas trouvé de solution pour l'instant
-      await this.waitUntil(() => ps.isLoaded);
-
-      this.listDisplay = ps.listHost;
+      setTimeout(() => {
+        const ps = useListPostStore();
+        console.log(ps.isLoaded)
+        this.listDisplay = ps.listHost;
+      }, 250)
     }
   },
 
@@ -104,19 +101,6 @@ export default {
       } catch (error) {
         return new URL(`/src/assets/img/error.jpg`, import.meta.url).href;
       }
-    },
-
-    waitUntil(conditionFn, interval = 100) {
-      return new Promise((resolve) => {
-        const checkCondition = () => {
-          if (conditionFn()) {
-            resolve();
-          } else {
-            setTimeout(checkCondition, interval);
-          }
-        };
-        checkCondition();
-      });
     },
 
     navigate(path) {
