@@ -41,8 +41,8 @@
             return $query->execute(); // Retourne un boolean
         }
 
-        public function insertUser($email, $password, $firstname, $lastname, $birthdate, $genre, $tel, $maritalStatus, $photo, $type, $complete) {
-            $sql = "INSERT INTO users (mail, password, firstname, lastname, birthdate, genre, tel, marital_status, photo, active, type, isComplete)
+        public function insertUser($email, $password, $firstname, $lastname, $birthdate, $tel, $gender, $maritalStatus, $photo, $type, $complete) {
+            $sql = "INSERT INTO users (mail, `password`, firstname, lastname, birthdate, genre, tel, marital_status, photo, active, `type`, isComplete)
                     VALUES (:pEmail, :pPassword, :pFirstname, :pLastname, :pBirthdate, :pGenre, :pTel, :pMaritalStatus, :pPhoto, 1, :pType, :pComplete);";
 
             $query = $this->conn->prepare($sql);
@@ -52,7 +52,7 @@
             $query->bindParam("pFirstname", $firstname);
             $query->bindParam("pLastname", $lastname);
             $query->bindParam("pBirthdate", $birthdate);
-            $query->bindParam("pGenre", $genre);
+            $query->bindParam("pGenre", $gender);
             $query->bindParam("pTel", $tel);
             $query->bindParam("pMaritalStatus", $maritalStatus);
             $query->bindParam("pPhoto", $photo);
