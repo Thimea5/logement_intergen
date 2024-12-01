@@ -59,7 +59,7 @@
             $query->bindParam("pType", $type);
             $query->bindParam("pComplete", $complete);
 
-            return $query->execute();
+            return ["status" => $query->execute(), "id" => $this->conn->lastInsertId()];
         }
 
         public function updatePassword($email, $password) {
