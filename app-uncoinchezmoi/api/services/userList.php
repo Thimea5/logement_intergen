@@ -6,7 +6,6 @@ header("Access-Control-Allow-Headers: Content-Type, Authorization");
 include_once '../config/database.php';
 include_once '../model/user.php';
 
-
 $database = new Database();
 $db = $database->connect();
 

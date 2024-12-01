@@ -33,7 +33,7 @@
         if ($outputComments) {
             foreach ($outputComments as $keys => $values) {
                 foreach($values as $key => $value) {
-                    if ($key === 'com_idAuthor') {
+                    if ($key === 'id_user') {
                         $userInfo = $userModel->getUsersById($value);
                         $nameAuthor = $userInfo["firstname"] . ' ' . $userInfo['lastname'];
 
@@ -53,16 +53,16 @@
             exit;
         }
         $comment = $data->comment; 
-        if (!isset($comment->comText, $comment->comIdAuthor, $comment->comIdPost)) {
+        if (!isset($comment->content, $comment->idUser, $comment->idPost)) {
             echo json_encode(["success" => false, "message" => "Paramètres manquants."]);
             exit;
         }
         date_default_timezone_set('Europe/Paris');
         if ($commentModel->insertNewComment(
-            $comment->comText, 
+            $comment->content, 
             date('Y-m-d H:i:s'), 
-            $comment->comIdAuthor, 
-            $comment->comIdPost
+            $comment->idUser, 
+            $comment->idPost
         )) {
             echo json_encode(["success" => true, "message" => "Ajouté"]);
         } else {

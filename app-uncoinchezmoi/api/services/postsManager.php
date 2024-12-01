@@ -6,7 +6,6 @@
 
   include_once '../config/database.php';
   include_once '../model/post.php';
-  include_once '../model/host.php';
   include_once '../model/service.php';
 
   $database = new Database();
