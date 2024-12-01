@@ -7,6 +7,7 @@
     require '../vendor/autoload.php'; 
     include_once '../config/database.php';
     include_once '../model/user.php';
+    include_once '../model/service.php';
 
     use Firebase\JWT\JWT;
 
@@ -29,6 +30,7 @@
     $db = $database->connect();
 
     $user = new User($db);
+    $service = new Service($db);
 
     // Recherche de l'utilsateur en base 
     $userData = $user->getUsersByEmail($data->email);
@@ -49,8 +51,15 @@
 
             $jwt = JWT::encode($payload, $secretKey, 'HS256');
 
-            echo json_encode(["success" => true, "message" => "Connexion réussie.", "token" => $jwt, "user-info" => $userData]);
-            
+            $servicesData = $service->getServicesByHost($userData['id']);
+
+            echo json_encode([
+                "success" => true, 
+                "message" => "Connexion réussie.", 
+                "token" => $jwt, 
+                "user-info" => $userData,
+                "user-services" => $servicesData
+            ]);
         } else {
             echo json_encode(["success" => false, "message" => "Mot de passe incorrect."]);
         }

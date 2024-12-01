@@ -46,9 +46,9 @@ export default {
     },
     addNewComment() {
       const comment = {
-        comText: this.text,
-        comIdAuthor: this.userId,
-        comIdPost: this.postId,
+        content: this.text,
+        idUser: this.userId,
+        idPost: this.postId,
       };
 
       const apiUrl = import.meta.env.VITE_API_URL;

@@ -1,29 +1,46 @@
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
 
 // Double persistence : en mémoire de l'application avec Pinia et SessionStorage
-export const useUserStore = defineStore('user', {
+export const useUserStore = defineStore("user", {
   state: () => ({
     user: null,
+    service: null,
+    preference: null,
   }),
 
   actions: {
+    setPreference(preferenceData) {
+      this.preference = preferenceData;
+      sessionStorage.setItem("preference", JSON.stringify(preferenceData));
+    },
+
     setUser(userData) {
       this.user = userData;
-      sessionStorage.setItem('user', JSON.stringify(userData)); 
+      sessionStorage.setItem("user", JSON.stringify(userData));
+    },
+
+    setServices(serviceData) {
+      this.service = serviceData;
+      sessionStorage.setItem("service", JSON.stringify(serviceData));
     },
 
     loadUserFromSession() {
-      const storedUser = sessionStorage.getItem('user');
-      if (storedUser) {
-        this.user = JSON.parse(storedUser);
+      if (sessionStorage.length > 0) {
+        this.user = JSON.parse(sessionStorage.getItem("user"));
+        this.service = JSON.parse(sessionStorage.getItem("service"));
+        //this.preference = JSON.parse(sessionStorage.getItem("preference"));
       } else {
         this.user = null;
+        this.service = null;
+        this.preference = null;
       }
     },
 
     clearUser() {
       this.user = null;
-      sessionStorage.removeItem('user');
+      this.service = null;
+      this.preference = null;
+      sessionStorage.clear();
     },
   },
 

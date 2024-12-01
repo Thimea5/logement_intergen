@@ -125,7 +125,10 @@ export default {
               sessionStorage.setItem("tokenExpiration", expirationTime); // Pas obligatoire, mais pourquoi pas...
 
               const user = result.data["user-info"];
+              const serv = result.data["user-services"];
+
               this.userStore.setUser(user);
+              this.userStore.setServices(serv);
 
               // Redirection vers la page d'accueil
               this.$router.push("/");

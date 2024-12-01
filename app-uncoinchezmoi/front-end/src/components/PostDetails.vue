@@ -107,7 +107,7 @@ export default {
     const route = useRoute();
     const postId = route.params.id;
 
-    this.post = ps.listHost.find((ph) => ph.idHost == postId);
+    this.post = ps.lisPost.find((ph) => ph.id == postId);
     if (this.post) {
       for (let i = 1; i <= this.post.nbPhoto; i++) {
         this.imgList.push(
@@ -132,9 +132,9 @@ export default {
           const res = result.data["comments"];
           for (let i = 0; i < res.length; i++) {
             this.comments.push({
-              id: res[i]["com_id"],
-              text: res[i]["com_text"],
-              createdAt: res[i]["com_createdAt"],
+              id: res[i]["id"],
+              text: res[i]["content"],
+              createdAt: res[i]["creation_date"],
               author: res[i]["nameAuthor"],
             });
           }

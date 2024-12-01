@@ -45,6 +45,7 @@ export default {
   },
 
   async mounted() {
+    console.log("async mounted");
     const ps = useListPostStore();
 
     if (!ps.isLoaded) ps.loadPosts();
@@ -52,7 +53,7 @@ export default {
     // C'est un peu long au chargement, mais j'ai pas trouvé de solution pour l'instant
     await this.waitUntil(() => ps.isLoaded);
 
-    this.listDisplay = ps.listHost;
+    this.listDisplay = ps.listPost;
 
     if (this.isLoggedIn) {
       this.userStore.loadUserFromSession();

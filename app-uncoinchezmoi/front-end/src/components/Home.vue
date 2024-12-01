@@ -94,7 +94,7 @@ export default {
     if (this.isLoggedIn) {
       setTimeout(() => {
         const ps = useListPostStore();
-        this.listDisplay = ps.listHost;
+        this.listDisplay = ps.listPost;
       }, 250);
     }
   },

@@ -28,7 +28,7 @@
           <strong>{{ post.type_logement }} - {{ (post.size === null ? 0 : post.size) + "m²" }}</strong>
           <p>{{ post.address }} - {{ post.postalCode }} - {{ post.city }}</p>
           <img
-            :src="getImageSrc(post.img, post.idHost)"
+            :src="getImageSrc(post.img, post.id)"
             alt="Aucune image disponible"
             style="width: 80%; height: 50%"
             @click="goToPostDetails(post)"
@@ -123,7 +123,7 @@ export default {
       if (query.length == 0) return;
 
       const ps = useListPostStore();
-      this.filteredPosts = ps.listHost.filter((ph) => {
+      this.filteredPosts = ps.listPost.filter((ph) => {
         return (
           ph.address.toLowerCase().includes(query) ||
           ph.city.toLowerCase().includes(query) ||
@@ -148,7 +148,7 @@ export default {
     },
 
     goToPostDetails(listing) {
-      this.$router.push({ name: "PostDetails", params: { id: listing.idHost } });
+      this.$router.push({ name: "PostDetails", params: { id: listing.id } });
     },
 
     getImageSrc(pImgPath, pIndex) {
@@ -162,7 +162,7 @@ export default {
     refreshMapWithNearPosts(pBounds) {
       // on les chargent toutes d'un coup, c'est pas fou, mais ça passe
       const ps = useListPostStore();
-      this.filteredPosts = ps.listHost;
+      this.filteredPosts = ps.listPost;
     },
   },
 };
