@@ -47,7 +47,7 @@ $price = $data['price'] ?: 0;
 
 $sd = $data['services'] ?:  [false, false, false, false, false, false, false, false];
 
-$userInserted = $user->insertUser($email, $password, $firstName, $lastName, $birthDate, $telephone, $gender, $maritalStatus, $photo, $type, 1);
+$userInserted = $user->insertUser($email, $password, $firstName, $lastName, $birthDate, $gender, $telephone, $maritalStatus, $photo, $type, 1);
 $idUser = $userInserted["id"];
 
 if ($userInserted["status"]) {

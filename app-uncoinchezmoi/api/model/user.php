@@ -41,7 +41,7 @@
             return $query->execute(); // Retourne un boolean
         }
 
-        public function insertUser($email, $password, $firstname, $lastname, $birthdate, $tel, $gender, $maritalStatus, $photo, $type, $complete) {
+        public function insertUser($email, $password, $firstname, $lastname, $birthdate, $gender, $tel, $maritalStatus, $photo, $type, $complete) {
             $sql = "INSERT INTO users (mail, `password`, firstname, lastname, birthdate, genre, tel, marital_status, photo, active, `type`, isComplete)
                     VALUES (:pEmail, :pPassword, :pFirstname, :pLastname, :pBirthdate, :pGenre, :pTel, :pMaritalStatus, :pPhoto, 1, :pType, :pComplete);";
 
