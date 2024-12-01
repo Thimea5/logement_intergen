@@ -7,18 +7,23 @@
   include_once '../config/database.php';
   include_once '../model/post.php';
   include_once '../model/host.php';
+  include_once '../model/service.php';
 
   $database = new Database();
   $db = $database->connect();
 
   $postModel = new Post($db);
+  $serviceModel = new Service($db);
 
   $posts = $postModel->getPostsWithHostInformations();
-  //echo $posts;
-  //var_dump($posts);
 
+  $services = [];
+  for ($i=1; $i<=count($posts); ++$i) {
+    array_push($services, $serviceModel->getServicesByHost($i));
+  }
+  
   if ($posts) {
-    echo json_encode(['success' => true, 'posts' => $posts]);
+    echo json_encode(['success' => true, 'posts' => $posts, 'services' => $services]);
   } else {
     echo json_encode(['success' => false, 'message' => 'Aucun post trouvé.']);
   }

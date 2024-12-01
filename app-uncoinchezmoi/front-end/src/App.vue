@@ -45,22 +45,19 @@ export default {
   },
 
   async mounted() {
+    const ps = useListPostStore();
+
+    if (!ps.isLoaded) ps.loadPosts();
+
+    // C'est un peu long au chargement, mais j'ai pas trouvé de solution pour l'instant
+    await this.waitUntil(() => ps.isLoaded);
+
+    this.listDisplay = ps.listHost;
+
     if (this.isLoggedIn) {
-      const ps = useListPostStore();
-
-      if (!ps.isLoaded) ps.loadPosts();
-
-      // C'est un peu long au chargement, mais j'ai pas trouvé de solution pour l'instant
-      await this.waitUntil(() => ps.isLoaded);
-
-      this.listDisplay = ps.listHost;
-
-      console.log(this.listDisplay)
-      
       this.userStore.loadUserFromSession();
-      this.isComplete = this.userStore.user.complete
+      this.isComplete = this.userStore.user.complete;
     }
-
   },
 
   methods: {
@@ -68,7 +65,7 @@ export default {
       this.$router.push(path);
     },
 
-    waitUntil(conditionFn, interval = 100) {
+    waitUntil(conditionFn, interval = 250) {
       return new Promise((resolve) => {
         const checkCondition = () => {
           if (conditionFn()) {
