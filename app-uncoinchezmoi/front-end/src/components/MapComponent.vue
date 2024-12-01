@@ -106,7 +106,7 @@ export default {
           this.tileLayer.addTo(map);
           this.refreshMapWithNearPosts(map.getBounds());
         }
-      }, 250); // Délai de 100ms pour s'assurer que la carte est prête
+      }, 250); // Délai de 250ms pour s'assurer que la carte est prête
     });
   },
 

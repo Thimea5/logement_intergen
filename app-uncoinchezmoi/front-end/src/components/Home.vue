@@ -17,7 +17,17 @@
       <img src="../assets/logo.png" alt="Logo de l'application" class="home-small-logo" />
 
       <div class="d-flex justify-space-between align-center" style="width: 100%">
-        <v-btn @click="navigate('/TODO_ICI')" color="primary" style="flex: 1; margin-right: 5px"> Mon logement </v-btn>
+        <v-btn
+          v-if="this.user.role == 'guest'"
+          @click="navigate('/advanced-search')"
+          color="primary"
+          style="flex: 1; margin-right: 5px"
+        >
+          Rechercher
+        </v-btn>
+        <v-btn v-else @click="navigate('/TODO_ICI')" color="primary" style="flex: 1; margin-right: 5px">
+          Mon logement
+        </v-btn>
         <v-btn @click="navigate('/TODO_ICI')" color="secondary" style="flex: 1; margin-left: 5px">
           Favoris
           <v-icon>mdi-heart</v-icon>
@@ -74,6 +84,7 @@ export default {
 
   data() {
     return {
+      user: JSON.parse(sessionStorage.getItem("user")) || {},
       listDisplay: [],
       isLoggedIn: sessionStorage.getItem("user") != null,
     };
@@ -83,9 +94,8 @@ export default {
     if (this.isLoggedIn) {
       setTimeout(() => {
         const ps = useListPostStore();
-        console.log(ps.isLoaded)
         this.listDisplay = ps.listHost;
-      }, 250)
+      }, 250);
     }
   },
 
