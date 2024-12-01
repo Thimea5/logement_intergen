@@ -20,7 +20,7 @@
   for ($i=1; $i<=count($posts); ++$i) {
     array_push($services, $serviceModel->getServicesByHost($i));
   }
-  
+
   if ($posts) {
     echo json_encode(['success' => true, 'posts' => $posts, 'services' => $services]);
   } else {

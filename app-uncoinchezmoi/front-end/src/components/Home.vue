@@ -18,7 +18,7 @@
 
       <div class="d-flex justify-space-between align-center" style="width: 100%">
         <v-btn
-          v-if="this.user.role == 'guest'"
+          v-if="this.user.type == 'guest'"
           @click="navigate('/advanced-search')"
           color="primary"
           style="flex: 1; margin-right: 5px"
@@ -91,7 +91,9 @@ export default {
   },
 
   mounted() {
+    console.log("mounted");
     if (this.isLoggedIn) {
+      console.log("if problème");
       setTimeout(() => {
         const ps = useListPostStore();
         this.listDisplay = ps.listPost;

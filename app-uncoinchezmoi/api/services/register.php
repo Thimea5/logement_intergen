@@ -15,13 +15,12 @@ $db = $database->connect();
 $user = new User($db);
 $services = new Service($db);
 
-$data = json_decode(file_get_contents('php://input'), associative: true)["data"];
+$data = json_decode(file_get_contents('php://input'), associative: true);
 
 if ($data === null) {
     echo json_encode(['error' => 'Données invalides']);
     exit;
 }
-
 
 $email = $data['mail'] ?:  '';
 $password = password_hash($data['password'] ?:  '', PASSWORD_DEFAULT);
@@ -34,8 +33,8 @@ $maritalStatus = $data['maritalStatus'] ?:  '';
 $photo = 'lien_photo';
 $type = $data['type'] ?:  'guest';
 
-$services = $data['services'] ? :  [false, false, false, false, false, false, false, false];
-
+$services = $data['services'] ?:  [false, false, false, false, false, false, false, false];
+//var_dump($email, $password, $firstName, $lastName, $birthDate, $telephone, $gender, $maritalStatus, $photo, $type, $services);
 
 if ($user->insertUser($email, $password, $firstName, $lastName, $birthDate, $telephone, $gender, $maritalStatus, $photo, $type, 1)) {
     echo json_encode(["success" => true, "message" => "Utilisateur créé en tant que guest"]);

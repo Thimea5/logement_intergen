@@ -10,6 +10,7 @@ export const useListPostStore = defineStore("listPost", {
 
   actions: {
     loadPosts() {
+      console.log("this.loadPosts");
       if (!this.isLoaded) {
         const apiUrl = import.meta.env.VITE_API_URL;
         axios
@@ -19,6 +20,7 @@ export const useListPostStore = defineStore("listPost", {
             },
           })
           .then((result) => {
+            console.log(result);
             if (result.status === 200 && result.data["success"]) {
               const resPosts = result.data["posts"];
               const resServices = result.data["services"];
@@ -54,9 +56,9 @@ export const useListPostStore = defineStore("listPost", {
                   isTalking: resServices[i][0]["chatting"],
                 });
               }
-
-              this.isLoaded = true;
             }
+            this.isLoaded = true;
+            console.log("fini");
           })
           .catch((error) => {
             console.log(error);

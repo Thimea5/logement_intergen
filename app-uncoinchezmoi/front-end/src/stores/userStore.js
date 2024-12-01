@@ -25,7 +25,7 @@ export const useUserStore = defineStore("user", {
     },
 
     loadUserFromSession() {
-      if (sessionStorage.length > 0) {
+      if (sessionStorage.length != 0) {
         this.user = JSON.parse(sessionStorage.getItem("user"));
         this.service = JSON.parse(sessionStorage.getItem("service"));
         //this.preference = JSON.parse(sessionStorage.getItem("preference"));

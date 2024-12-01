@@ -2,7 +2,7 @@
   <v-app class="custom-application">
     <router-view></router-view>
 
-    <v-bottom-navigation v-if="userStore.isAuthenticated">
+    <v-bottom-navigation v-if="this.userStore.isAuthenticated">
       <v-btn @click="navigate('/')">
         <v-icon>
           <img src="../public/dark-favicon.ico" alt="Icon" style="width: 16px; height: 16px" />
@@ -46,19 +46,26 @@ export default {
 
   async mounted() {
     console.log("async mounted");
+    console.log(this.userStore.isAuthenticated);
     const ps = useListPostStore();
 
     if (!ps.isLoaded) ps.loadPosts();
 
     // C'est un peu long au chargement, mais j'ai pas trouvé de solution pour l'instant
+    console.log(ps.isLoaded);
     await this.waitUntil(() => ps.isLoaded);
+    console.log("après");
 
     this.listDisplay = ps.listPost;
 
+    console.log(this.isLoggedIn);
     if (this.isLoggedIn) {
+      console.log(this.isLoggedIn);
       this.userStore.loadUserFromSession();
       this.isComplete = this.userStore.user.complete;
     }
+
+    console.log(this.userStore.isAuthenticated);
   },
 
   methods: {

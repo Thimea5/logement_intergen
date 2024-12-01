@@ -8,6 +8,8 @@ Back-end : Php (natif, composer si besoin, etc.) + MySql
 
 ## Aide Git
 
+$2y$10$9OiEJdiYmqNZcJAevTlo9.72e1y6Vc694r27qqPhZu85Z8ImszBC2
+
 ```sh
 git add .
 git status # étape de vérification (non obligatoire)

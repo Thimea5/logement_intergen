@@ -196,7 +196,8 @@
                     class="h-100 d-flex flex-column justify-content-center align-items-center"
                     v-model="user.type"
                     mandatory
-                    color="#E6CDB5">
+                    color="#E6CDB5"
+                  >
                     <v-btn class="w-100 h-25 m-3 rounded-xl" value="guest"> Locataire </v-btn>
                     <v-btn class="w-100 h-25 m-3 rounded-xl" value="host"> Propriétaire </v-btn>
                   </v-btn-toggle>
@@ -210,7 +211,12 @@
               <v-dialog v-model="step3_1" transition="dialog-bottom-transition" fullscreen>
                 <v-card class="p-3 d-flex flex-column justify-content-between">
                   <div>
-                    <v-btn icon="mdi-keyboard-backspace" variant="plain" size="x-large" @click="step3_1 = false"></v-btn>
+                    <v-btn
+                      icon="mdi-keyboard-backspace"
+                      variant="plain"
+                      size="x-large"
+                      @click="step3_1 = false"
+                    ></v-btn>
                     <h1 class="headline text-center">Votre logement</h1>
                     <p>Bonjour {{ user.firstName }}, décrivez votre logement</p>
                   </div>
@@ -227,10 +233,11 @@
                             clearable
                             variant="solo-filled"
                             v-model="post.city"
-                            :rules="[rules.required]">
+                            :rules="[rules.required]"
+                          >
                           </v-text-field>
                         </div>
-                        
+
                         <div class="w-50 me-5">
                           <label class="custom-label mb-3" for="postal_code">Code postal</label>
                           <v-text-field
@@ -240,11 +247,12 @@
                             clearable
                             variant="solo-filled"
                             v-model="post.postal_code"
-                            :rules="[rules.required]">
+                            :rules="[rules.required]"
+                          >
                           </v-text-field>
                         </div>
                       </div>
-                      
+
                       <label class="custom-label mb-3" for="address">Adresse</label>
                       <v-text-field
                         id="address"
@@ -253,7 +261,8 @@
                         clearable
                         variant="solo-filled"
                         v-model="post.address"
-                        :rules="[rules.required]">
+                        :rules="[rules.required]"
+                      >
                       </v-text-field>
                     </div>
 
@@ -264,7 +273,8 @@
                         class="d-flex flex-wrap justify-content-between h-auto"
                         v-model="post.type_logement"
                         mandatory
-                        color="#E6CDB5">
+                        color="#E6CDB5"
+                      >
                         <v-btn class="rounded-xl m-1 p-3" value="Maison"> Maison </v-btn>
                         <v-btn class="rounded-xl m-1 p-3" value="Appartement"> Appartement </v-btn>
                         <v-btn class="rounded-xl m-1 p-3" value="Villa"> Villa </v-btn>
@@ -282,13 +292,13 @@
                         variant="solo-filled"
                         v-model="post.size"
                         :rules="[rules.required]"
-                        suffix="m²">
+                        suffix="m²"
+                      >
                       </v-text-field>
                     </div>
                   </div>
 
-
-                  <v-btn class="w-100 rounded-pill mb-5" color="#4F685D" @click="">Suivant</v-btn>
+                  <v-btn class="w-100 rounded-pill mb-5" color="#4F685D" @click="registerHost()">Suivant</v-btn>
                 </v-card>
               </v-dialog>
             </template>
@@ -297,13 +307,17 @@
               <v-dialog v-model="step3_1" transition="dialog-bottom-transition" fullscreen>
                 <v-card class="p-3 d-flex flex-column justify-content-between">
                   <div>
-                    <v-btn icon="mdi-keyboard-backspace" variant="plain" size="x-large" @click="step3_1 = false"></v-btn>
+                    <v-btn
+                      icon="mdi-keyboard-backspace"
+                      variant="plain"
+                      size="x-large"
+                      @click="step3_1 = false"
+                    ></v-btn>
                     <h1 class="headline text-center">Votre profil</h1>
                     <p>Bonjour {{ user.firstName }}, veuillez finaliser votre inscription</p>
                   </div>
 
                   <div class="h-100 d-flex flex-column justify-content-around">
-
                     <div>
                       <!-- <label class="custom-label mb-3" for="services">Services proposés</label>
                       <v-select
@@ -330,8 +344,14 @@
                         class="d-flex flex-wrap justify-content-between h-auto"
                         v-model="guest.services"
                         multiple
-                        color="#E6CDB5">
-                        <v-btn class="mx-1 my-3 p-3 rounded-pill border" v-for="service in services" :value="service" :text="service"></v-btn>
+                        color="#E6CDB5"
+                      >
+                        <v-btn
+                          class="mx-1 my-3 p-3 rounded-pill border"
+                          v-for="service in services"
+                          :value="service"
+                          :text="service"
+                        ></v-btn>
                       </v-btn-toggle>
                     </div>
 
@@ -345,17 +365,16 @@
                         variant="solo-filled"
                         v-model="guest.max_price"
                         :rules="[rules.required]"
-                        suffix="€">
+                        suffix="€"
+                      >
                       </v-text-field>
                     </div>
                   </div>
-
 
                   <v-btn class="w-100 rounded-pill mb-5" color="#4F685D" @click="registerGuest()">S'inscrire</v-btn>
                 </v-card>
               </v-dialog>
             </template>
-
           </v-form>
         </div>
       </div>
@@ -365,9 +384,8 @@
 
 <script>
 import axios from "axios";
-import { VDateInput } from "vuetify/labs/VDateInput"
-import { VNumberInput } from 'vuetify/labs/VNumberInput'
-
+import { VDateInput } from "vuetify/labs/VDateInput";
+import { VNumberInput } from "vuetify/labs/VNumberInput";
 
 const code = Math.floor(100000 + Math.random() * 900000);
 
@@ -375,7 +393,7 @@ export default {
   name: "Register",
   components: {
     VDateInput,
-    VNumberInput
+    VNumberInput,
   },
   data() {
     return {
@@ -455,14 +473,23 @@ export default {
         description: "",
         price: 0,
         size: 0,
-        services: []
+        services: [],
       },
 
       guest: {
-        services: []
+        services: [],
       },
 
-      services: ["Jardinage", "Courses", "Ménage", "Discussion", "Cuisine", "Bricolage", "Covoiturage", "Garde d'animaux"]
+      services: [
+        "Jardinage",
+        "Courses",
+        "Ménage",
+        "Discussion",
+        "Cuisine",
+        "Bricolage",
+        "Covoiturage",
+        "Garde d'animaux",
+      ],
     };
   },
 
@@ -596,13 +623,13 @@ export default {
     },
 
     validateUser() {
-      this.step3_1 = true
+      this.step3_1 = true;
     },
 
     registerGuest() {
-      const aServ = []
-      for (let i=0; i<this.services.length; i++) {
-        aServ.push(this.guest.services.includes(this.services[i]))
+      const aServ = [];
+      for (let i = 0; i < this.services.length; i++) {
+        aServ.push(this.guest.services.includes(this.services[i]));
       }
 
       const data = {
@@ -615,35 +642,34 @@ export default {
         gender: this.user.gender,
         maritalStatus: this.user.maritalStatus,
         type: this.user.type,
-        
-        services: aServ
-      }
-      
-      this.registerUser(data)
+
+        services: aServ,
+      };
+
+      this.registerUser(data);
+    },
+
+    registerHost() {
+      console.log(this.user);
+      console.log(this.post);
     },
 
     registerUser(pData) {
-      console.log(pData)
+      console.log(pData);
       const apiUrl = import.meta.env.VITE_API_URL;
       axios
-        .post(
-          apiUrl + "/services/register.php",
-          {
-            data: pData
+        .post(apiUrl + "/services/register.php", pData, {
+          headers: {
+            "Content-Type": "application/json",
           },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
+        })
         .then((result) => {
-          console.log(result)
+          console.log(result);
           if (result.status == 200 && result.data["success"]) {
             console.log("L'utilisateur est bien créé en base");
             this.$router.push("/login");
           } else {
-            console.log("raté")
+            console.log("raté");
           }
         })
         .catch((error) => {

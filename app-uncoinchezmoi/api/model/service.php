@@ -17,7 +17,7 @@
         }
 
         public function getServicesByHost($pIdUser) {
-            $sql = "SELECT * FROM services WHERE id_host = :pIdUser;";
+            $sql = "SELECT * FROM services WHERE id_user = :pIdUser;";
 
             $query = $this->conn->prepare($sql);
 

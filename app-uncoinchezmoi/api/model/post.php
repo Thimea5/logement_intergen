@@ -16,13 +16,13 @@
     }
 
     public function getPostsWithHostInformations() {
-      $sql = "SELECT post.*, user.*
+      $sql = "SELECT post.*, users.*
               FROM post 
-              JOIN user ON post.id_user = user.id;";
+              JOIN users ON post.id_user = users.id;";
 
       $query = $this->conn->prepare($sql);
       $query->execute();
-
+      
       return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
