@@ -1,17 +1,6 @@
 <?php
     class User 
     {
-        private $id;
-        private $email;
-        private $password;
-        private $firstname;
-        private $lastname;
-        private $birthdate;
-        private $isActive;
-        private $genre;
-        private $tel;
-        private $maritalStatus;
-
         private $conn;
 
         public function __construct($database) {
@@ -52,9 +41,9 @@
             return $query->execute(); // Retourne un boolean
         }
 
-        public function insertUser($email, $password, $firstname, $lastname, $birthdate, $genre, $tel, $maritalStatus, $role) {
-            $sql = "INSERT INTO users (mail, password, firstname, lastname, birthdate, genre, tel, marital_status, active, role)
-                    VALUES (:pEmail, :pPassword, :pFirstname, :pLastname, :pBirthdate, :pGenre, :pTel, :pMaritalStatus, 1, :pRole);";
+        public function insertUser($email, $password, $firstname, $lastname, $birthdate, $genre, $tel, $maritalStatus, $photo, $type, $complete) {
+            $sql = "INSERT INTO users (mail, password, firstname, lastname, birthdate, genre, tel, marital_status, photo, active, type, isComplete)
+                    VALUES (:pEmail, :pPassword, :pFirstname, :pLastname, :pBirthdate, :pGenre, :pTel, :pMaritalStatus, :pPhoto, 1, :pType, :pComplete);";
 
             $query = $this->conn->prepare($sql);
 
@@ -66,10 +55,11 @@
             $query->bindParam("pGenre", $genre);
             $query->bindParam("pTel", $tel);
             $query->bindParam("pMaritalStatus", $maritalStatus);
-            $query->bindParam("pRole", $role);
+            $query->bindParam("pPhoto", $photo);
+            $query->bindParam("pType", $type);
+            $query->bindParam("pComplete", $complete);
 
-        
-            return ["status" => $query->execute(), "id" => $this->conn->lastInsertId()];
+            return $query->execute();
         }
 
         public function updatePassword($email, $password) {

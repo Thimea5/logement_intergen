@@ -94,7 +94,7 @@
                         <label class="custom-label mb-3" for="lName">Nom</label>
                         <v-text-field
                           id="lName"
-                          placeholder="Prénom"
+                          placeholder="Nom"
                           type="text"
                           rounded="pill"
                           clearable
@@ -108,7 +108,7 @@
                         <label class="custom-label mb-3" for="fName">Prénom</label>
                         <v-text-field
                           id="fName"
-                          placeholder="Nom"
+                          placeholder="Prénom"
                           type="text"
                           rounded="pill"
                           clearable
@@ -226,7 +226,7 @@
                             rounded="pill"
                             clearable
                             variant="solo-filled"
-                            v-model="host.city"
+                            v-model="post.city"
                             :rules="[rules.required]">
                           </v-text-field>
                         </div>
@@ -239,7 +239,7 @@
                             rounded="pill"
                             clearable
                             variant="solo-filled"
-                            v-model="host.postal_code"
+                            v-model="post.postal_code"
                             :rules="[rules.required]">
                           </v-text-field>
                         </div>
@@ -252,7 +252,7 @@
                         rounded="pill"
                         clearable
                         variant="solo-filled"
-                        v-model="host.address"
+                        v-model="post.address"
                         :rules="[rules.required]">
                       </v-text-field>
                     </div>
@@ -262,7 +262,7 @@
                       <v-btn-toggle
                         id="property"
                         class="d-flex flex-wrap justify-content-between h-auto"
-                        v-model="host.type"
+                        v-model="post.type_logement"
                         mandatory
                         color="#E6CDB5">
                         <v-btn class="rounded-xl m-1 p-3" value="Maison"> Maison </v-btn>
@@ -280,7 +280,7 @@
                         rounded="pill"
                         clearable
                         variant="solo-filled"
-                        v-model="host.size"
+                        v-model="post.size"
                         :rules="[rules.required]"
                         suffix="m²">
                       </v-text-field>
@@ -305,26 +305,7 @@
                   <div class="h-100 d-flex flex-column justify-content-around">
 
                     <div>
-                      <label class="custom-label mb-3" for="features">Règles et caractéristiques</label>
-                      <v-select
-                        id="features"
-                        v-model="guest.features"
-                        :items="features"
-                        rounded="pill"
-                        clearable
-                        variant="solo-filled"
-                        multiple>
-                          <template v-slot:selection="{ item, index }">
-                          <v-chip v-if="index < 3">
-                            <span>{{ item.title }}</span>
-                          </v-chip>
-                          <span v-if="index === 3" class="text-grey text-caption align-self-center">
-                            (+{{ guest.features.length - 3 }})
-                          </span>
-                      </template>
-                      </v-select>
-
-                      <label class="custom-label mb-3" for="services">Services proposés</label>
+                      <!-- <label class="custom-label mb-3" for="services">Services proposés</label>
                       <v-select
                         id="services"
                         v-model="guest.services"
@@ -341,7 +322,17 @@
                             (+{{ guest.features.length - 3 }})
                           </span>
                       </template>
-                      </v-select>
+                      </v-select> -->
+
+                      <label class="custom-label mb-3" for="services">Services proposés</label>
+                      <v-btn-toggle
+                        id="services"
+                        class="d-flex flex-wrap justify-content-between h-auto"
+                        v-model="guest.services"
+                        multiple
+                        color="#E6CDB5">
+                        <v-btn class="mx-1 my-3 p-3 rounded-pill border" v-for="service in services" :value="service" :text="service"></v-btn>
+                      </v-btn-toggle>
                     </div>
 
                     <div>
@@ -360,7 +351,7 @@
                   </div>
 
 
-                  <v-btn class="w-100 rounded-pill mb-5" color="#4F685D" @click="">Suivant</v-btn>
+                  <v-btn class="w-100 rounded-pill mb-5" color="#4F685D" @click="registerGuest()">S'inscrire</v-btn>
                 </v-card>
               </v-dialog>
             </template>
@@ -454,32 +445,22 @@ export default {
 
       step3_1: false,
 
-      host: {
+      post: {
         city: "",
         postal_code: "",
         address: "",
         lat: "",
         lng: "",
-        type: "Maison",
-        type_logement: "",
-        handicap: "",
-        smoking: "",
-        pets: "",
-        shopping: "",
-        gardening: "",
-        chores: "",
-        price: "",
-        size: ""
-      },
-
-      guest: {
-        features: [],
+        type_logement: "Maison",
+        description: "",
+        price: 0,
+        size: 0,
         services: []
       },
 
-      features: ["Jardin", "Balcon", "Terrasse", "Ascenseur", "Cave", "Grenier", "Animaux", "Double vitrage", "Fibre optique", "Cheminée", 
-                  "Chauffage au sol", "Meublé", "Non meublé", "Ancien rénové", "Garage", "Climatisation", "Piscine", "Quartier calme",
-                  "Quartier dynamique", "Accès handicapés", "Digicode"],
+      guest: {
+        services: []
+      },
 
       services: ["Jardinage", "Courses", "Ménage", "Discussion", "Cuisine", "Bricolage", "Covoiturage", "Garde d'animaux"]
     };
@@ -618,21 +599,37 @@ export default {
       this.step3_1 = true
     },
 
-    registerUser() {
+    registerGuest() {
+      const aServ = []
+      for (let i=0; i<this.services.length; i++) {
+        aServ.push(this.guest.services.includes(this.services[i]))
+      }
+
+      const data = {
+        mail: this.user.mail,
+        password: this.user.password,
+        firstName: this.user.firstName,
+        lastName: this.user.lastName,
+        birthDate: this.user.birthDate,
+        telephone: this.user.telephone,
+        gender: this.user.gender,
+        maritalStatus: this.user.maritalStatus,
+        type: this.user.type,
+        
+        services: aServ
+      }
+      
+      this.registerUser(data)
+    },
+
+    registerUser(pData) {
+      console.log(pData)
       const apiUrl = import.meta.env.VITE_API_URL;
       axios
         .post(
           apiUrl + "/services/register.php",
           {
-            mail: this.user.mail,
-            password: this.user.password,
-            firstName: this.user.firstName,
-            lastName: this.user.lastName,
-            birthDate: this.user.birthDate,
-            telephone: this.user.telephone,
-            gender: this.user.gender,
-            maritalStatus: this.user.maritalStatus,
-            type: this.user.type,
+            data: pData
           },
           {
             headers: {

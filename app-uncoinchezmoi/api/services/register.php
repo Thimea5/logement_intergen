@@ -1,60 +1,44 @@
 <?php
-    header("Access-Control-Allow-Origin: *");
-    header("Access-Control-Allow-Methods: POST, OPTIONS");
-    header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-    include_once '../config/database.php';
-    include_once '../model/user.php';
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-    $database = new Database();
-    $db = $database->connect();
+include_once '../config/database.php';
+include_once '../model/user.php';
+include_once '../model/service.php';
+include_once '../model/post.php';
 
-    $user = new User($db);
+$database = new Database();
+$db = $database->connect();
 
-    $data = json_decode(file_get_contents('php://input'), true);
+$user = new User($db);
+$services = new Service($db);
 
-    if ($data === null) {
-        echo json_encode(['error' => 'Données invalides']);
-        exit;
-    }
+$data = json_decode(file_get_contents('php://input'), associative: true)["data"];
 
-    $id;
-    $mail = $data['mail'] ?? '';
-    $password = $data['password'] ?? 'test-dev';
-    $firstName = $data['firstName'] ?? '';
-    $lastName = $data['lastName'] ?? '';
-    $birthDate = $data['birthdate'] ?? null;
-    $telephone = $data['telephone'] ?? '';
-    $gender = $data['gender'] ?? '';
-    $maritalStatus = $data['maritalStatus'] ?? '';
-    $type = $data['type'] ?? 'guest';
+if ($data === null) {
+    echo json_encode(['error' => 'Données invalides']);
+    exit;
+}
 
-    $passwordHashed = password_hash($password, PASSWORD_DEFAULT);
 
-    $userRegistered = registerUser($user, $mail, $passwordHashed, $firstName, $lastName, $birthDate, $gender, $telephone, $maritalStatus, $type);
+$email = $data['mail'] ?:  '';
+$password = password_hash($data['password'] ?:  '', PASSWORD_DEFAULT);
+$firstName = $data['firstName'] ?:  '';
+$lastName = $data['lastName'] ?:  '';
+$birthDate = $data['birthDate'] ?:  null;
+$telephone = $data['telephone'] ?:  '';
+$gender = $data['gender'] ?:  '';
+$maritalStatus = $data['maritalStatus'] ?:  '';
+$photo = 'lien_photo';
+$type = $data['type'] ?:  'guest';
 
-    if ($userRegistered["status"]) {
-        $id = $userRegistered["id"];
+$services = $data['services'] ? :  [false, false, false, false, false, false, false, false];
 
-        if ($hostCreated || $guestCreated) {
-            $message = '';
-            if ($type === 'host') {
-                $message = "Inscription réussie et hôte créé avec des valeurs NULL.";
-            } elseif ($type === 'guest') {
-                $message = "Inscription réussie et invité créé avec des valeurs NULL.";
-            } else {
-                $message = "Inscription réussie.";
-            }
-            echo json_encode(["success" => true, "message" => $message]);
-        } else {
-            echo json_encode(["success" => false, "message" => "L'inscription de l'utilisateur a réussi, mais la création de l'hôte ou de l'invité a échoué."]);
-        }
-    } else {
-        echo json_encode(["success" => false, "message" => "Inscription ratée."]);
-    }
 
-    function registerUser($user, $mail, $passwordHashed, $firstName, $lastName, $birthDate, $gender, $telephone, $maritalStatus, $role)
-    {
-        return $user->insertUser($mail, $passwordHashed, $firstName, $lastName, $birthDate, $gender, $telephone, $maritalStatus, $role);
-    }
-?>
+if ($user->insertUser($email, $password, $firstName, $lastName, $birthDate, $telephone, $gender, $maritalStatus, $photo, $type, 1)) {
+    echo json_encode(["success" => true, "message" => "Utilisateur créé en tant que guest"]);
+} else {
+    echo json_encode(["success" => false, "message" => "Utilisateur flingué en base"]);
+}

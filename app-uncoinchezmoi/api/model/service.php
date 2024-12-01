@@ -1,17 +1,5 @@
 <?php
     class Service {
-        private $id;
-        private $idHost;
-        private $isGardening;
-        private $isErrand;
-        private $isDiy;
-        private $isCleanning;
-        private $isTalking;
-        private $isCooking;
-        private $isPetsSitting;
-        private $isCarSharing;
-        private $isRepairs;
-
         private $conn;
 
         public function __construct($database) {
@@ -20,19 +8,43 @@
 
         public function getAllServices() {
             $sql = "SELECT * FROM services;";
+            
             $query = $this->conn->prepare($sql);
+            
             $query->execute();
 
             return $query->fetchAll();
         }
 
-        public function getServicesByHost($pIdPost) {
-            $sql = "SELECT * FROM services WHERE serv_idHost = :pIdHost;";
+        public function getServicesByHost($pIdUser) {
+            $sql = "SELECT * FROM services WHERE id_host = :pIdUser;";
+
             $query = $this->conn->prepare($sql);
-            $query->bindParam("pIdHost", $pIdPost);
+
+            $query->bindParam("pIdUser", $pIdUser);
+
             $query->execute();
 
             return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
+        public function insertServices($gardening, $errand, $diy, $cleaning, $chatting, $cooking, $petSitting, $carSharing, $pIdUser) {
+            $sql = "INSERT INTO services (gardening, errand, diy, cleaning, chatting, cooking, petSitting, carSharing, id_user) VALUES
+                                        (:pGardening, :pErrand, :pDiy, :pCleaning, :pChatting, :pCooking, :pPetSitting, :pCarSharing, :pId_user)";
+            
+            $query = $this->conn->prepare($sql);
+            
+            $query->bindParam("pGardening", $gardening);
+            $query->bindParam("pErrand", $errand);
+            $query->bindParam("pDiy", $diy);
+            $query->bindParam("pCleaning", $cleaning);
+            $query->bindParam("pChatting", $chatting);
+            $query->bindParam("pCooking", $cooking);
+            $query->bindParam("pPetSitting", $petSitting);
+            $query->bindParam("pCarSharing", $carSharing);
+            $query->bindParam("pId_user", $pIdUser);
+
+            return $query->execute();
         }
 
     }

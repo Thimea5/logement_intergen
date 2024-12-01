@@ -13,7 +13,7 @@
         }
 
         public function getAllComments() {
-            $sql = "SELECT * FROM comments;";
+            $sql = "SELECT * FROM comment;";
             $query = $this->conn->prepare($sql);
             $query->execute();
 
@@ -21,7 +21,7 @@
         }
 
         public function getCommentsByPost($pIdPost) {
-            $sql = "SELECT * FROM comments WHERE com_idPost = :pIdPost;";
+            $sql = "SELECT * FROM comment WHERE com_idPost = :pIdPost;";
             $query = $this->conn->prepare($sql);
             $query->bindParam("pIdPost", $pIdPost);
             $query->execute();
@@ -30,7 +30,7 @@
         }
 
         public function insertNewComment($pText, $pCreatedAt, $pIdAuthor, $pIdPost) {
-            $sql = "INSERT INTO comments (com_text, com_createdAt, com_idAuthor, com_idPost) 
+            $sql = "INSERT INTO comment (com_text, com_createdAt, com_idAuthor, com_idPost) 
                 VALUES (:pComText, :pComCreatedAt, :pComIdAuthor, :pComIdPost);";
             $query = $this->conn->prepare($sql);
             $query->bindParam("pComText", $pText);
