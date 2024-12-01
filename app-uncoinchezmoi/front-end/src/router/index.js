@@ -12,7 +12,7 @@ import MapComponent from "../components/MapComponent.vue";
 import AdvancedSearch from "../components/AdvancedSearch.vue";
 import PostDetails from "../components/PostDetails.vue";
 import NewComment from "../components/NewComment.vue";
-import MessageComponent from "../components/MessageComponent.vue";
+import ConversationComponent from "../components/ConversationComponent.vue";
 
 const routes = [
   {
@@ -22,9 +22,9 @@ const routes = [
     meta: { requiresAuth: false },
   },
   {
-    path: "/messages",
-    name: "MessageComponent",
-    component: MessageComponent,
+    path: "/conversations",
+    name: "ConversationComponent",
+    component: ConversationComponent,
     meta: { requiresAuth: true },
   },
   {

@@ -2,8 +2,9 @@
   <v-main class="d-flex flex-column justify-content-between align-items-center">
     <v-app-bar :elevation="0">
       <v-btn icon="mdi-keyboard-backspace" variant="plain" size="x-large" @click="goBack()"></v-btn>
-      <h1>Bonjour, {{ this.user.firstname }} {{ user.lastname }}</h1>
+      <v-app-title>Bonjour, {{ user.firstname }} {{ user.lastname }}</v-app-title>
     </v-app-bar>
+
     <v-container class="d-flex flex-column">
       <p class="text-danger" v-if="!user.complete">
         Veuillez compléter votre profile pour profiter de toutes les fonctionnalités de l'application
@@ -55,6 +56,7 @@ export default {
     console.log("mounted");
     this.isHost = this.user.type == "host";
   },
+
   methods: {
     logOut() {
       sessionStorage.clear();

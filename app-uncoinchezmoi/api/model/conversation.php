@@ -1,9 +1,10 @@
 <?php
     class Conversation {
+/*        
         private $id;
         private $idUser1;
         private $idUser2;
-        private $creationDate;
+        private $creationDate;*/
 
         private $conn;
 
@@ -21,7 +22,7 @@
         }
 
         public function getUserConversation($pUserId) {
-            $sql = "SELECT * FROM conversation where id_user1 = :pId or id_user2 = :pId;";
+            $sql = "SELECT * FROM conversation WHERE id_user1 = :pId or id_user2 = :pId;";
 
             $query = $this->conn->prepare($sql);
             $query->bindParam("pId", $pUserId);
@@ -30,16 +31,17 @@
             return $query->fetchAll();
         }
 
-        public function insertConversation() {
+        public function insertConversation($creationDate, $idUser1, $idUser2) {
             $sql = "INSERT INTO conversation (creation_date, id_user1, id_user2) 
-                VALUES();";
-            return 0;
-        }
+                VALUES(:pCreationDate, :pIdUser1, :pIdUser2);";
 
-        public function updateDateConversation() {
-            return 0;
-        }
+            $query = $this->conn->prepare($sql);
+            $query->bindParam("pCreationDate", $creationDate);
+            $query->bindParam("pIdUser1", $idUser1);
+            $query->bindParam("pIdUser2", $idUser2);
 
+            return $query->execute();
+        }
 
     }
 ?>

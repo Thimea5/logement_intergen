@@ -13,7 +13,7 @@
         <v-icon>mdi-magnify</v-icon>
         Rechercher
       </v-btn>
-      <v-btn @click="navigate('/messages')">
+      <v-btn @click="navigate('/conversations')">
         <v-icon class="fa-regular fa-comments"></v-icon>
         Messages
       </v-btn>
