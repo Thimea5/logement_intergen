@@ -1,7 +1,10 @@
 <template>
-  <v-main>
-    <v-container class="d-flex flex-column">
+  <v-main class="d-flex flex-column justify-content-between align-items-center">
+    <v-app-bar :elevation="0">
+      <v-btn icon="mdi-keyboard-backspace" variant="plain" size="x-large" @click="goBack()"></v-btn>
       <h1>Bonjour, {{ this.user.firstname }} {{ user.lastname }}</h1>
+    </v-app-bar>
+    <v-container class="d-flex flex-column">
       <p class="text-danger" v-if="!user.complete">Veuillez compléter votre profile pour profiter de toutes les fonctionnalités de l'application</p>
       <v-card class="my-5">
         <v-card-text>Coordonnées : </v-card-text>
@@ -18,6 +21,27 @@
       </v-card>
       <v-btn @click="logOut()" color="primary">Déconnexion</v-btn>
     </v-container>
+    <v-btn class="w-75 rounded-pill mb-5" color="#4F685D" @click="modifStep1 = true">
+      Modifier mon profil
+    </v-btn>
+
+    <template>
+      <v-dialog v-model="modifStep1" transition="dialog-bottom-transition" fullscreen>
+        <v-card class="px-3 d-flex flex-column justify-content-between">
+          <div>
+            <v-btn icon="mdi-keyboard-backspace" variant="plain" size="x-large" @click="modifStep1 = false"></v-btn>
+            <h1 class="headline text-center">Modification de profil</h1>
+          </div>
+          <div v-if="isHost">
+            
+          </div>
+          <div v-else="isHost">
+            
+          </div>
+        </v-card>
+      </v-dialog>
+    </template>
+
   </v-main>
 </template>
 
@@ -28,6 +52,8 @@ export default {
   data() {
     return {
       user: JSON.parse(sessionStorage.getItem("user")) || {},
+      modifStep1: false,
+      isHost: user.role == "host"
     };
   },
   methods: {
@@ -35,8 +61,10 @@ export default {
       sessionStorage.clear();
 
       window.location.replace("/");
-      //this.$router.push("/");
     },
+    goBack() {
+      this.$router.go(-1);
+    }
   },
 };
 </script>

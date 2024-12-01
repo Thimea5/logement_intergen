@@ -160,6 +160,8 @@ export default {
         return;
       }
 
+      console.log(this.generatedCode)
+
       this.panel = "otpShow";
 
       this.startChrono();

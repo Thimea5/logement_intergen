@@ -15,6 +15,7 @@
               <label class="custom-label mb-3" for="email">Adresse Email</label>
               <v-text-field
                 id="email"
+                placeholder="Adresse Email"
                 rounded="pill"
                 clearable
                 variant="solo-filled"
@@ -47,6 +48,7 @@
               <label class="custom-label mb-3" for="pwd">Mot de passe</label>
               <v-text-field
                 id="pwd"
+                placeholder="Mot de passe"
                 autocomplete="nope"
                 :type="marker[0] ? 'password' : 'text'"
                 rounded="pill"
@@ -62,6 +64,7 @@
               <label class="custom-label mb-3" for="pwdConf">Confirmez votre mot de passe</label>
               <v-text-field
                 id="pwdConf"
+                placeholder="Confirmez votre mot de passe"
                 autocomplete="none"
                 :type="marker[1] ? 'password' : 'text'"
                 rounded="pill"
@@ -91,6 +94,7 @@
                         <label class="custom-label mb-3" for="lName">Nom</label>
                         <v-text-field
                           id="lName"
+                          placeholder="Prénom"
                           type="text"
                           rounded="pill"
                           clearable
@@ -104,6 +108,7 @@
                         <label class="custom-label mb-3" for="fName">Prénom</label>
                         <v-text-field
                           id="fName"
+                          placeholder="Nom"
                           type="text"
                           rounded="pill"
                           clearable
@@ -131,6 +136,7 @@
                     <label class="custom-label mb-3" for="tel">N° Téléphone</label>
                     <v-text-field
                       id="tel"
+                      placeholder="Numéro de téléphone"
                       rounded="pill"
                       clearable
                       variant="solo-filled"
@@ -190,16 +196,175 @@
                     class="h-100 d-flex flex-column justify-content-center align-items-center"
                     v-model="user.type"
                     mandatory
-                    color="#E6CDB5"
-                  >
-                    <v-btn class="w-100 h-25 m-3 rounded-xl" value="guest" selected> Locataire </v-btn>
+                    color="#E6CDB5">
+                    <v-btn class="w-100 h-25 m-3 rounded-xl" value="guest"> Locataire </v-btn>
                     <v-btn class="w-100 h-25 m-3 rounded-xl" value="host"> Propriétaire </v-btn>
                   </v-btn-toggle>
 
-                  <v-btn class="w-100 rounded-pill mb-5" color="#4F685D" @click="registerUser()">S'inscrire</v-btn>
+                  <v-btn class="w-100 rounded-pill mb-5" color="#4F685D" @click="validateUser()">Suivant</v-btn>
                 </v-card>
               </v-dialog>
             </template>
+
+            <template v-if="user.type == 'host'">
+              <v-dialog v-model="step3_1" transition="dialog-bottom-transition" fullscreen>
+                <v-card class="p-3 d-flex flex-column justify-content-between">
+                  <div>
+                    <v-btn icon="mdi-keyboard-backspace" variant="plain" size="x-large" @click="step3_1 = false"></v-btn>
+                    <h1 class="headline text-center">Votre logement</h1>
+                    <p>Bonjour {{ user.firstName }}, décrivez votre logement</p>
+                  </div>
+
+                  <div class="h-100 d-flex flex-column justify-content-around">
+                    <div>
+                      <div class="d-flex justify-content-between">
+                        <div class="w-50 me-5">
+                          <label class="custom-label mb-3" for="city">Ville</label>
+                          <v-text-field
+                            id="city"
+                            placeholder="Ville"
+                            rounded="pill"
+                            clearable
+                            variant="solo-filled"
+                            v-model="host.city"
+                            :rules="[rules.required]">
+                          </v-text-field>
+                        </div>
+                        
+                        <div class="w-50 me-5">
+                          <label class="custom-label mb-3" for="postal_code">Code postal</label>
+                          <v-text-field
+                            id="postal_code"
+                            placeholder="Code postal"
+                            rounded="pill"
+                            clearable
+                            variant="solo-filled"
+                            v-model="host.postal_code"
+                            :rules="[rules.required]">
+                          </v-text-field>
+                        </div>
+                      </div>
+                      
+                      <label class="custom-label mb-3" for="address">Adresse</label>
+                      <v-text-field
+                        id="address"
+                        placeholder="Numéro de rue"
+                        rounded="pill"
+                        clearable
+                        variant="solo-filled"
+                        v-model="host.address"
+                        :rules="[rules.required]">
+                      </v-text-field>
+                    </div>
+
+                    <div>
+                      <label class="custom-label mb-3" for="property">Type de propriété</label>
+                      <v-btn-toggle
+                        id="property"
+                        class="d-flex flex-wrap justify-content-between h-auto"
+                        v-model="host.type"
+                        mandatory
+                        color="#E6CDB5">
+                        <v-btn class="rounded-xl m-1 p-3" value="Maison"> Maison </v-btn>
+                        <v-btn class="rounded-xl m-1 p-3" value="Appartement"> Appartement </v-btn>
+                        <v-btn class="rounded-xl m-1 p-3" value="Villa"> Villa </v-btn>
+                        <v-btn class="rounded-xl m-1 p-3" value="Chalet"> Chalet </v-btn>
+                      </v-btn-toggle>
+                    </div>
+
+                    <div>
+                      <label class="custom-label mb-3" for="size">Surface</label>
+                      <v-text-field
+                        id="size"
+                        placeholder="Surface"
+                        rounded="pill"
+                        clearable
+                        variant="solo-filled"
+                        v-model="host.size"
+                        :rules="[rules.required]"
+                        suffix="m²">
+                      </v-text-field>
+                    </div>
+                  </div>
+
+
+                  <v-btn class="w-100 rounded-pill mb-5" color="#4F685D" @click="">Suivant</v-btn>
+                </v-card>
+              </v-dialog>
+            </template>
+
+            <template v-if="user.type == 'guest'">
+              <v-dialog v-model="step3_1" transition="dialog-bottom-transition" fullscreen>
+                <v-card class="p-3 d-flex flex-column justify-content-between">
+                  <div>
+                    <v-btn icon="mdi-keyboard-backspace" variant="plain" size="x-large" @click="step3_1 = false"></v-btn>
+                    <h1 class="headline text-center">Votre profil</h1>
+                    <p>Bonjour {{ user.firstName }}, veuillez finaliser votre inscription</p>
+                  </div>
+
+                  <div class="h-100 d-flex flex-column justify-content-around">
+
+                    <div>
+                      <label class="custom-label mb-3" for="features">Règles et caractéristiques</label>
+                      <v-select
+                        id="features"
+                        v-model="guest.features"
+                        :items="features"
+                        rounded="pill"
+                        clearable
+                        variant="solo-filled"
+                        multiple>
+                          <template v-slot:selection="{ item, index }">
+                          <v-chip v-if="index < 3">
+                            <span>{{ item.title }}</span>
+                          </v-chip>
+                          <span v-if="index === 3" class="text-grey text-caption align-self-center">
+                            (+{{ guest.features.length - 3 }})
+                          </span>
+                      </template>
+                      </v-select>
+
+                      <label class="custom-label mb-3" for="services">Services proposés</label>
+                      <v-select
+                        id="services"
+                        v-model="guest.services"
+                        :items="services"
+                        rounded="pill"
+                        clearable
+                        variant="solo-filled"
+                        multiple>
+                          <template v-slot:selection="{ item, index }">
+                          <v-chip v-if="index < 3">
+                            <span>{{ item.title }}</span>
+                          </v-chip>
+                          <span v-if="index === 3" class="text-grey text-caption align-self-center" color="">
+                            (+{{ guest.features.length - 3 }})
+                          </span>
+                      </template>
+                      </v-select>
+                    </div>
+
+                    <div>
+                      <label class="custom-label mb-3" for="max_price">Prix maximum souhaité</label>
+                      <v-text-field
+                        id="max_price"
+                        placeholder="Prix max"
+                        rounded="pill"
+                        clearable
+                        variant="solo-filled"
+                        v-model="guest.max_price"
+                        :rules="[rules.required]"
+                        suffix="€">
+                      </v-text-field>
+                    </div>
+                  </div>
+
+
+                  <v-btn class="w-100 rounded-pill mb-5" color="#4F685D" @click="">Suivant</v-btn>
+                </v-card>
+              </v-dialog>
+            </template>
+
           </v-form>
         </div>
       </div>
@@ -209,7 +374,9 @@
 
 <script>
 import axios from "axios";
-import { VDateInput } from "vuetify/labs/VDateInput";
+import { VDateInput } from "vuetify/labs/VDateInput"
+import { VNumberInput } from 'vuetify/labs/VNumberInput'
+
 
 const code = Math.floor(100000 + Math.random() * 900000);
 
@@ -217,6 +384,7 @@ export default {
   name: "Register",
   components: {
     VDateInput,
+    VNumberInput
   },
   data() {
     return {
@@ -283,6 +451,37 @@ export default {
         maritalStatus: "",
         type: "guest",
       },
+
+      step3_1: false,
+
+      host: {
+        city: "",
+        postal_code: "",
+        address: "",
+        lat: "",
+        lng: "",
+        type: "Maison",
+        type_logement: "",
+        handicap: "",
+        smoking: "",
+        pets: "",
+        shopping: "",
+        gardening: "",
+        chores: "",
+        price: "",
+        size: ""
+      },
+
+      guest: {
+        features: [],
+        services: []
+      },
+
+      features: ["Jardin", "Balcon", "Terrasse", "Ascenseur", "Cave", "Grenier", "Animaux", "Double vitrage", "Fibre optique", "Cheminée", 
+                  "Chauffage au sol", "Meublé", "Non meublé", "Ancien rénové", "Garage", "Climatisation", "Piscine", "Quartier calme",
+                  "Quartier dynamique", "Accès handicapés", "Digicode"],
+
+      services: ["Jardinage", "Courses", "Ménage", "Discussion", "Cuisine", "Bricolage", "Covoiturage", "Garde d'animaux"]
     };
   },
 
@@ -348,17 +547,14 @@ export default {
 
     validateStep1() {
       // if (!(this.user.mail && this.user.password && this.user.passwordConf)) {
-      // 	alert('Veuillez remplir tout les champs  !')
       // 	return
       // }
 
       // if (this.user.password != this.user.passwordConf) {
-      // 	alert('Les mots de passe ne correspondent pas.')
       // 	return
       // }
 
       // if (this.user.code != code) {
-      // 	alert('Code de verification incorrect')
       // 	return
       // }
 
@@ -367,20 +563,17 @@ export default {
 
     validateStep2() {
       // if (!(this.user.lastName && this.user.firstName && this.user.birthDate && this.user.telephone)) {
-      // 	alert('Veuillez remplir tous les champs !');
       // 	return;
       // }
 
       // const phoneRegex = /^[0-9]{10}$/;
       // if (!phoneRegex.test(this.user.telephone)) {
-      // 	alert('Veuillez entrer un numéro de téléphone valide (10 chiffres).');
       // 	return;
       // }
 
       // const birthDate = new Date(this.user.birthDate);
       // const today = new Date();
       // if (birthDate >= today) {
-      // 	alert('La date de naissance ne peut pas être dans le futur.');
       // 	return;
       // }
 
@@ -396,7 +589,6 @@ export default {
       this.startChrono();
 
       if (this.user.mail === "") {
-        alert("Veuillez renseigner une adresse mail");
         return;
       }
 
@@ -420,6 +612,10 @@ export default {
           console.log("FAILED...", error);
         }
       );
+    },
+
+    validateUser() {
+      this.step3_1 = true
     },
 
     registerUser() {

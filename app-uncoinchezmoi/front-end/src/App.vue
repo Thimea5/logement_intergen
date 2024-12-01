@@ -56,10 +56,11 @@ export default {
       this.listDisplay = ps.listHost;
 
       console.log(this.listDisplay)
+      
+      this.userStore.loadUserFromSession();
+      this.isComplete = this.userStore.user.complete
     }
 
-    this.userStore.loadUserFromSession();
-    this.isComplete = this.userStore.user.complete
   },
 
   methods: {
