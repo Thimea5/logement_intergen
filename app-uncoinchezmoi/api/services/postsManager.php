@@ -16,16 +16,15 @@
 
   $posts = $postModel->getPostsWithHostInformations();
   
-  var_dump($posts);
+  //var_dump($posts);
   $services = [];
-  for ($i=1; $i<=count($posts); ++$i) {
-    array_push($services, $serviceModel->getServicesByPost($i));
+  for ($i=0; $i<count($posts); ++$i) {
+    array_push($services, $serviceModel->getServicesByPost($posts[$i]['post_id']));
   }
 
   //var_dump($services);
 
   if ($posts) {
-    
     echo json_encode(['success' => true, 'posts' => $posts, 'services' => $services]);
   } else {
     echo json_encode(['success' => false, 'message' => 'Aucun post trouvé.']);

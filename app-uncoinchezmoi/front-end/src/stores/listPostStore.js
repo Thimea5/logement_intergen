@@ -24,11 +24,12 @@ export const useListPostStore = defineStore("listPost", {
             if (result.status === 200 && result.data["success"]) {
               const resPosts = result.data["posts"];
               const resServices = result.data["services"];
-              console.log(resPosts);
+              //console.log(resPosts);
+              //console.log(resServices);
               for (let i = 0; i < resPosts.length; i++) {
-                console.log(resPosts[i]["id"]);
+                //console.log(resPosts[i]["id"]);
                 this.listPost.push({
-                  idPost: resPosts[i]["id"],
+                  idPost: resPosts[i]["post_id"],
                   address: resPosts[i]["address"],
                   city: resPosts[i]["city"],
                   postalCode: resPosts[i]["postal_code"],

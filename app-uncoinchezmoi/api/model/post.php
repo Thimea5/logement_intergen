@@ -16,16 +16,41 @@
     }
 
     public function getPostsWithHostInformations() {
-      $sql = "SELECT post.*, users.*
+      $sql = "SELECT 
+                  post.id AS post_id, 
+                  post.city, 
+                  post.postal_code, 
+                  post.address, 
+                  post.lat, 
+                  post.lng, 
+                  post.cheminPhoto, 
+                  post.type_logement, 
+                  post.description, 
+                  post.price, 
+                  post.size, 
+                  post.nb_photo, 
+                  post.available, 
+                  post.id_user, 
+                  users.id AS user_id, 
+                  users.mail, 
+                  users.firstname, 
+                  users.lastname, 
+                  users.birthdate, 
+                  users.genre, 
+                  users.tel, 
+                  users.marital_status, 
+                  users.photo, 
+                  users.active, 
+                  users.type, 
+                  users.isComplete
               FROM post 
               JOIN users ON post.id_user = users.id;";
 
       $query = $this->conn->prepare($sql);
       $query->execute();
-      /*Problème de l'id post ici, le fetch all bloque et envoie dans id, le id_user... */
-      
       return $query->fetchAll(PDO::FETCH_ASSOC);
-    }
+  }
+
 
     public function insertPost($city, $postal_code, $address, $lat, $lng, $cheminPhoto, $type_logement, $description, $price, $size, $nb_photo, $available, $id_user) {
       $sql = "INSERT INTO post (city, postal_code, `address`, lat, lng, cheminPhoto, type_logement, `description`, price, size, nb_photo, available, id_user) 
