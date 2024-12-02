@@ -52,17 +52,18 @@
             echo json_encode(['error' => 'Données invalides']);
             exit;
         }
-        $comment = $data->comment; 
-        if (!isset($comment->content, $comment->idUser, $comment->idPost)) {
+        var_dump($data);
+        if (!isset($data->content, $data->idUser, $data->idPost)) {
             echo json_encode(["success" => false, "message" => "Paramètres manquants."]);
             exit;
         }
+
         date_default_timezone_set('Europe/Paris');
         if ($commentModel->insertNewComment(
-            $comment->content, 
+            $data->content, 
             date('Y-m-d H:i:s'), 
-            $comment->idUser, 
-            $comment->idPost
+            $data->idUser, 
+            $data->idPost
         )) {
             echo json_encode(["success" => true, "message" => "Ajouté"]);
         } else {

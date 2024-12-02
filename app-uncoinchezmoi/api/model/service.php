@@ -28,6 +28,18 @@
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
 
+        public function getServicesByPost($pPost) {
+            $sql = "SELECT * FROM services WHERE id = :pId;";
+
+            $query = $this->conn->prepare($sql);
+
+            $query->bindParam("pId", $pPost);
+
+            $query->execute();
+
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        }
+
         public function insertServices($gardening, $errand, $diy, $cleaning, $chatting, $cooking, $petSitting, $carSharing, $pIdUser) {
             $sql = "INSERT INTO services (gardening, errand, diy, cleaning, chatting, cooking, petSitting, carSharing, id_user) VALUES
                                         (:pGardening, :pErrand, :pDiy, :pCleaning, :pChatting, :pCooking, :pPetSitting, :pCarSharing, :pId_user)";

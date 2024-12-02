@@ -15,13 +15,17 @@
   $serviceModel = new Service($db);
 
   $posts = $postModel->getPostsWithHostInformations();
-
+  
+  var_dump($posts);
   $services = [];
   for ($i=1; $i<=count($posts); ++$i) {
-    array_push($services, $serviceModel->getServicesByHost($i));
+    array_push($services, $serviceModel->getServicesByPost($i));
   }
 
+  //var_dump($services);
+
   if ($posts) {
+    
     echo json_encode(['success' => true, 'posts' => $posts, 'services' => $services]);
   } else {
     echo json_encode(['success' => false, 'message' => 'Aucun post trouvé.']);

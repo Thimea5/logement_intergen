@@ -44,6 +44,7 @@ export default {
     goBack() {
       this.$router.go(-1);
     },
+
     addNewComment() {
       const comment = {
         content: this.text,
@@ -51,17 +52,17 @@ export default {
         idPost: this.postId,
       };
 
+      console.log(comment);
       const apiUrl = import.meta.env.VITE_API_URL;
       axios
-        .post(
-          apiUrl + "/services/commentsManager.php",
-          { comment },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
+        .post(apiUrl + "/services/commentsManager.php", comment, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((result) => {
+          console.log(result);
+        })
         .catch((error) => {
           console.error(error);
         });

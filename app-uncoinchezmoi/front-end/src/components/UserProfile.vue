@@ -7,7 +7,8 @@
 
     <v-container class="d-flex flex-column">
       <p class="text-danger" v-if="!user.complete">
-        Veuillez compléter votre profile pour profiter de toutes les fonctionnalités de l'application
+        Attention, veuillez compléter les informations de votre profil pour profiter de toutes les fonctionnalités de
+        l'application
       </p>
       <v-card class="my-5">
         <v-card-text>Coordonnées : </v-card-text>

@@ -22,6 +22,7 @@
 
       $query = $this->conn->prepare($sql);
       $query->execute();
+      /*Problème de l'id post ici, le fetch all bloque et envoie dans id, le id_user... */
       
       return $query->fetchAll(PDO::FETCH_ASSOC);
     }

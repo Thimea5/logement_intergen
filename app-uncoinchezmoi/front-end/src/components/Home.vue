@@ -50,7 +50,7 @@
         <div v-else>
           <v-row>
             <v-col v-for="elt in listDisplay" :key="elt.id" cols="12" sm="6" md="4">
-              <v-card @click="goToPostDetails(elt)" class="bg-blue-grey-lighten-4">
+              <v-card @click="goToPostDetails(elt.idPost)" class="bg-blue-grey-lighten-4">
                 <v-img :src="getImageSrc(elt.img)">
                   <v-btn
                     icon
@@ -66,6 +66,7 @@
                 <v-card-subtitle>{{ elt.city }} - {{ elt.postalCode }}</v-card-subtitle>
                 <v-card-text>
                   <p>Disponibilité: {{ elt.available }}</p>
+                  <p>{{ elt }}</p>
                 </v-card-text>
               </v-card>
             </v-col>
@@ -97,13 +98,14 @@ export default {
       setTimeout(() => {
         const ps = useListPostStore();
         this.listDisplay = ps.listPost;
+        console.log(this.listDisplay);
       }, 250);
     }
   },
 
   methods: {
     goToPostDetails(pPost) {
-      this.$router.push({ name: "PostDetails", params: { id: pPost.idHost } });
+      this.$router.push({ name: "PostDetails", params: { id: pPost } });
     },
 
     getImageSrc(pImgPath) {

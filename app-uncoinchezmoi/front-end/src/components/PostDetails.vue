@@ -106,8 +106,9 @@ export default {
     const ps = useListPostStore();
     const route = useRoute();
     const postId = route.params.id;
+    console.log(postId);
 
-    this.post = ps.lisPost.find((ph) => ph.id == postId);
+    this.post = ps.listPost.find((ph) => ph.idPost == postId);
     if (this.post) {
       for (let i = 1; i <= this.post.nbPhoto; i++) {
         this.imgList.push(
@@ -115,13 +116,14 @@ export default {
         );
       }
     }
+    //console.log(this.imgList);
 
     // Chargement des commentaires du post
     const apiUrl = import.meta.env.VITE_API_URL;
     axios
       .get(apiUrl + "/services/commentsManager.php", {
         params: {
-          id: this.post.idHost,
+          id: this.post.idPost,
         },
         headers: {
           "Content-Type": "application/json",
@@ -130,6 +132,7 @@ export default {
       .then((result) => {
         if (result.status === 200 && result.data["success"]) {
           const res = result.data["comments"];
+          //console.log("resComments", res);
           for (let i = 0; i < res.length; i++) {
             this.comments.push({
               id: res[i]["id"],
