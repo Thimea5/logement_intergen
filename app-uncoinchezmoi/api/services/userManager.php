@@ -13,10 +13,4 @@ $user = new User($db);
 
 $users = $user->getUsers();
 
-$emails = [];
-
-foreach ($users as $user) {
-    $emails[] = $user['mail'];
-}
-
-echo json_encode($emails);
+echo json_encode([$users]);

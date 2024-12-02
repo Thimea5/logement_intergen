@@ -24,16 +24,12 @@
 
       <!-- Marqueurs -->
       <l-marker v-for="post in filteredPosts" :key="post.id" :lat-lng="[post.latitude, post.longitude]">
-        <l-popup>
-          <strong>{{ post.type_logement }} - {{ (post.size === null ? 0 : post.size) + "m²" }}</strong>
-          <p>{{ post.address }} - {{ post.postalCode }} - {{ post.city }}</p>
-          <img
-            :src="getImageSrc(post.img, post.id)"
-            alt="Aucune image disponible"
-            style="width: 80%; height: 50%"
-            @click="goToPostDetails(post)"
-          />
-          <p>Prix : {{ post.price }}€/mois</p>
+        <l-popup @click="goToPostDetails(post)">
+          <strong>
+            {{ post.type_logement }} de {{ (post.size === null ? 0 : post.size) + "m²" }} [{{ post.price }}€/mois]
+          </strong>
+          <p>{{ post.address }} - {{ post.postalCode }} {{ post.city }}</p>
+          <v-img :src="getImageSrc(post.img)" alt="Aucune image disponible" style="width: 100%; height: 50%"></v-img>
         </l-popup>
       </l-marker>
     </l-map>
@@ -148,13 +144,18 @@ export default {
     },
 
     goToPostDetails(listing) {
-      this.$router.push({ name: "PostDetails", params: { id: listing.id } });
+      this.$router.push({ name: "PostDetails", params: { id: listing.idPost } });
     },
 
-    getImageSrc(pImgPath, pIndex) {
-      try {
-        return new URL(`/src/assets/img/${pImgPath}/host_photo${pIndex}_1.jpg`, import.meta.url).href;
-      } catch (error) {
+    getImageSrc(pImgPath) {
+      const url = new URL(
+        `/src/assets/img/${pImgPath}/host_photo${pImgPath[pImgPath.length - 1]}_1.jpg`,
+        import.meta.url
+      ).href;
+      console.log(url);
+      if (!url.includes("undefined")) {
+        return url;
+      } else {
         return new URL(`/src/assets/img/error.jpg`, import.meta.url).href;
       }
     },

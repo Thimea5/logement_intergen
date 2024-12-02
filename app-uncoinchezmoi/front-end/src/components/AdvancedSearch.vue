@@ -219,10 +219,13 @@ export default {
     },
 
     getImageSrc(pImgPath) {
-      try {
-        return new URL(`/src/assets/img/${pImgPath}/host_photo${pImgPath[pImgPath.length - 1]}_1.jpg`, import.meta.url)
-          .href;
-      } catch (error) {
+      const url = new URL(
+        `/src/assets/img/${pImgPath}/host_photo${pImgPath[pImgPath.length - 1]}_1.jpg`,
+        import.meta.url
+      ).href;
+      if (!url.includes("undefined")) {
+        return url;
+      } else {
         return new URL(`/src/assets/img/error.jpg`, import.meta.url).href;
       }
     },

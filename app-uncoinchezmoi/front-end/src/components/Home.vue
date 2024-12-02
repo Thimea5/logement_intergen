@@ -25,7 +25,7 @@
         >
           Rechercher
         </v-btn>
-        <v-btn v-else @click="navigate('/TODO_ICI')" color="primary" style="flex: 1; margin-right: 5px">
+        <v-btn v-else @click="navigate('/view-post')" color="primary" style="flex: 1; margin-right: 5px">
           Mon logement
         </v-btn>
         <v-btn @click="navigate('/TODO_ICI')" color="secondary" style="flex: 1; margin-left: 5px">
@@ -62,11 +62,17 @@
                     <v-icon>mdi-heart</v-icon>
                   </v-btn>
                 </v-img>
-                <v-card-title>{{ elt.address }}</v-card-title>
-                <v-card-subtitle>{{ elt.city }} - {{ elt.postalCode }}</v-card-subtitle>
-                <v-card-text>
-                  <p>Disponibilité: {{ elt.available }}</p>
-                  <p>{{ elt }}</p>
+                <v-card-title>
+                  {{ elt.type_logement }} - {{ (elt.size === null ? 0 : elt.size) + "m²" }} [{{ elt.price }}€/mois]
+                </v-card-title>
+                <v-card-subtitle>{{ elt.address }} - {{ elt.city }} {{ elt.postalCode }}</v-card-subtitle>
+                <v-card-text class="d-flex flex-row">
+                  <p>Services :</p>
+                  <template v-for="(icon, key) in serviceIcons">
+                    <v-icon v-if="listService[elt.idPost]?.[key] === 1" :key="`${elt.idPost}-${key}`" class="mx-1">
+                      {{ icon }}
+                    </v-icon>
+                  </template>
                 </v-card-text>
               </v-card>
             </v-col>
@@ -87,18 +93,28 @@ export default {
     return {
       user: JSON.parse(sessionStorage.getItem("user")) || {},
       listDisplay: [],
+      listService: [],
       isLoggedIn: sessionStorage.getItem("user") != null,
+      serviceIcons: {
+        isCleaning: "mdi-broom",
+        isCarSharing: "mdi-car",
+        isCooking: "mdi-silverware-fork-knife",
+        isDiy: "mdi-hammer",
+        isErrand: "mdi-cart",
+        isGardening: "mdi-sprout",
+        isPetsSitting: "mdi-paw",
+        isTalking: "mdi-chat",
+      },
     };
   },
 
   mounted() {
     console.log("mounted");
     if (this.isLoggedIn) {
-      console.log("if problème");
       setTimeout(() => {
         const ps = useListPostStore();
         this.listDisplay = ps.listPost;
-        console.log(this.listDisplay);
+        this.listService = ps.listServices;
       }, 250);
     }
   },
@@ -109,10 +125,14 @@ export default {
     },
 
     getImageSrc(pImgPath) {
-      try {
-        return new URL(`/src/assets/img/${pImgPath}/host_photo${pImgPath[pImgPath.length - 1]}_1.jpg`, import.meta.url)
-          .href;
-      } catch (error) {
+      const url = new URL(
+        `/src/assets/img/${pImgPath}/host_photo${pImgPath[pImgPath.length - 1]}_1.jpg`,
+        import.meta.url
+      ).href;
+
+      if (!url.includes("undefined")) {
+        return url;
+      } else {
         return new URL(`/src/assets/img/error.jpg`, import.meta.url).href;
       }
     },

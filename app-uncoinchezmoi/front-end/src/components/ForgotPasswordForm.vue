@@ -77,7 +77,7 @@ export default {
         required: (value) => !!value || "Ce champ est requis",
         email: (value) =>
           !value || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) || "L'adresse mail est invalide.",
-        emailExists: (value) => !this.users.includes(value) || "Cette adresse est déjà utilisée",
+        //emailExists: (value) => !this.users.includes(value) || "Cette adresse est déjà utilisée",
         passwordsMatch: (value) => value === this.newPassword || "Les mots de passe ne correspondent pas",
         codeMatch: (value) => value === generatedCode || "Code de vérification incorrect",
       },
@@ -97,16 +97,19 @@ export default {
   },
 
   mounted() {
-    this.getAllUsers();
+    //this.getAllUsers();
   },
 
   methods: {
     getAllUsers() {
       const apiUrl = import.meta.env.VITE_API_URL;
       axios
-        .get(apiUrl + "/services/userList.php")
+        .get(apiUrl + "/services/userManager.php")
         .then((response) => {
-          this.users = response.data;
+          console.log(response.data);
+          for (let i = 0; i < response.data.length; i++) {
+            this.users.push(response.data[i]["mail"]);
+          }
         })
         .catch((error) => {
           console.error("Erreur lors de la récupération des utilisateurs:", error);
@@ -160,7 +163,7 @@ export default {
         return;
       }
 
-      console.log(this.generatedCode)
+      console.log(this.generatedCode);
 
       this.panel = "otpShow";
 

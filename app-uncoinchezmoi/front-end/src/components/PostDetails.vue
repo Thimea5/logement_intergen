@@ -29,7 +29,7 @@
         </div>
 
         <v-card class="styled-card" v-if="post">
-          <v-card-title>{{ post.type_logement }} de TODO</v-card-title>
+          <v-card-title>{{ post.type_logement }} de {{ this.usersData[post.idUser].firstname }}</v-card-title>
           <v-card-subtitle>
             <v-icon>mdi-map-marker</v-icon> {{ post.address }} - {{ post.postalCode }} {{ post.city }}
           </v-card-subtitle>
@@ -99,6 +99,7 @@ export default {
       comments: [],
       currentImageIndex: 0,
       zoomDialog: false,
+      usersData: [],
     };
   },
 
@@ -116,7 +117,6 @@ export default {
         );
       }
     }
-    //console.log(this.imgList);
 
     // Chargement des commentaires du post
     const apiUrl = import.meta.env.VITE_API_URL;
@@ -146,6 +146,17 @@ export default {
       .catch((error) => {
         console.error(error);
       });
+
+    axios
+      .get(apiUrl + "/services/userManager.php")
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Erreur lors de la récupération des utilisateurs:", error);
+      });
+
+    console.log(this.usersData);
 
     this.comments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   },
