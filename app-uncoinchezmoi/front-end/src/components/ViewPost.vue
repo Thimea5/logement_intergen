@@ -26,7 +26,7 @@
                                 <v-divider></v-divider>
                                 <div class="d-flex justify-content-around">
                                     <template v-for="(icon, key) in serviceIcons">
-                                        <v-icon v-if="servicesList.key === 1" class="mx-1">
+                                        <v-icon v-if="servicesList?.[key] == 1" class="mx-1">
                                             {{ icon }}
                                         </v-icon>
                                     </template>
@@ -80,7 +80,7 @@ export default {
         setTimeout(() => {
             this.post = ps.listPost.filter(post => post.idUser == this.user.id)[0]
 
-            this.servicesList = ps.listServices.filter(list => list.idUser == this.user.id)
+            this.servicesList = ps.listServices.filter(list => list.idUser == this.user.id)[0]
         }, 250);
     },
     methods: {
@@ -89,7 +89,7 @@ export default {
         },
 
         deactivatePost() {
-            console.log(useListPostStore().listServices)
+            console.log(this.servicesList)
         },
 
         updatePost() {

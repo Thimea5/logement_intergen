@@ -21,6 +21,14 @@ SET time_zone = "+00:00";
 -- Database: `uccm-user_db-uncoinchezmoi`
 --
 
+DROP TABLE IF EXISTS `message`;
+DROP TABLE IF EXISTS `reservation`;
+DROP TABLE IF EXISTS `services`;
+DROP TABLE IF EXISTS `comment`;
+DROP TABLE IF EXISTS `conversation`;
+DROP TABLE IF EXISTS `post`;
+DROP TABLE IF EXISTS `users`;
+
 -- --------------------------------------------------------
 
 --
