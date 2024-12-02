@@ -85,6 +85,34 @@
   
       return $query->execute();
     }
+
+  public function updatePost($city, $postal_code, $address, $lat, $lng, $type_logement, $description, $price, $size, $id_post)
+  {
+    // Requête UPDATE pour modifier les informations du post
+    $sql = "UPDATE post 
+            SET city = :pCity, postal_code = :pPostal_code, address = :pAddress, lat = :pLat,
+                lng = :pLng, type_logement = :pType_logement, description = :pDescription,
+                price = :pPrice, size = :pSize
+            WHERE id = :pId_post";  // Condition WHERE pour spécifier quel post mettre à jour
+
+    $query = $this->conn->prepare($sql);
+
+    // Lier les paramètres
+    $query->bindParam("pCity", $city);
+    $query->bindParam("pPostal_code", $postal_code);
+    $query->bindParam("pAddress", $address);
+    $query->bindParam("pLat", $lat);
+    $query->bindParam("pLng", $lng);
+    $query->bindParam("pType_logement", $type_logement);
+    $query->bindParam("pDescription", $description);
+    $query->bindParam("pPrice", $price);
+    $query->bindParam("pSize", $size);
+
+    $query->bindParam("pId_post", $id_post);  // Lier l'ID du post à mettre à jour
+
+    return $query->execute();  // Exécuter la requête
+  }
+
   
   }
 ?>

@@ -398,8 +398,7 @@
                         class="d-flex flex-wrap justify-content-between h-auto"
                         v-model="post.services"
                         multiple
-                        color="#E6CDB5"
-                      >
+                        color="#E6CDB5">
                         <v-btn
                           class="mx-1 my-2 p-2 rounded-pill border"
                           v-for="service in services"
