@@ -72,5 +72,19 @@
             return $query->execute();
         }
 
+        public function updateUser($id, $mail, $firstname, $lastname, $birthdate, $tel) {
+            $sql = "UPDATE users SET mail=:pMail, firstname=:pFirstname, lastname=:pLastname, birthdate=:pBirthdate, tel=:pTel WHERE id = :pId;";
+            
+            $query = $this->conn->prepare($sql);
+            $query->bindParam("pId", $id);
+            $query->bindParam("pMail", $mail);
+            $query->bindParam("pFirstname", $firstname);
+            $query->bindParam("pLastname", $lastname);
+            $query->bindParam("pBirthdate", $birthdate);
+            $query->bindParam("pTel", $tel);            
+            
+            return $query->execute();
+        }
+
     }
 ?>
