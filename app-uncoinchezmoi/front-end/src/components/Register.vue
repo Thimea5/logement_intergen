@@ -650,11 +650,11 @@ export default {
       axios
         .get(apiUrl + "/services/userManager.php")
         .then((response) => {
-          console.log(response.data);
+          //console.log(response.data);
           for (let i = 0; i < response.data.length; i++) {
             this.users.push(response.data[i]["mail"]);
           }
-          console.log(this.users);
+          //console.log(this.users);
         })
         .catch((error) => {
           console.error("Erreur lors de la récupération des utilisateurs:", error);
@@ -667,10 +667,10 @@ export default {
     validateOtp() {
       if (this.user.code.length == 6) {
         if (this.user.code == code) {
-          console.log("OTP valide : ", this.user.code, code);
+          //console.log("OTP valide : ", this.user.code, code);
           this.otpError = false;
         } else {
-          console.log("OTP invalide : ", this.user.code, code);
+          //console.log("OTP invalide : ", this.user.code, code);
           this.otpError = true;
         }
       }
@@ -703,16 +703,20 @@ export default {
 
     validateStep1() {
       if (!(this.user.mail && this.user.password && this.user.passwordConf)) {
+        //console.log(1);
         return;
       }
 
       if (this.user.password != this.user.passwordConf) {
+        //console.log(2);
         return;
       }
 
       if (this.user.code != code) {
+        //console.log(3);
         return;
       }
+      //console.log("ici ?");
 
       this.step2 = true;
     },
@@ -732,7 +736,7 @@ export default {
       if (birthDate >= today) {
         return;
       }
-
+      //console.log("hey !");
       this.step3 = true;
     },
 
@@ -748,7 +752,7 @@ export default {
         return;
       }
 
-      console.log("Envoyer le code de vérification par email: " + code);
+      //console.log("Envoyer le code de vérification par email: " + code);
 
       emailjs.init({
         publicKey: "gH39qa5yQWVo_b1pQ",
@@ -762,10 +766,10 @@ export default {
 
       emailjs.send("service_bkoff5o", "template_gx7o92j", templateParams).then(
         (response) => {
-          console.log("SUCCESS !", response.status, response.text);
+          //console.log("SUCCESS !", response.status, response.text);
         },
         (error) => {
-          console.log("FAILED...", error);
+          //console.log("FAILED...", error);
         }
       );
     },
@@ -776,7 +780,7 @@ export default {
 
     async validateStep3_1() {
       this.fullAddress = this.post.address + " " + this.post.city + " " + this.post.postal_code;
-      console.log(this.fullAddress);
+      //console.log(this.fullAddress);
 
       provider.search({ query: this.fullAddress }).then((result) => {
         if (result.length > 0) {
@@ -851,7 +855,7 @@ export default {
     },
 
     registerUser(pData) {
-      console.log(pData);
+      //console.log(pData);
       const apiUrl = import.meta.env.VITE_API_URL;
       axios
         .post(apiUrl + "/services/register.php", pData, {
@@ -860,12 +864,12 @@ export default {
           },
         })
         .then((result) => {
-          console.log(result);
+          //console.log(result);
           if (result.status == 200 && result.data["success"]) {
-            console.log("L'utilisateur est bien créé en base");
+            //console.log("L'utilisateur est bien créé en base");
             this.$router.push("/login");
           } else {
-            console.log("raté");
+            //console.log("raté");
           }
         })
         .catch((error) => {

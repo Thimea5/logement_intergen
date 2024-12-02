@@ -12,5 +12,5 @@ $db = $database->connect();
 $user = new User($db);
 
 $users = $user->getUsers();
-
+//var_dump($users);
 echo json_encode([$users]);

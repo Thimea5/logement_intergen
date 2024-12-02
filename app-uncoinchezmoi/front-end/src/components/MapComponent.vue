@@ -152,7 +152,7 @@ export default {
         `/src/assets/img/${pImgPath}/host_photo${pImgPath[pImgPath.length - 1]}_1.jpg`,
         import.meta.url
       ).href;
-      console.log(url);
+      //console.log(url);
       if (!url.includes("undefined")) {
         return url;
       } else {

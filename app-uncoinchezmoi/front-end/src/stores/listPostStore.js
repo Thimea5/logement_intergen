@@ -10,7 +10,7 @@ export const useListPostStore = defineStore("listPost", {
 
   actions: {
     loadPosts() {
-      //console.log("this.loadPosts");
+      ////console.log("this.loadPosts");
       if (!this.isLoaded) {
         const apiUrl = import.meta.env.VITE_API_URL;
         axios
@@ -24,10 +24,10 @@ export const useListPostStore = defineStore("listPost", {
             if (result.status === 200 && result.data["success"]) {
               const resPosts = result.data["posts"];
               const resServices = result.data["services"];
-              //console.log(resPosts);
-              //console.log(resServices);
+              console.log(resPosts);
+              console.log(resServices);
               for (let i = 0; i < resPosts.length; i++) {
-                //console.log(resPosts[i]["id"]);
+                ////console.log(resPosts[i]["id"]);
                 this.listPost.push({
                   idPost: resPosts[i]["post_id"],
                   address: resPosts[i]["address"],
@@ -49,7 +49,7 @@ export const useListPostStore = defineStore("listPost", {
                   id: resServices[i][0]["id"],
                   idUser: resServices[i][0]["id_user"],
                   isCleaning: resServices[i][0]["cleaning"],
-                  isCarSharing: resServices[i][0]["carsharing"],
+                  isCarSharing: resServices[i][0]["carSharing"],
                   isCooking: resServices[i][0]["cooking"],
                   isDiy: resServices[i][0]["diy"],
                   isErrand: resServices[i][0]["errand"],
@@ -60,13 +60,13 @@ export const useListPostStore = defineStore("listPost", {
               }
             }
 
-            console.log("resPosts", this.listPost);
-            console.log("resServices", this.listServices);
+            //console.log("resPosts", this.listPost);
+            //console.log("resServices", this.listServices);
             this.isLoaded = true;
-            //console.log("fini");
+            ////console.log("fini");
           })
           .catch((error) => {
-            console.log(error);
+            //console.log(error);
           });
       }
     },

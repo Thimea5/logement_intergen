@@ -22,7 +22,7 @@
     array_push($services, $serviceModel->getServicesByPost($posts[$i]['post_id']));
   }
 
-  //var_dump($services);
+  var_dump($services);
 
   if ($posts) {
     echo json_encode(['success' => true, 'posts' => $posts, 'services' => $services]);

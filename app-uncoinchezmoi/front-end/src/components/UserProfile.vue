@@ -79,9 +79,9 @@ export default {
     };
   },
   mounted() {
-    console.log("mounted");
+    //console.log("mounted");
     this.isHost = this.user.type == "host";
-    console.log(this.user.birthdate);
+    //console.log(this.user.birthdate);
     this.dateModel = new Date(this.user.birthdate);
   },
 
@@ -117,7 +117,7 @@ export default {
           }
         )
         .then((result) => {
-          console.log(result);
+          //console.log(result);
         })
         .catch((error) => {
           console.error(error);

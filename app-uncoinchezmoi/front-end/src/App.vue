@@ -52,20 +52,15 @@ export default {
     if (!ps.isLoaded) ps.loadPosts();
 
     // C'est un peu long au chargement, mais j'ai pas trouvé de solution pour l'instant
-    console.log(ps.isLoaded);
     await this.waitUntil(() => ps.isLoaded);
     console.log("après");
 
     this.listDisplay = ps.listPost;
 
-    console.log(this.isLoggedIn);
     if (this.isLoggedIn) {
-      console.log(this.isLoggedIn);
       this.userStore.loadUserFromSession();
       this.isComplete = this.userStore.user.complete;
     }
-
-    console.log(this.userStore.isAuthenticated);
   },
 
   methods: {

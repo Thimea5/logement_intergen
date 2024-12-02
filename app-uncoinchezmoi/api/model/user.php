@@ -12,7 +12,7 @@
             $query = $this->conn->prepare($sql);
             $query->execute();
 
-            return $query->fetch(PDO::FETCH_ASSOC);
+            return $query->fetchAll(PDO::FETCH_ASSOC);
         }
 
         function getUsersByEmail($email) {

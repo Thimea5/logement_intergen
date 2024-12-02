@@ -115,10 +115,10 @@ export default {
           }
         )
         .then((result) => {
-          console.log(result);
+          //console.log(result);
           if (result.status === 200) {
             if (result.data["success"]) {
-              console.log("here");
+              //console.log("here");
               const token = result.data["token"];
 
               sessionStorage.setItem("token", token);
@@ -129,8 +129,8 @@ export default {
 
               const user = result.data["user-info"];
               const serv = result.data["user-services"];
-              console.log(user);
-              console.log(serv);
+              //console.log(user);
+              //console.log(serv);
 
               this.userStore.setUser(user);
               this.userStore.setServices(serv);

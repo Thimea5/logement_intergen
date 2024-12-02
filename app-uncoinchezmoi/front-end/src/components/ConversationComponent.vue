@@ -39,7 +39,7 @@ export default {
   },
 
   mounted() {
-    console.log("mounted inside conv");
+    //console.log("mounted inside conv");
     const cs = useConversationStore();
     if (!cs.isLoaded) {
       cs.load(this.userId);

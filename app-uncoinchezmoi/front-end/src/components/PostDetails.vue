@@ -28,35 +28,48 @@
           ></v-btn>
         </div>
 
-        <v-card class="styled-card" v-if="post">
-          <v-card-title>{{ post.type_logement }} de {{ this.usersData[post.idUser].firstname }}</v-card-title>
+        <v-card class="styled-card bg-blue-grey-lighten-4" v-if="post">
+          <v-card-title>
+            {{ post.type_logement }} de {{ this.usersData.genre == "F" ? "Mme" : "M." }} {{ this.usersData.lastname }}
+            {{ this.usersData.firstname }}
+          </v-card-title>
           <v-card-subtitle>
             <v-icon>mdi-map-marker</v-icon> {{ post.address }} - {{ post.postalCode }} {{ post.city }}
           </v-card-subtitle>
           <v-card-text>
-            <p>Taille : {{ post.size }} m²</p>
-            <p>Loyer : {{ post.price }} €/Mois</p>
-            <p>Services : TODO ICONE</p>
+            <p>{{ this.listService }}</p>
+            <p>{{ post }}</p>
+            <p>Taille {{ post.size }} m² - [{{ post.price }} €/Mois]</p>
+            <div class="d-flex flex-row">
+              <p>Services :</p>
+              <template v-for="(icon, key) in serviceIcons">
+                <v-icon v-if="this.listService[post.idPost]?.[key] === 1" :key="`${post.idPost}-${key}`" class="mx-1">
+                  {{ icon }}
+                </v-icon>
+              </template>
+            </div>
           </v-card-text>
         </v-card>
 
-        <v-card class="styled-card p-3">
-          <v-card-title class="text-h5 font-weight-bold">Commentaires & Avis</v-card-title>
+        <v-card class="styled-card bg-blue-grey-lighten-4 p-2">
+          <v-card-title>Commentaires & Avis</v-card-title>
           <v-row>
             <v-col v-if="comments.length == 0">
-              <v-card class="styled-card m-2" color="red">
+              <v-card class="styled-card m-auto">
                 <v-card-title class="text-h6 font-weight-bold">Aucun Commentaire</v-card-title>
               </v-card>
             </v-col>
             <v-col v-else v-for="comment in comments" :key="comment.id" cols="12" sm="6" md="4">
-              <v-card class="styled-card m-2" color="red">
-                <v-card-title class="text-h6 font-weight-bold">{{
-                  comment.author == " " ? "Anonyme" : comment.author
-                }}</v-card-title>
-                <v-card-subtitle class="text-caption grey--text">{{ formatDate(comment.createdAt) }}</v-card-subtitle>
-                <v-card-text class="mt-2">
-                  <p>{{ comment.text }}</p>
-                </v-card-text>
+              <v-card class="styled-card m-auto">
+                <v-card-title style="white-space: normal; word-wrap: break-word; overflow: visible" height="100%">
+                  {{ comment.text }}
+                </v-card-title>
+                <div style="border-top: 1px solid #ccc; margin: 2% 5%"></div>
+
+                <v-card-subtitle class="text-caption grey--text">
+                  De {{ comment.author == " " ? "Anonyme" : comment.author }} -
+                  {{ formatDate(comment.createdAt) }}
+                </v-card-subtitle>
               </v-card>
             </v-col>
           </v-row>
@@ -100,14 +113,26 @@ export default {
       currentImageIndex: 0,
       zoomDialog: false,
       usersData: [],
+      serviceIcons: {
+        isCleaning: "mdi-broom",
+        isCarSharing: "mdi-car",
+        isCooking: "mdi-silverware-fork-knife",
+        isDiy: "mdi-hammer",
+        isErrand: "mdi-cart",
+        isGardening: "mdi-sprout",
+        isPetsSitting: "mdi-paw",
+        isTalking: "mdi-chat",
+      },
+      listService: [],
     };
   },
 
   mounted() {
+    //console.log("mounted pd");
     const ps = useListPostStore();
     const route = useRoute();
     const postId = route.params.id;
-    console.log(postId);
+    ////console.log(postId); //0
 
     this.post = ps.listPost.find((ph) => ph.idPost == postId);
     if (this.post) {
@@ -130,9 +155,11 @@ export default {
         },
       })
       .then((result) => {
+        //console.log("chargeemnt des comments ok");
+        //console.log(result);
         if (result.status === 200 && result.data["success"]) {
           const res = result.data["comments"];
-          //console.log("resComments", res);
+          ////console.log("resComments", res);
           for (let i = 0; i < res.length; i++) {
             this.comments.push({
               id: res[i]["id"],
@@ -141,24 +168,32 @@ export default {
               author: res[i]["nameAuthor"],
             });
           }
+
+          //console.log(this.comments);
+
+          this.comments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         }
+
+        //console.log("chargeemnt de l'users");
+
+        axios
+          .get(apiUrl + "/services/userManager.php")
+          .then((response) => {
+            this.usersData = response.data[0][postId];
+          })
+          .catch((error) => {
+            console.error("Erreur lors de la récupération des utilisateurs:", error);
+          });
+
+        //console.log(this.usersData);
+
+        this.listService = ps.listServices;
+        console.log(ps.listServices);
+        console.log(this.listService);
       })
       .catch((error) => {
         console.error(error);
       });
-
-    axios
-      .get(apiUrl + "/services/userManager.php")
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Erreur lors de la récupération des utilisateurs:", error);
-      });
-
-    console.log(this.usersData);
-
-    this.comments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   },
 
   methods: {
@@ -178,11 +213,11 @@ export default {
     },
 
     reportPostById(postId) {
-      console.log("TODO report");
+      //console.log("TODO report");
     },
 
     contactHost() {
-      console.log("TODO msg");
+      //console.log("TODO msg");
     },
 
     getImageSrc(index) {
@@ -260,7 +295,6 @@ export default {
 }
 .styled-card {
   margin: 5%;
-  background-color: #3b6475;
   border-radius: 8px;
   width: 100%;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);

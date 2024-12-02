@@ -78,8 +78,8 @@
                     </v-card-title>
                     <v-card-subtitle>
                       {{ listing.type_logement }} -
-                      {{ (listing.size === null ? 0 : listing.size) + "m²" }}</v-card-subtitle
-                    >
+                      {{ (listing.size === null ? 0 : listing.size) + "m²" }}
+                    </v-card-subtitle>
                     <v-card-text>{{ listing.city }} - {{ listing.postalCode }}</v-card-text>
                   </v-card>
                 </v-col>

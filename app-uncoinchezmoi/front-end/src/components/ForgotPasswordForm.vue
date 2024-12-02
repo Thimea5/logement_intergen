@@ -106,7 +106,7 @@ export default {
       axios
         .get(apiUrl + "/services/userManager.php")
         .then((response) => {
-          console.log(response.data);
+          //console.log(response.data);
           for (let i = 0; i < response.data.length; i++) {
             this.users.push(response.data[i]["mail"]);
           }
@@ -131,17 +131,17 @@ export default {
     validateOtp() {
       if (this.userCode.length == 6) {
         if (this.userCode == this.generatedCode) {
-          // console.log("OTP valide : ", this.userCode, this.generatedCode);
+          // //console.log("OTP valide : ", this.userCode, this.generatedCode);
           this.otpError = false;
         } else {
-          // console.log("OTP invalide : ", this.userCode, this.generatedCode);
+          // //console.log("OTP invalide : ", this.userCode, this.generatedCode);
           this.otpError = true;
         }
       }
     },
 
     startChrono() {
-      //console.log("startChrono");
+      ////console.log("startChrono");
       this.disabled = true;
       let wait = this.timer;
       this.interval = setInterval(() => {
@@ -163,13 +163,13 @@ export default {
         return;
       }
 
-      console.log(this.generatedCode);
+      //console.log(this.generatedCode);
 
       this.panel = "otpShow";
 
       this.startChrono();
 
-      //console.log("Envoyer le code de vérification par email:", this.generatedCode);
+      ////console.log("Envoyer le code de vérification par email:", this.generatedCode);
 
       emailjs.init({
         publicKey: "gH39qa5yQWVo_b1pQ",
@@ -183,7 +183,7 @@ export default {
 
       try {
         emailjs.send("service_bkoff5o", "template_u5sv70c", templateParams);
-        console.log("Email envoyé !");
+        //console.log("Email envoyé !");
         this.codeSent = true;
       } catch (error) {
         console.error("Erreur d'envoi de l'email:", error);

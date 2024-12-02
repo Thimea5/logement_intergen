@@ -52,7 +52,6 @@ export default {
         idPost: this.postId,
       };
 
-      console.log(comment);
       const apiUrl = import.meta.env.VITE_API_URL;
       axios
         .post(apiUrl + "/services/commentsManager.php", comment, {
@@ -61,11 +60,13 @@ export default {
           },
         })
         .then((result) => {
-          console.log(result);
+          //console.log(result);
         })
         .catch((error) => {
           console.error(error);
         });
+
+      this.$router.go(-1);
     },
   },
 };

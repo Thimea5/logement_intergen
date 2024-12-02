@@ -12,7 +12,7 @@ export const useConversationStore = defineStore("conversation", {
 
   actions: {
     load(pId) {
-      console.log("loading inside store", pId);
+      //console.log("loading inside store", pId);
       if (!this.isLoaded1) {
         const apiUrl = import.meta.env.VITE_API_URL;
         axios
@@ -23,14 +23,14 @@ export const useConversationStore = defineStore("conversation", {
             headers: { "Content-Type": "application/json" },
           })
           .then((result) => {
-            console.log(result);
+            //console.log(result);
             if (result.status === 200 && result.data["success"]) {
               const conv = result.data["conversations"];
               const msg = result.data["messages"];
               const usr = result.data["users"];
-              console.log(conv);
-              console.log(msg);
-              console.log(usr);
+              //console.log(conv);
+              //console.log(msg);
+              //console.log(usr);
             }
 
             this.isLoaded1 = true;
