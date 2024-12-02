@@ -37,13 +37,15 @@
             <v-icon>mdi-map-marker</v-icon> {{ post.address }} - {{ post.postalCode }} {{ post.city }}
           </v-card-subtitle>
           <v-card-text>
-            <p>{{ this.listService }}</p>
-            <p>{{ post }}</p>
             <p>Taille {{ post.size }} m² - [{{ post.price }} €/Mois]</p>
             <div class="d-flex flex-row">
               <p>Services :</p>
               <template v-for="(icon, key) in serviceIcons">
-                <v-icon v-if="this.listService[post.idPost]?.[key] === 1" :key="`${post.idPost}-${key}`" class="mx-1">
+                <v-icon
+                  v-if="this.listService[post.idPost - 1]?.[key] === 1"
+                  :key="`${post.idPost - 1}-${key}`"
+                  class="mx-1"
+                >
                   {{ icon }}
                 </v-icon>
               </template>

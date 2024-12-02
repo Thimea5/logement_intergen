@@ -69,7 +69,11 @@
                 <v-card-text class="d-flex flex-row">
                   <p>Services :</p>
                   <template v-for="(icon, key) in serviceIcons">
-                    <v-icon v-if="listService[elt.idPost]?.[key] === 1" :key="`${elt.idPost}-${key}`" class="mx-1">
+                    <v-icon
+                      v-if="listService[elt.idPost - 1]?.[key] === 1"
+                      :key="`${elt.idPost - 1}-${key}`"
+                      class="mx-1"
+                    >
                       {{ icon }}
                     </v-icon>
                   </template>

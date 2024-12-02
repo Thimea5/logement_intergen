@@ -18,11 +18,12 @@
   
   //var_dump($posts);
   $services = [];
+  //var_dump($posts);
   for ($i=0; $i<count($posts); ++$i) {
-    array_push($services, $serviceModel->getServicesByPost($posts[$i]['post_id']));
+    array_push($services, $serviceModel->getServicesByHost($posts[$i]['user_id']));
   }
 
-  var_dump($services);
+  //var_dump($services);
 
   if ($posts) {
     echo json_encode(['success' => true, 'posts' => $posts, 'services' => $services]);

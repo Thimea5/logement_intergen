@@ -25,6 +25,7 @@
                 <div>
                   <h5>Description:</h5>
                   <p class="ms-5">{{ this.post.description }}</p>
+                  <p>{{ this.serviceList }}</p>
                 </div>
                 <v-divider></v-divider>
                 <div class="d-flex justify-content-around">
@@ -87,7 +88,9 @@ export default {
     setTimeout(() => {
       this.post = ps.listPost.filter((post) => post.idUser == this.user.id)[0];
 
+      //console.log(ps.listServices);
       this.servicesList = ps.listServices.filter((list) => list.idUser == this.user.id)[0];
+      //console.log(this.servicesList);
     }, 250);
   },
   methods: {
