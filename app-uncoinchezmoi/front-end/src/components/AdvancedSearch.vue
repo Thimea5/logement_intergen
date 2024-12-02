@@ -173,19 +173,30 @@ export default {
       this.cardList = ps.listPost
         .map((listing, index) => {
           if (listing.available) {
+            const serviceData = ps.listServices[index] || {};
             return {
-              id: listing.id,
-              address: ps.listHost[index]?.address,
-              city: ps.listHost[index]?.city,
-              postalCode: ps.listHost[index]?.postalCode,
-              services: ps.listServices[index],
-              type_logement: ps.listHost[index]?.type_logement,
-              img: ps.listHost[index]?.img,
-              size: ps.listHost[index]?.size,
+              id: listing.idPost,
+              address: listing.address,
+              city: listing.city,
+              postalCode: listing.postalCode,
+              services: {
+                isCleaning: serviceData.isCleaning || false,
+                isCarSharing: serviceData.isCarSharing || false,
+                isCooking: serviceData.isCooking || false,
+                isDiy: serviceData.isDiy || false,
+                isErrand: serviceData.isErrand || false,
+                isGardening: serviceData.isGardening || false,
+                isPetsSitting: serviceData.isPetsSitting || false,
+                isTalking: serviceData.isTalking || false,
+              },
+              type_logement: listing.type_logement,
+              img: listing.img,
+              size: listing.size,
             };
           }
         })
         .filter((item) => {
+          if (!item) return false;
           const matchQuery =
             item.address.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
             item.city.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
