@@ -15,6 +15,17 @@
       return $query->fetchAll();
     }
 
+    public function getPostByHostId($idUser) {
+      $sql = "SELECT * FROM post WHERE id_user = :pIdUser";
+      $query = $this->conn->prepare($sql);
+
+      $query->bindParam("pIdUser", $idUser);
+
+      $query->execute();
+      
+      return $query->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getPostsWithHostInformations() {
       $sql = "SELECT 
                   post.id AS post_id, 

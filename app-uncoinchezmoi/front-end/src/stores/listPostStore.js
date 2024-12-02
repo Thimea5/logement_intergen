@@ -36,6 +36,7 @@ export const useListPostStore = defineStore("listPost", {
                   latitude: resPosts[i]["lat"],
                   longitude: resPosts[i]["lng"],
                   type_logement: resPosts[i]["type_logement"],
+                  description: resPosts[i]["description"],
                   price: resPosts[i]["price"],
                   size: resPosts[i]["size"],
                   img: resPosts[i]["cheminPhoto"],

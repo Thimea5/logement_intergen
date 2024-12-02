@@ -13,6 +13,7 @@ import AdvancedSearch from "../components/AdvancedSearch.vue";
 import PostDetails from "../components/PostDetails.vue";
 import NewComment from "../components/NewComment.vue";
 import ConversationComponent from "../components/ConversationComponent.vue";
+import ViewPost from "../components/ViewPost.vue";
 
 const routes = [
   {
@@ -25,6 +26,12 @@ const routes = [
     path: "/conversations",
     name: "ConversationComponent",
     component: ConversationComponent,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/view-post",
+    name: "ViewPost",
+    component: ViewPost,
     meta: { requiresAuth: true },
   },
   {
