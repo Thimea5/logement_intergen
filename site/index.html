@@ -1,14 +1,580 @@
-<!--https://www.w3schools.com/html/html_basic.asp-->
 <!DOCTYPE html>
-<html>
-    <head>
+<!--[if lt IE 9]><html class="no-js oldie" lang="en"> <![endif]-->
+<!--[if IE 9]><html class="no-js oldie ie9" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html class="no-js" lang="fr">
+  <!--<![endif]-->
 
-    </head>
+  <head>
+    <!--- basic page needs
+   ================================================== -->
+    <meta charset="utf-8" />
+    <title>Un Coin Chez Moi</title>
+    <meta name="description" content="" />
+    <meta name="author" content="" />
 
-    <body>
+    <!-- mobile specific metas
+   ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <h1>My First Heading</h1>
-    <p>My first paragraph.</p>
+    <!-- CSS
+   ================================================== -->
+    <link rel="stylesheet" href="css/base.css" />
+    <link rel="stylesheet" href="css/vendor.css" />
+    <link rel="stylesheet" href="css/main.css" />
 
-    </body>
+    <!-- script
+   ================================================== -->
+    <script src="js/modernizr.js"></script>
+    <script src="js/pace.min.js"></script>
+
+    <!-- favicons
+	================================================== -->
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  </head>
+
+  <body id="top">
+    <!-- header 
+   ================================================== -->
+    <header id="header" class="row">
+      <div class="header-logo">
+        <a href="index.html">Un Coin Chez Moi</a>
+      </div>
+
+      <nav id="header-nav-wrap">
+        <ul class="header-main-nav">
+          <li class="current">
+            <a class="smoothscroll" href="#home" title="home">Bienvenu</a>
+          </li>
+          <li>
+            <a class="smoothscroll" href="#about" title="about">A propos</a>
+          </li>
+          <li>
+            <a class="smoothscroll" href="#testimonials" title="testimonials">Témoignages</a>
+          </li>
+          <li>
+            <a class="smoothscroll" href="#download" title="download">Télécharger</a>
+          </li>
+        </ul>
+      </nav>
+
+      <a class="header-menu-toggle" href="#"><span>Menu</span></a>
+    </header>
+    <!-- /header -->
+
+    <!-- home
+   ================================================== -->
+    <section
+      id="home"
+      data-parallax="scroll"
+      data-image-src="images/hero-bg.jpg"
+      data-natural-width="3000"
+      data-natural-height="2000"
+    >
+      <div class="overlay"></div>
+      <div class="home-content">
+        <div class="row contents">
+          <div class="home-content-left">
+            <h3 data-aos="fade-up">Un Coin Chez Moi</h3>
+
+            <h1 data-aos="fade-up">
+              Bienvenu <br />
+              Chez toi !
+            </h1>
+
+            <div class="buttons" data-aos="fade-up">
+              <a href="#download" class="smoothscroll button stroke">
+                <span class="icon-circle-down" aria-hidden="true"></span>
+                Télécharger l'app
+              </a>
+              <a
+                href="https://www.youtube.com/embed/wMOGzSZfCsE?si=z2hPt5Vl08wjLEhm&amp;controls=0"
+                data-lity
+                class="button stroke"
+              >
+                <span class="icon-play" aria-hidden="true"></span>
+                Regarder la vidéo
+              </a>
+            </div>
+          </div>
+
+          <div class="home-image-right">
+            <img src="images/iphone-app.png" data-aos="fade-up" />
+          </div>
+        </div>
+      </div>
+      <!-- end home-content -->
+
+      <div class="home-scrolldown">
+        <a href="#about" class="scroll-icon smoothscroll">
+          <span>Venez voir</span>
+          <i class="icon-arrow-right" aria-hidden="true"></i>
+        </a>
+      </div>
+    </section>
+    <!-- end home -->
+
+    <!-- about
+    ================================================== -->
+    <section id="about">
+      <div class="row about-intro">
+        <div class="col-four">
+          <h1 class="intro-header" data-aos="fade-up">
+            A propos de notre application
+          </h1>
+        </div>
+        <div class="col-eight">
+          <p class="lead" data-aos="fade-up">
+            Un Coin Chez Moi est née de la conviction que le logement peut être
+            bien plus qu'un simple toit. Fondée par des étudiants motivés. Notre
+            application répond aux défis actuels de la solitude, du coût du
+            logement et de la solidarité. Nous croyons que chaque espace de vie
+            peut devenir une opportunité de rencontre, d'échange et d'entraide.
+            Notre mission : transformer la façon dont les générations
+            cohabitent, en créant des connexions humaines durables et
+            bienveillantes.
+          </p>
+        </div>
+      </div>
+
+      <div class="row about-features">
+        <div class="features-list block-1-3 block-m-1-2 block-mob-full group">
+          <div class="bgrid feature" data-aos="fade-up">
+            <span class="icon"><i class="icon-shield"></i></span>
+
+            <div class="service-content">
+              <h3>Sécurité avant tout</h3>
+
+              <p>
+                Notre plateforme met la sécurité au cœur de son dispositif.
+                Chaque profil est méticuleusement vérifié, des systèmes de
+                notation sont mis en place, et nos outils de communication
+                internes protègent l'identité et les données personnelles de nos
+                utilisateurs.
+              </p>
+            </div>
+          </div>
+          <!-- /bgrid -->
+
+          <div class="bgrid feature" data-aos="fade-up">
+            <span class="icon"><i class="icon-toggles"></i></span>
+
+            <div class="service-content">
+              <h3>Flexibilité totale</h3>
+
+              <p>
+                Chaque échange est unique et personnalisable. Les services
+                proposés peuvent aller de l'aide aux courses à du jardinage, en
+                passant par du soutien administratif ou numérique. Vous
+                définissez ensemble les contours de votre cohabitation.
+              </p>
+            </div>
+          </div>
+          <!-- /bgrid -->
+
+          <div class="bgrid feature" data-aos="fade-up">
+            <span class="icon"><i class="icon-users"></i></span>
+
+            <div class="service-content">
+              <h3>Économie collaborative</h3>
+
+              <p>
+                Un Coin Chez Moi propose une solution gagnant-gagnant. Les
+                propriétaires bénéficient d'une présence rassurante et d'une
+                aide au quotidien, tandis que les jeunes accèdent à un logement
+                abordable dans un cadre convivial.
+              </p>
+            </div>
+          </div>
+          <!-- /bgrid -->
+
+          <div class="bgrid feature" data-aos="fade-up">
+            <span class="icon"><i class="icon-shuffle"></i></span>
+
+            <div class="service-content">
+              <h3>Algorithme de matching intelligent</h3>
+
+              <p>
+                Notre technologie exclusive analyse les compatibilités bien
+                au-delà des critères classiques. Personnalités, centres
+                d'intérêts, besoins spécifiques : notre algorithme garantit des
+                mises en relation pertinentes et harmonieuses.
+              </p>
+            </div>
+          </div>
+          <!-- /bgrid -->
+
+          <div class="bgrid feature" data-aos="fade-up">
+            <span class="icon"><i class="icon-star"></i></span>
+
+            <div class="service-content">
+              <h3>Accompagnement personnalisé</h3>
+
+              <p>
+                Nous ne nous contentons pas de mettre en relation. Notre équipe
+                reste disponible tout au long de l'expérience de cohabitation
+                pour conseiller, rassurer et résoudre d'éventuels points de
+                friction.
+              </p>
+            </div>
+          </div>
+          <!-- /bgrid -->
+
+          <div class="bgrid feature" data-aos="fade-up">
+            <span class="icon"><i class="icon-group"></i></span>
+
+            <div class="service-content">
+              <h3>Communauté solidaire</h3>
+
+              <p>
+                Un Coin Chez Moi, c'est plus qu'une application, c'est une
+                communauté qui promeut le lien intergénérationnel, lutte contre
+                l'isolement et réinvente les modes de vie traditionnels.
+              </p>
+            </div>
+          </div>
+          <!-- /bgrid -->
+        </div>
+        <!-- end features-list -->
+      </div>
+      <!-- end about-features -->
+
+      <div class="row about-how">
+        <h1 class="intro-header" data-aos="fade-up">Comment ça fonctionne ?</h1>
+
+        <div class="about-how-content" data-aos="fade-up">
+          <div class="about-how-steps block-1-2 block-tab-full group">
+            <div class="bgrid step" data-item="1">
+              <h3>
+                Création de profil : Votre première étape vers une nouvelle
+                expérience
+              </h3>
+              <p>
+                Que vous soyez propriétaire ou jeune à la recherche d'un
+                logement, votre parcours commence par la création d'un profil
+                détaillé. Les propriétaires renseignent les caractéristiques de
+                leur logement, leurs centres d'intérêt et les services qu'ils
+                souhaitent échanger. Les jeunes, quant à eux, présentent leur
+                parcours, leurs compétences et leurs attentes. Un processus de
+                vérification rigoureux garantit la fiabilité et la sécurité des
+                informations.
+              </p>
+            </div>
+
+            <div class="bgrid step" data-item="2">
+              <h3>Matching intelligent : La magie de l'algorithme</h3>
+              <p>
+                Notre algorithme breveté analyse les compatibilités bien au-delà
+                des simples critères de logement. Il prend en compte les centres
+                d'intérêt, les personnalités, les disponibilités et les besoins
+                spécifiques de chaque profil. Grâce à un système de scoring
+                précis, nous proposons des mises en relation pertinentes qui
+                maximisent les chances de créer un lien durable et harmonieux
+                entre le propriétaire et le jeune.
+              </p>
+            </div>
+
+            <div class="bgrid step" data-item="3">
+              <h3>
+                Communication sécurisée : Faites connaissance en toute
+                tranquillité
+              </h3>
+              <p>
+                Une fois les profils matchés, notre plateforme met à disposition
+                un outil de communication interne entièrement sécurisé. Les
+                utilisateurs peuvent échanger, faire connaissance et organiser
+                des rencontres sans partager leurs coordonnées personnelles. Des
+                guides de bonnes pratiques et des conseils de mise en relation
+                sont également proposés pour faciliter les premiers échanges et
+                lever les éventuelles appréhensions.
+              </p>
+            </div>
+
+            <div class="bgrid step" data-item="4">
+              <h3>
+                Contractualisation et suivi : La garantie d'une expérience
+                sereine
+              </h3>
+              <p>
+                Après avoir trouvé le bon colocataire, notre application
+                accompagne les utilisateurs dans la rédaction d'un contrat
+                personnalisé. Nous proposons des modèles adaptés à chaque
+                situation, précisant les conditions de l'échange, les services
+                attendus et les engagements de chacun. Un système de notation et
+                de feedback permet ensuite de suivre la qualité de la
+                cohabitation et d'intervenir si nécessaire pour résoudre
+                d'éventuels points de friction.
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- end about-how-content -->
+      </div>
+      <!-- end about-how -->
+    </section>
+    <!-- end about -->
+
+    <!-- Testimonials Section
+    ================================================== -->
+    <section id="testimonials">
+      <div class="row">
+        <div class="col-twelve">
+          <h1 class="intro-header" data-aos="fade-up">
+            Ce que dises les utilisateurs
+          </h1>
+        </div>
+      </div>
+
+      <div class="row owl-wrap">
+        <div id="testimonial-slider" data-aos="fade-up">
+          <div class="slides owl-carousel">
+            <div>
+              <p>
+                Grâce à Un Coin Chez Moi, j'ai rencontré Thomas, un étudiant
+                adorable qui m'aide à faire mes courses et à jardiner. En
+                échange, il bénéficie d'un loyer très abordable. Ce n'est plus
+                de la location, c'est devenu une vraie amitié !
+              </p>
+
+              <div class="testimonial-author">
+                <img src="images/avatars/user-01.jpg" alt="Author image" />
+                <div class="author-info">
+                  Marie D.
+                  <span class="position">68 ans - Retraitée</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <p>
+                J'ai trouvé ma colocation idéale à Paris sans me ruiner. Mme
+                Dupont m'aide pour mes révisions et je l'accompagne à ses
+                rendez-vous médicaux. Un échange intelligent et bienveillant !
+              </p>
+
+              <div class="testimonial-author">
+                <img src="images/avatars/user-02.jpg" alt="Author image" />
+                <div class="author-info">
+                  Antoine L.
+                  <span class="position">24 ans - Étudiant</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <p>
+                Après des années de solitude, j'ai retrouvé de la vie chez moi.
+                Emma, ma colocataire, apporte un souffle de jeunesse et
+                d'énergie. La plateforme est simple et sécurisante.
+              </p>
+
+              <div class="testimonial-author">
+                <img src="images/avatars/user-03.jpg" alt="Author image" />
+                <div class="author-info">
+                  Sophie R.
+                  <span>72 ans - Retraitée</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <p>
+                Un concept génial qui m'a permis de me loger à moindre coût à
+                Bordeaux. M. Martin m'a aidé à améliorer mon CV et je l'aide à
+                configurer ses appareils numériques.
+              </p>
+
+              <div class="testimonial-author">
+                <img src="images/avatars/user-04.jpg" alt="Author image" />
+                <div class="author-info">
+                  Lucas M.
+                  <span>22 ans - Alternant</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <p>
+                Je ne me sentais plus seule depuis que j'ai accueilli Mehdi. Il
+                est comme un petit-fils pour moi. Un Coin Chez Moi a changé ma
+                vie !
+              </p>
+
+              <div class="testimonial-author">
+                <img src="images/avatars/user-05.jpg" alt="Author image" />
+                <div class="author-info">
+                  Jacqueline B.
+                  <span>65 ans - Retraitée</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end slides -->
+        </div>
+        <!-- end testimonial-slider -->
+      </div>
+      <!-- end flex-container -->
+    </section>
+    <!-- end testimonials -->
+
+    <!-- download
+    ================================================== -->
+    <section id="download">
+      <div class="row">
+        <div class="col-full">
+          <h1 class="intro-header" data-aos="fade-up">
+            Téléchargez notre application maintenant !
+          </h1>
+
+          <p class="lead" data-aos="fade-up">
+            Imaginez un logement qui va bien au-delà des murs : un lieu de
+            rencontres, d'entraide et de découvertes mutuelles. Un Coin Chez Moi
+            réinvente le concept de cohabitation en rapprochant les générations.
+            Chaque profil est unique, chaque histoire est différente, mais tous
+            partagent la même envie : créer du lien et simplifier la vie.
+          </p>
+
+          <ul class="download-badges">
+            <li>
+              <a href="#" title="" class="badge-appstore" data-aos="fade-up"
+                >App Store</a
+              >
+            </li>
+            <li>
+              <a href="#" title="" class="badge-googleplay" data-aos="fade-up"
+                >Play Store</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- end download -->
+
+    <!-- footer
+    ================================================== -->
+    <footer>
+      <div class="footer-main">
+        <div class="row">
+          <div class="col-three md-1-3 tab-full footer-info">
+            <div class="footer-logo"></div>
+
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              Pellentesque in ipsum id orci porta dapibus. Vivamus magna justo,
+              lacinia eget consectetur sed, convallis at tellus.
+            </p>
+
+            <ul class="footer-social-list">
+              <li>
+                <a href="#"><i class="fa fa-facebook-square"></i></a>
+              </li>
+              <li>
+                <a href="#"><i class="fa fa-twitter"></i></a>
+              </li>
+              <li>
+                <a href="#"><i class="fa fa-behance"></i></a>
+              </li>
+              <li>
+                <a href="#"><i class="fa fa-dribbble"></i></a>
+              </li>
+              <li>
+                <a href="#"><i class="fa fa-instagram"></i></a>
+              </li>
+            </ul>
+          </div>
+          <!-- end footer-info -->
+
+          <div class="col-three md-1-3 tab-1-2 mob-full footer-contact">
+            <h4>Contact</h4>
+
+            <p>
+              ICOM<br />
+              5 Av. Pierre Mendès France,<br />
+              69500 Bron<br />
+            </p>
+
+            <p>
+              contact@uncoinchezmoi.com <br />
+              Tel : 01 02 03 04 05
+            </p>
+          </div>
+          <!-- end footer-contact -->
+
+          <div class="col-two md-1-3 tab-1-2 mob-full footer-site-links">
+            <h4>Liens</h4>
+
+            <ul class="list-links">
+              <li><a href="#">Bienvenu</a></li>
+              <li><a href="#about">A propos</a></li>
+              <li><a href="#">Blog</a></li>
+              <li><a href="faq.html">FAQ</a></li>
+              <li><a href="#">CGU</a></li>
+              <li><a href="#">Confidentialité</a></li>
+            </ul>
+          </div>
+          <!-- end footer-site-links -->
+
+          <div class="col-four md-1-2 tab-full footer-subscribe">
+            <h4>Notre Newsletter</h4>
+
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+
+            <div class="subscribe-form">
+              <form id="mc-form" class="group" novalidate="true">
+                <input
+                  type="email"
+                  value=""
+                  name="EMAIL"
+                  class="email"
+                  id="mc-email"
+                  placeholder="Email"
+                  required=""
+                />
+
+                <input type="submit" name="subscribe" value="Envoyer" />
+
+                <label for="mc-email" class="subscribe-message"></label>
+              </form>
+            </div>
+          </div>
+          <!-- end footer-subscribe -->
+        </div>
+        <!-- /row -->
+      </div>
+      <!-- end footer-main -->
+
+      <div class="footer-bottom">
+        <div class="row">
+          <div class="col-twelve">
+            <div class="copyright">
+              <span>© Copyright Un Coin Chez Moi - 2020.</span>
+              <span>fait par des étudiants 🎓</span>
+            </div>
+
+            <div id="go-top">
+              <a class="smoothscroll" title="Back to Top" href="#top"
+                ><i class="icon-arrow-up"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+        <!-- end footer-bottom -->
+      </div>
+    </footer>
+
+    <div id="preloader">
+      <div id="loader"></div>
+    </div>
+
+    <!-- Java Script
+    ================================================== -->
+    <script src="js/jquery-2.1.3.min.js"></script>
+    <script src="js/plugins.js"></script>
+    <script src="js/main.js"></script>
+  </body>
 </html>
