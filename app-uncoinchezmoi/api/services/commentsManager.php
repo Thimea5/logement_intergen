@@ -52,7 +52,7 @@
             echo json_encode(['error' => 'Données invalides']);
             exit;
         }
-        var_dump($data);
+        //var_dump($data);
         if (!isset($data->content, $data->idUser, $data->idPost)) {
             echo json_encode(["success" => false, "message" => "Paramètres manquants."]);
             exit;

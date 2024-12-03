@@ -18,7 +18,7 @@
             $query = $this->conn->prepare($sql);
             $query->execute();
             
-            return $query->fetchAll();
+            return $query->fetchAll(PDO::FETCH_ASSOC);
         }
 
         public function getUserConversation($pUserId) {

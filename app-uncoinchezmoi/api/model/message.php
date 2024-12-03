@@ -22,11 +22,11 @@
             $query->bindParam("pConvId", $pConvId);
             $query->execute();
 
-            return $query->fetchAll();
+            return $query->fetchAll(PDO::FETCH_ASSOC);
         }
 
         public function insertNewMessage($content, $creationDate, $convId, $userId) {
-            $sql = "INSERT INTO message(content, creation_date, id_conversation, id_user 
+            $sql = "INSERT INTO message(content, creation_date, id_conversation, id_user)
                 VALUES (:pContent, :pCreationDate, :pConvId, :pUserId);";
 
             $query = $this->conn->prepare($sql);

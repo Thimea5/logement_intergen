@@ -46,25 +46,25 @@ export default {
   },
 
   async mounted() {
-    console.log("async mounted");
-    console.log(this.userStore.isAuthenticated);
     const ps = useListPostStore();
+    const cs = useConversationStore();
 
     if (!ps.isLoaded) ps.loadPosts();
 
     // C'est un peu long au chargement, mais j'ai pas trouvé de solution pour l'instant
     await this.waitUntil(() => ps.isLoaded);
-    console.log("après");
+    console.log("chargement des listes ok");
     this.listDisplay = ps.listPost;
 
     if (this.isLoggedIn) {
+      console.log("connexion faite");
       this.userStore.loadUserFromSession();
       this.isComplete = this.userStore.user.complete;
 
-      const cs = useConversationStore();
       if (!cs.isLoaded1) cs.load(this.userStore.user.id);
+
       await this.waitUntil(() => cs.isLoaded1);
-      console.log("chargé !");
+      console.log("chargeemnt des conv/msg ok");
     }
   },
 

@@ -1,6 +1,6 @@
 <?php
     header("Access-Control-Allow-Origin: *");
-    header("Access-Control-Allow-Methods: POST, OPTIONS");
+    header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
     include_once '../config/database.php';
@@ -19,25 +19,41 @@
 
     if ($requestInfo === "POST") {
         $inputData = json_decode(file_get_contents("php://input"), true);  // Pour récupérer les données envoyées en POST
-
-        if (!isset($inputData['content']) || !isset($inputData['conversation_id']) || !isset($inputData['user_id'])) {
+        if (!isset($inputData['content']) || !isset($inputData['conv_id']) || !isset($inputData['user_id'])) {
             echo json_encode(["success" => false, "message" => "Données manquantes."]);
             exit;
         }
 
         $content = $inputData['content'];
-        $conversationId = $inputData['conversation_id'];
+        $conversationId = $inputData['conv_id'];
         $userId = $inputData['user_id'];
+        date_default_timezone_set('Europe/Paris');
         $creationDate = date('Y-m-d H:i:s');  // Date et heure actuelles
 
         $success = $msgModel->insertNewMessage($content, $creationDate, $conversationId, $userId);
-
+        //var_dump($success);
         if ($success) {
             echo json_encode(["success" => true, "message" => "Message envoyé avec succès."]);
         } else {
             echo json_encode(["success" => false, "message" => "Erreur lors de l'envoi du message."]);
         }
     } else {
-        echo json_encode(["success" => false, "message" => "Méthode non autorisée."]);
+        $inputData = $_GET;
+
+        if (!isset($inputData)) {
+            echo json_encode(["success" => false, "message" => "Aucune donnée reçue."]);
+            exit;
+        }
+
+        if (!isset($inputData['id'])) { 
+            echo json_encode(["success" => false, "message" => "Paramètres manquants."]);
+            exit;
+        }
+
+        //var_dump($inputData);
+
+        $listMsg = $msgModel->getConversationMessage($inputData['id']);
+        //var_dump($listMsg);
+        echo json_encode($listMsg);
     }
 ?>

@@ -35,16 +35,35 @@ export default {
       messages: [],
     };
   },
-  mounted() {
+  async mounted() {
     const cs = useConversationStore();
+
+    if (!cs.isLoaded1) cs.load(this.user.id);
+
+    await this.waitUntil(() => cs.isLoaded1);
+
     this.conversations = cs.conversations;
     this.usersTarget = cs.convUsersInfo;
     this.messages = cs.messages;
   },
+
   methods: {
+    waitUntil(conditionFn, interval = 250) {
+      return new Promise((resolve) => {
+        const checkCondition = () => {
+          if (conditionFn()) {
+            resolve();
+          } else {
+            setTimeout(checkCondition, interval);
+          }
+        };
+        checkCondition();
+      });
+    },
     goBack() {
       this.$router.go(-1);
     },
+
     showConversation(pId) {
       this.$router.push({ name: "MessageComponent", params: { id: pId } });
     },

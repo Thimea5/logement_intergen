@@ -108,6 +108,7 @@
 import { useListPostStore } from "../stores/listPostStore";
 import { useRoute } from "vue-router";
 import axios from "axios";
+import { useConversationStore } from "../stores/ConversationStore";
 
 export default {
   data() {
@@ -133,12 +134,14 @@ export default {
     };
   },
 
-  mounted() {
-    //console.log("mounted pd");
-    const ps = useListPostStore();
+  async mounted() {
     const route = useRoute();
+    const ps = useListPostStore();
+
+    if (!ps.isLoaded) ps.loadPosts();
+    await this.waitUntil(() => ps.isLoaded);
+
     const postId = route.params.id;
-    //console.log(postId); //0
 
     this.post = ps.listPost.find((ph) => ph.idPost == postId);
     if (this.post) {
@@ -242,15 +245,42 @@ export default {
     },
 
     reportPostById(postId) {
-      //console.log("TODO report");
+      this.$router.push({ name: "NewReport", params: { id: postId } });
     },
 
     contactHost() {
-      console.log(this.usersData); // les infos du dest
-      console.log(this.user); // les infos de moi
-      //this.$router.push({ name: "PostDetails", params: { id: listing.idPost } });
-      this.$router.push({ name: "MessageComponent", params: { destUserId: this.usersData.id } });
-      //console.log("TODO msg");
+      const cs = useConversationStore();
+
+      if (cs.isLoaded1) {
+        //console.log(cs.conversations);
+        //console.log(this.usersData);
+        //console.log(this.user);
+        let ci = cs.conversations.find((c) => {
+          return c.id == this.id;
+        });
+
+        if (ci == undefined) {
+          //console.log("nouvelle conv");
+          const apiUrl = import.meta.env.VITE_API_URL;
+          axios
+            .post(
+              apiUrl + "/services/conversationsManager.php",
+              { idDest: this.usersData.id, idUser: this.user.id },
+              {
+                header: {
+                  "Content-Type": "application/json",
+                },
+              }
+            )
+            .then((result) => {
+              console.log(result);
+              this.$router.push({ name: "MessageComponent", params: { destUserId: this.usersData.id } });
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+      }
     },
 
     getImageSrc(index) {
@@ -267,6 +297,19 @@ export default {
 
     goBack() {
       this.$router.go(-1);
+    },
+
+    waitUntil(conditionFn, interval = 250) {
+      return new Promise((resolve) => {
+        const checkCondition = () => {
+          if (conditionFn()) {
+            resolve();
+          } else {
+            setTimeout(checkCondition, interval);
+          }
+        };
+        checkCondition();
+      });
     },
   },
 };

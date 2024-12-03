@@ -33,7 +33,9 @@
 
       <v-btn class="w-100 rounded-pill mb-5" color="#4F685D" @click="modifStep1 = true"> Modifier mon profil </v-btn>
 
-      <v-btn v-if="user.type == 'host'" class="w-100 rounded-pill mb-5" color="#4F685D" @click="navigate('/view-post')">Mon logement</v-btn>
+      <v-btn v-if="user.type == 'host'" class="w-100 rounded-pill mb-5" color="#4F685D" @click="navigate('/view-post')"
+        >Mon logement</v-btn
+      >
 
       <v-btn class="w-100 rounded-pill mb-2" color="#4F685D" @click="logOut()">Déconnexion</v-btn>
     </v-container>
@@ -117,15 +119,17 @@ export default {
           }
         )
         .then((result) => {
-          //console.log(result);
+          console.log(result);
+          this.modifStep1 = false;
         })
         .catch((error) => {
           console.error(error);
         });
     },
+
     navigate(path) {
       this.$router.push(path);
-    }
+    },
   },
 };
 </script>

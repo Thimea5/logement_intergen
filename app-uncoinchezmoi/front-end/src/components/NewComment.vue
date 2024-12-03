@@ -60,13 +60,12 @@ export default {
           },
         })
         .then((result) => {
-          //console.log(result);
+          console.log(result);
+          window.location.replace(`/post-details/${this.postId}`);
         })
         .catch((error) => {
           console.error(error);
         });
-
-      //window.location.replace(`/PostDetails/${idPost}`);
     },
   },
 };

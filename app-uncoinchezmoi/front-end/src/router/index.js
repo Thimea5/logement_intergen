@@ -15,6 +15,7 @@ import NewComment from "../components/NewComment.vue";
 import ConversationComponent from "../components/ConversationComponent.vue";
 import ViewPost from "../components/ViewPost.vue";
 import MessageComponent from "../components/MessageComponent.vue";
+import NewReport from "../components/NewReport.vue";
 
 const routes = [
   {
@@ -41,6 +42,13 @@ const routes = [
     name: "ViewPost",
     component: ViewPost,
     meta: { requiresAuth: true },
+  },
+  {
+    path: "/new-report:id",
+    name: "NewReport",
+    component: NewReport,
+    meta: { requiresAuth: true },
+    props: true,
   },
   {
     path: "/new-comment:id",

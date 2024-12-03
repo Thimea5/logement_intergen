@@ -23,12 +23,12 @@ export const useConversationStore = defineStore("conversation", {
             headers: { "Content-Type": "application/json" },
           })
           .then((result) => {
-            console.log(result);
+            //console.log(result);
             if (result.status === 200 && result.data["success"]) {
               this.conversations = result.data["conversations"];
               this.messages = result.data["messages"];
               this.convUsersInfo = result.data["users"];
-              console.log(this.convUsersInfo);
+              //console.log(this.convUsersInfo);
             }
 
             this.isLoaded1 = true;
