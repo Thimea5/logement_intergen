@@ -28,7 +28,7 @@
             $query->bindParam("pId", $pUserId);
             $query->execute();
 
-            return $query->fetchAll();
+            return $query->fetchAll(PDO::FETCH_ASSOC);
         }
 
         public function insertConversation($creationDate, $idUser1, $idUser2) {

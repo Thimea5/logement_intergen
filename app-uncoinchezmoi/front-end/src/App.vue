@@ -31,6 +31,7 @@
 import "./assets/style.css";
 import { useUserStore } from "./stores/userStore";
 import { useListPostStore } from "./stores/listPostStore";
+import { useConversationStore } from "./stores/ConversationStore";
 
 export default {
   name: "App",
@@ -54,12 +55,16 @@ export default {
     // C'est un peu long au chargement, mais j'ai pas trouvé de solution pour l'instant
     await this.waitUntil(() => ps.isLoaded);
     console.log("après");
-
     this.listDisplay = ps.listPost;
 
     if (this.isLoggedIn) {
       this.userStore.loadUserFromSession();
       this.isComplete = this.userStore.user.complete;
+
+      const cs = useConversationStore();
+      if (!cs.isLoaded1) cs.load(this.userStore.user.id);
+      await this.waitUntil(() => cs.isLoaded1);
+      console.log("chargé !");
     }
   },
 

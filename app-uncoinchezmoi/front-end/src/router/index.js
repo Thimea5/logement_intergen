@@ -14,6 +14,7 @@ import PostDetails from "../components/PostDetails.vue";
 import NewComment from "../components/NewComment.vue";
 import ConversationComponent from "../components/ConversationComponent.vue";
 import ViewPost from "../components/ViewPost.vue";
+import MessageComponent from "../components/MessageComponent.vue";
 
 const routes = [
   {
@@ -21,6 +22,13 @@ const routes = [
     name: "Home",
     component: Home,
     meta: { requiresAuth: false },
+  },
+  {
+    path: "/message/:id",
+    name: "MessageComponent",
+    component: MessageComponent,
+    meta: { requiresAuth: true },
+    props: true,
   },
   {
     path: "/conversations",

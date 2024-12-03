@@ -78,7 +78,10 @@
         </v-card>
 
         <div class="button-container">
-          <v-btn color="primary" @click="contactHost()">Contacter le propriétaire</v-btn>
+          <v-btn v-if="this.user.type == 'guest'" color="primary" @click="contactHost()"
+            >Contacter le propriétaire</v-btn
+          >
+          <v-btn v-if="this.user.type == 'guest'" color="primary" @click="reserver()">Réserver l'offre</v-btn>
           <v-btn color="secondary" @click="commentPostById(post.idHost)">Laissez un commentaire</v-btn>
           <v-btn color="error" @click="reportPostById(post.id)">Signalez l'annonce</v-btn>
         </div>
@@ -109,6 +112,7 @@ import axios from "axios";
 export default {
   data() {
     return {
+      user: JSON.parse(sessionStorage.getItem("user")) || {},
       post: null,
       imgList: [],
       comments: [],
@@ -134,7 +138,7 @@ export default {
     const ps = useListPostStore();
     const route = useRoute();
     const postId = route.params.id;
-    ////console.log(postId); //0
+    //console.log(postId); //0
 
     this.post = ps.listPost.find((ph) => ph.idPost == postId);
     if (this.post) {
@@ -199,6 +203,29 @@ export default {
   },
 
   methods: {
+    reserver() {
+      console.log(this.post.idPost);
+      console.log(this.user.id);
+
+      const apiUrl = import.meta.env.VITE_API_URL;
+      axios
+        .post(
+          apiUrl + "/services/reservationManager.php",
+          { idPost: this.post.idPost, idUser: this.user.id },
+          {
+            header: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((result) => {
+          console.log(result);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
     formatDate(date) {
       const options = {
         year: "numeric",
@@ -219,6 +246,10 @@ export default {
     },
 
     contactHost() {
+      console.log(this.usersData); // les infos du dest
+      console.log(this.user); // les infos de moi
+      //this.$router.push({ name: "PostDetails", params: { id: listing.idPost } });
+      this.$router.push({ name: "MessageComponent", params: { destUserId: this.usersData.id } });
       //console.log("TODO msg");
     },
 

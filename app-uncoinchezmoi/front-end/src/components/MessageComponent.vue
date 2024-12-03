@@ -1,28 +1,53 @@
 <template>
   <v-main>
-    <v-app-bar :elevation="0">
-      <v-btn icon="mdi-keyboard-backspace" variant="plain" @click="goBack"></v-btn>
-    </v-app-bar>
+    <v-container>
+      <v-app-bar :elevation="0">
+        <v-btn icon="mdi-keyboard-backspace" variant="plain" size="x-large" @click="goBack()"></v-btn>
+        <v-app-bar-title>Messages</v-app-bar-title>
+      </v-app-bar>
 
-    <v-container class="d-flex align-center justify-center full-height">
-      <h1 class="headline mt-5 mb-5">Conversation</h1>
+      <div class="d-flex flex-column justify-center">
+        <v-text-area class="m-2" v-model="msgContent"></v-text-area>
+        <v-btn @click="sendMessage()">Envoyer</v-btn>
+      </div>
     </v-container>
   </v-main>
 </template>
 
 <script>
+import axios from "axios";
+import { useRoute } from "vue-router";
+import { useConversationStore } from "../stores/ConversationStore";
+
 export default {
   data() {
     return {
-      userId: JSON.parse(sessionStorage.getItem("user")).id,
+      msgContent: "",
+      loading: true,
+      messages: [],
+      newMessage: "",
+      messages: [],
+      userTarget: {},
     };
   },
-
-  mounted() {},
-
+  mounted() {
+    console.log("mounted msg");
+    const cs = useConversationStore();
+    const route = useRoute();
+    const convId = route.params.id;
+    //console.log(convId);
+    //console.log(cs.conversations);
+    let lct = cs.conversations.find((c) => c.id == convId);
+    console.log(lct);
+    console.log(cs.messages);
+    //console.log(test);
+  },
   methods: {
     goBack() {
       this.$router.go(-1);
+    },
+    sendMessage() {
+      console.log("test");
     },
   },
 };

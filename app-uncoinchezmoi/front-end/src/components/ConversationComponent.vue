@@ -1,25 +1,20 @@
 <template>
   <v-main>
-    <v-app-bar :elevation="0">
-      <v-btn icon="mdi-keyboard-backspace" variant="plain" @click="goBack"></v-btn>
-      <v-app-title class="headline mt-5 mb-5">Conversation</v-app-title>
-    </v-app-bar>
+    <v-container>
+      <v-app-bar :elevation="0">
+        <v-btn icon="mdi-keyboard-backspace" variant="plain" size="x-large" @click="goBack()"></v-btn>
+        <v-app-bar-title>Mes conversations</v-app-bar-title>
+      </v-app-bar>
 
-    <v-container class="d-flex align-center justify-center full-height">
-      <v-list>
-        <v-list-item v-for="(conversation, index) in conversations">
-          <v-list-item-avatar>
-            <v-img :src="conversation.image" alt="Profile Picture"></v-img>
-          </v-list-item-avatar>
-
-          <v-list-item-content>
-            <v-list-item-title class="headline">
-              {{ conversation.name }}
-            </v-list-item-title>
-            <v-list-item-subtitle>
-              {{ conversation.lastMessage }}
-            </v-list-item-subtitle>
-          </v-list-item-content>
+      <!-- Parcours des conversations et affichage de l'utilisateur cible correspondant -->
+      <v-list v-for="(elt, index) in conversations" :key="index" class="m-auto">
+        <v-list-item class="bg-blue-grey-lighten-4" @click="showConversation(elt.id)">
+          <p><strong>Conversation ID:</strong> {{ elt.id }}</p>
+          <p><strong>Date de création:</strong> {{ elt.creation_date }}</p>
+          <p>
+            <strong>Utilisateur cible:</strong> {{ getUserTarget(elt.id_user1, elt.id_user2)?.firstname }}
+            {{ getUserTarget(elt.id_user1, elt.id_user2)?.lastname }}
+          </p>
         </v-list-item>
       </v-list>
     </v-container>
@@ -27,32 +22,35 @@
 </template>
 
 <script>
+import axios from "axios";
 import { useConversationStore } from "../stores/ConversationStore";
 
 export default {
   data() {
     return {
-      userId: JSON.parse(sessionStorage.getItem("user")).id,
-      conversations: null,
+      loading: true,
+      user: JSON.parse(sessionStorage.getItem("user")) || {},
+      conversations: [],
+      usersTarget: [],
       messages: [],
     };
   },
-
   mounted() {
-    //console.log("mounted inside conv");
     const cs = useConversationStore();
-    if (!cs.isLoaded) {
-      cs.load(this.userId);
-    }
+    this.conversations = cs.conversations;
+    this.usersTarget = cs.convUsersInfo;
+    this.messages = cs.messages;
   },
-
   methods: {
     goBack() {
       this.$router.go(-1);
     },
+    showConversation(pId) {
+      this.$router.push({ name: "MessageComponent", params: { id: pId } });
+    },
 
-    showMessages() {
-      this.$router.push("/TODO_ICI");
+    getUserTarget(idUser1, idUser2) {
+      return this.usersTarget.find((user) => user.id === idUser2 || user.id === idUser1);
     },
   },
 };

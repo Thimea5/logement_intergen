@@ -16,7 +16,7 @@
         }
 
         public function getConversationMessage($pConvId) {
-            $sql = "SELECT * FROM message WHERE id_conversation = pConvId;";
+            $sql = "SELECT * FROM message WHERE id_conversation = :pConvId;";
 
             $query = $this->conn->prepare($sql);
             $query->bindParam("pConvId", $pConvId);

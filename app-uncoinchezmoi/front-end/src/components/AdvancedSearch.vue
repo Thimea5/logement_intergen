@@ -93,6 +93,7 @@
 </template>
 
 <script>
+import { acceptHMRUpdate } from "pinia";
 import { useListPostStore } from "../stores/listPostStore";
 
 export default {
@@ -106,13 +107,13 @@ export default {
       sheet: false,
 
       typesOptions: [
-        { key: "studio", label: "Studio", icon: "mdi-door" },
-        { key: "appartement", label: "Appartement", icon: "mdi-office-building" },
-        { key: "maison", label: "Maison", icon: "mdi-home" },
-        { key: "chambre", label: "Chambre", icon: "mdi-bed" },
-        { key: "villa", label: "Villa", icon: "mdi-home-modern" },
-        { key: "chalet", label: "Chalet", icon: "mdi-home-variant" },
-        { key: "grenier", label: "Grenier", icon: "mdi-roof" },
+        { key: "Studio", label: "Studio", icon: "mdi-door" },
+        { key: "Appartement", label: "Appartement", icon: "mdi-office-building" },
+        { key: "Maison", label: "Maison", icon: "mdi-home" },
+        { key: "Chambre", label: "Chambre", icon: "mdi-bed" },
+        { key: "Villa", label: "Villa", icon: "mdi-home-modern" },
+        { key: "Chalet", label: "Chalet", icon: "mdi-home-variant" },
+        { key: "Grenier", label: "Grenier", icon: "mdi-roof" },
       ],
       selectedTypes: {
         studio: false,
@@ -170,6 +171,7 @@ export default {
         .filter(([key, value]) => value)
         .map(([key]) => key);
 
+      console.log(activeServices, activeTypes);
       this.cardList = ps.listPost
         .map((listing, index) => {
           if (listing.available) {
@@ -197,6 +199,8 @@ export default {
         })
         .filter((item) => {
           if (!item) return false;
+
+          console.log(item);
           const matchQuery =
             item.address.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
             item.city.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
@@ -208,7 +212,7 @@ export default {
 
           let matchTypes = true;
           if (activeTypes.length > 0) {
-            matchTypes = activeTypes.includes(item.type_logement);
+            matchTypes = activeTypes.map((type) => type.toLowerCase()).includes(item.type_logement.toLowerCase());
           }
 
           return matchQuery && matchServices && matchTypes;

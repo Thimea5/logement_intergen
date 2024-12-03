@@ -66,7 +66,7 @@ export default {
           console.error(error);
         });
 
-      this.$router.go(-1);
+      //window.location.replace(`/PostDetails/${idPost}`);
     },
   },
 };
