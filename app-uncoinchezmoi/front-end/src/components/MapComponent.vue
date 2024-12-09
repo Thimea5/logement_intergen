@@ -1,38 +1,60 @@
 <template>
   <v-main>
     <!-- Barre de recherche -->
-    <v-text-field
-      v-model="searchQuery"
-      prepend-inner-icon="mdi-tune"
-      append-inner-icon="mdi-magnify"
-      hide-details
-      single-line
-      placeholder="Rechercher un lieu..."
-      class="custom-toolbar"
-      @click:prepend-inner="navigate('/advanced-search')"
-      @click:append-inner="sampleSearch"
-      @keydown.enter.prevent="sampleSearch"
-    ></v-text-field>
+    <v-btn class="btn position-absolute top-0 left-0 m-3 mapBtn bg-light" icon="mdi-tune" rounded="pill"
+      @click="navigate('/advanced-search')">
+    </v-btn>
+    <v-btn class="btn position-absolute top-0 right-0 m-3 mapBtn bg-light" icon="mdi-format-list-bulleted"
+      rounded="pill" @click="navigate('/advance-search')">
+    </v-btn>
 
     <!-- Carte -->
     <l-map :zoom="zoom" :center="center" style="height: 100%" ref="mapRef" @update:bounds="refreshMapWithNearPosts">
       <!-- Tuiles -->
       <l-tile-layer :url="tileLayerUrl" :attribution="attribution" ref="tileLayer" />
-      <l-tile-layer :url="satelliteUrl" :attribution="attribution" ref="satelliteLayer" />
-      <l-tile-layer :url="openStreetMapUrl" :attribution="attribution" ref="openStreetMapLayer" />
-      <l-tile-layer :url="streetUrl" :attribution="attribution" ref="streetLayer" />
 
       <!-- Marqueurs -->
-      <l-marker v-for="post in filteredPosts" :key="post.id" :lat-lng="[post.latitude, post.longitude]">
-        <l-popup @click="goToPostDetails(post)">
-          <strong>
-            {{ post.type_logement }} de {{ (post.size === null ? 0 : post.size) + "m²" }} [{{ post.price }}€/mois]
-          </strong>
-          <p>{{ post.address }} - {{ post.postalCode }} {{ post.city }}</p>
-          <v-img :src="getImageSrc(post.img)" alt="Aucune image disponible" style="width: 100%; height: 50%"></v-img>
-        </l-popup>
+      <l-marker v-for="post in filteredPosts" :key="post.id" :lat-lng="[post.latitude, post.longitude]"
+        @click="onMarkerClick(post)">
+
       </l-marker>
     </l-map>
+    <v-bottom-sheet class="mb-14 shadow-none" z-index="1000" v-model="popup">
+      <v-card class="position-relative">
+        <v-btn class="position-absolute right-0" variant="solo" icon="mdi-close" @click="popup = false"></v-btn>
+        <template v-if="selectedPost">
+          <v-card-text @click="goToPostDetails(selectedPost)">
+            <div class="h-100 d-flex justify-content-between align-items-center">
+              <div class="w-50 h-100">
+                <v-img :src="getImageSrc('host_photo'+selectedPost.idPost)" cover height="200">
+                  <template v-slot:placeholder>
+                    <v-row align="center" class="fill-height ma-0" justify="center">
+                      <v-progress-circular color="#4f685d" indeterminate>
+                      </v-progress-circular>
+                    </v-row>
+                  </template>
+                </v-img>
+
+              </div>
+              <div class="d-flex flex-column justify-content-between ms-5 mb-3">
+                <div class="d-flex flex-column justify-content-between">
+                  <h6 class="pb-0 mb-0 fw-bold">{{ selectedPost.address }}</h6>
+                  <h7>{{ selectedPost.city }}, {{ selectedPost.postalCode }}</h7>
+                </div>
+                <div class="d-flex flex-column justify-content-between mt-3">
+                  <h7>{{ this.selectedPost.type_logement }}, {{ this.selectedPost.size }} m²</h7>
+                  <h6 class="fw-bold">{{ this.selectedPost.price }} €</h6>
+                </div>
+              </div>
+            </div>
+          </v-card-text>
+        </template>
+        <template v-else>
+          <v-card-title>Aucun post sélectionné</v-card-title>
+        </template>
+      </v-card>
+    </v-bottom-sheet>
+
   </v-main>
 </template>
 
@@ -40,6 +62,7 @@
 import { useListPostStore } from "../stores/listPostStore";
 import { LMap, LTileLayer, LControlLayers, LMarker, LPopup } from "@vue-leaflet/vue-leaflet";
 import L from "leaflet";
+import { icon } from "leaflet";
 
 export default {
   name: "Carte",
@@ -53,8 +76,9 @@ export default {
 
   data() {
     return {
+      popup: false,
       searchQuery: "",
-      filteredPosts: [],
+      filteredPosts: {},
       previousBounds: null,
       zoom: 12,
       center: [45.764043, 4.835659], // Position de départ à Lyon
@@ -63,6 +87,8 @@ export default {
       openStreetMapUrl: "https://api.maptiler.com/maps/openstreetmap/256/{z}/{x}/{y}.jpg?key=aRVKZ0fk9aEUzL9b5GZs",
       streetUrl: "https://api.maptiler.com/maps/streets-v2/256/{z}/{x}/{y}.png?key=aRVKZ0fk9aEUzL9b5GZs",
       attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> contributors',
+
+      selectedPost: null
     };
   },
 
@@ -78,26 +104,13 @@ export default {
           // création et application des calques (tuiles)
           this.tileLayer = L.tileLayer(this.tileLayerUrl, {
             attribution: this.attribution,
-          });
-          this.satelliteLayer = L.tileLayer(this.satelliteUrl, {
-            attribution: this.attribution,
-          });
-          this.openStreetMapLayer = L.tileLayer(this.openStreetMapUrl, {
-            attribution: this.attribution,
-          });
-
-          this.streetLayer = L.tileLayer(this.streetUrl, {
-            attribution: this.attribution,
-          });
+          })
 
           const layers = {
             "Carte de base": this.tileLayer,
-            "Vue satellite": this.satelliteLayer,
-            "OpenStreetMap vue": this.openStreetMapLayer,
-            "Street Vue": this.streetLayer,
-          };
+          }
 
-          L.control.layers(layers).addTo(map);
+          // L.control.layers(layers).addTo(map);
 
           this.tileLayer.addTo(map);
           this.refreshMapWithNearPosts(map.getBounds());
@@ -109,6 +122,16 @@ export default {
   methods: {
     navigate(pPath) {
       this.$router.push(pPath);
+    },
+
+    onMarkerClick(post) {
+      const map = this.$refs.mapRef.leafletObject;
+      map.flyTo([post.latitude, post.longitude], 12)
+
+      this.selectedPost = post
+      this.popup = true
+
+      // console.log(this.selectedPost)
     },
 
     sampleSearch() {

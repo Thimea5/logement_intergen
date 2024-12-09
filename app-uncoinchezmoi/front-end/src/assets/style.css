@@ -92,6 +92,10 @@ body {
   font-style: normal;
 }
 
+main {
+  background-color: lightgray;
+}
+
 * {
   font-family: "GillSansMT", sans-serif;
 }
@@ -103,13 +107,6 @@ body {
 }
 
 /* barre de recherche pour la carte */
-.custom-toolbar {
-  position: absolute;
-  top: 15%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - 100px);
-  background-color: rgba(255, 255, 255, 0.738);
-  border-radius: 8px;
+.mapBtn {
   z-index: 1000;
 }
