@@ -54,7 +54,7 @@
         </v-card>
 
         <v-card class="styled-card bg-blue-grey-lighten-4 p-2">
-          <v-card-title>Commentaires & Avis</v-card-title>
+          <v-card-title>Commentaires & Avis ({{ comments.length }})</v-card-title>
           <v-row>
             <v-col v-if="comments.length == 0">
               <v-card class="styled-card m-auto">
@@ -66,6 +66,7 @@
                 <v-card-title style="white-space: normal; word-wrap: break-word; overflow: visible" height="100%">
                   {{ comment.text }}
                 </v-card-title>
+
                 <div style="border-top: 1px solid #ccc; margin: 2% 5%"></div>
 
                 <v-card-subtitle class="text-caption grey--text">
@@ -155,7 +156,7 @@ export default {
     // Chargement des commentaires du post
     const apiUrl = import.meta.env.VITE_API_URL;
     axios
-      .get(apiUrl + "/services/commentsManager.php", {
+      .get(apiUrl + "/services/reviewsManager.php", {
         params: {
           id: this.post.idPost,
         },
@@ -164,15 +165,14 @@ export default {
         },
       })
       .then((result) => {
-        //console.log("chargeemnt des comments ok");
-        //console.log(result);
         if (result.status === 200 && result.data["success"]) {
-          const res = result.data["comments"];
-          ////console.log("resComments", res);
+          const res = result.data["reviews"];
+          console.log("resComments", res);
           for (let i = 0; i < res.length; i++) {
             this.comments.push({
               id: res[i]["id"],
-              text: res[i]["content"],
+              score: res[i]["score"],
+              text: res[i]["comment"],
               createdAt: res[i]["creation_date"],
               author: res[i]["nameAuthor"],
             });

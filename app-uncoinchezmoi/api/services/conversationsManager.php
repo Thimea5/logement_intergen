@@ -32,6 +32,7 @@
 
         $userConvs = $convModel->getUserConversation($inputData['id']);    
         $s = [];
+        $msgs = [];
         //var_dump($userConvs);   
         for ($i=0; $i <count($userConvs); $i++) {
             // Chargement des infos des utilisateurs destinataires (nom, img...)
@@ -45,10 +46,9 @@
             //var_dump($s)
             
             // Chargement des messages
-            $msgs = $msgModel->getConversationMessage($userConvs[$i]['id']);
-            //var_dump($msgs);
+            array_push($msgs, $msgModel->getConversationMessage($userConvs[$i]['id']));
+            
         }
-
         echo json_encode(["success"=>true, "conversations"=>$userConvs, "messages"=>$msgs, "users"=>$s]);
     } else {
         $inputData = json_decode(file_get_contents("php://input"), true);  

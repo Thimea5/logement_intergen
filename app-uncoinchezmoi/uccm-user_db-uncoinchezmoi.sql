@@ -41,8 +41,9 @@ CREATE TABLE `post` (
   FOREIGN KEY (`id_user`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `comment` (
+CREATE TABLE `review` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  ...
   `content` text DEFAULT NULL,
   `creation_date` date DEFAULT NULL,
   `id_user` int(11) DEFAULT NULL,
@@ -50,7 +51,7 @@ CREATE TABLE `comment` (
   PRIMARY KEY (`id`),
   FOREIGN KEY (`id_user`) REFERENCES `users` (`id`),
   FOREIGN KEY (`id_post`) REFERENCES `post` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 AUTO_INCREMENT=1;
 
 CREATE TABLE `conversation` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

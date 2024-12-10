@@ -1,20 +1,37 @@
 <template>
   <v-main>
+    <v-app-bar :elevation="0">
+      <v-btn icon="mdi-keyboard-backspace" variant="plain" size="x-large" @click="goBack()"></v-btn>
+      <v-app-bar-title>Messagerie</v-app-bar-title>
+    </v-app-bar>
+
     <v-container>
-      <v-app-bar :elevation="0">
-        <v-btn icon="mdi-keyboard-backspace" variant="plain" size="x-large" @click="goBack()"></v-btn>
-        <v-app-bar-title>Mes conversations</v-app-bar-title>
-      </v-app-bar>
+      <p style="display: inline-block; border-bottom: 2px solid black; padding-bottom: 4px">Messages</p>
 
       <!-- Parcours des conversations et affichage de l'utilisateur cible correspondant -->
       <v-list v-for="(elt, index) in conversations" :key="index" class="m-auto">
-        <v-list-item class="bg-blue-grey-lighten-4" @click="showConversation(elt.id)">
-          <p><strong>Conversation ID:</strong> {{ elt.id }}</p>
-          <p><strong>Date de création:</strong> {{ elt.creation_date }}</p>
-          <p>
-            <strong>Utilisateur cible:</strong> {{ getUserTarget(elt.id_user1, elt.id_user2)?.firstname }}
-            {{ getUserTarget(elt.id_user1, elt.id_user2)?.lastname }}
-          </p>
+        <v-list-item class="m-1" @click="showConversation(elt.id)" style="border-bottom: 1px solid lightgray">
+          <div style="display: flex; flex-direction: row; align-items: center">
+            <div class="ms-1 me-2">
+              <v-img
+                aspect-ratio="1"
+                rounded="pill"
+                :src="getImageSrc(getUserTarget(elt.id_user1, elt.id_user2)?.id)"
+                width="50"
+                cover
+              ></v-img>
+            </div>
+            <div class="mt-2 mb-1 m-0">
+              <p class="m-0 mb-1">
+                <strong
+                  >{{ getUserTarget(elt.id_user1, elt.id_user2)?.firstname }}
+                  {{ getUserTarget(elt.id_user1, elt.id_user2)?.lastname }}</strong
+                >
+                <br />
+                {{ this.messages[index][this.messages[index].length - 1].content }}
+              </p>
+            </div>
+          </div>
         </v-list-item>
       </v-list>
     </v-container>
@@ -45,6 +62,8 @@ export default {
     this.conversations = cs.conversations;
     this.usersTarget = cs.convUsersInfo;
     this.messages = cs.messages;
+    console.log(this.messages);
+    console.log(this.usersTarget);
   },
 
   methods: {
@@ -70,6 +89,15 @@ export default {
 
     getUserTarget(idUser1, idUser2) {
       return this.usersTarget.find((user) => user.id === idUser2 || user.id === idUser1);
+    },
+
+    getImageSrc(pId) {
+      const url = new URL(`/src/assets/img/user${pId}/${pId}.jpg`, import.meta.url).href;
+      if (!url.includes("undefined")) {
+        return url;
+      } else {
+        return new URL(`/src/assets/img/error.jpg`, import.meta.url).href;
+      }
     },
   },
 };
