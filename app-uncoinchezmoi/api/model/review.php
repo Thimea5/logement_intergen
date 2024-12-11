@@ -1,11 +1,11 @@
 <?php
     class Review {
-        private $id;
-        private $score;
-        private $comment;
-        private $creation_date;
-        private $id_user;
-        private $id_post;
+        public $id;
+        public $score;
+        public $comment;
+        public $creation_date;
+        public $id_user;
+        public $id_post;
 
         private $conn;
 
@@ -55,11 +55,12 @@
             return $query->execute();
         }
 
-        public function updateComment($pId) {
-            $sql = "UPDATE review r SET r.comment = :pComment, r.creation_date = :pCreationDate WHERE r.id = :pId;";
+        public function updateReview($pId) {
+            $sql = "UPDATE review r SET r.comment = :pComment, r.creation_date = :pCreationDate, r.score = :pScore WHERE r.id = :pId;";
 
             $query = $this->conn->prepare($sql);
             $query->bindParam("pId", $pId);
+            $query->bindParam("pScore", $this->score);
             $query->bindParam("pComment", $this->content);
             $query->bindParam("pCreationDate", $this->creation_date);
 

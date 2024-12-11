@@ -67,8 +67,19 @@
         }*/
     } else if ($request === "POST") {
         // ajout d'un commentaire
+        $data = json_decode(file_get_contents("php://input"));
 
+        $reviewModel->score = $data->score;
+        $reviewModel->comment = $data->content;
+        $reviewModel->id_user = $data->idUser;
+        $reviewModel->id_post = $data->idPost;
+        date_default_timezone_set('Europe/Paris');
+        $reviewModel->creation_date = date('Y-m-d H:i:s');
+
+        if ($reviewModel->insertReview()) {
+            echo json_encode(["success" => true]);
+        } else {
+            echo json_encode(["success" => false]);
+        }
     }
-
-    
 ?>

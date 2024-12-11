@@ -8,7 +8,7 @@
     <v-container>
       <p style="display: inline-block; border-bottom: 2px solid black; padding-bottom: 4px">Messages</p>
 
-      <!-- Parcours des conversations et affichage de l'utilisateur cible correspondant -->
+      <!-- Parcours des conversations et affichage du destinataire -->
       <v-list v-for="(elt, index) in conversations" :key="index" class="m-auto">
         <v-list-item class="m-1" @click="showConversation(elt.id)" style="border-bottom: 1px solid lightgray">
           <div style="display: flex; flex-direction: row; align-items: center">
@@ -28,7 +28,11 @@
                   {{ getUserTarget(elt.id_user1, elt.id_user2)?.lastname }}</strong
                 >
                 <br />
-                {{ this.messages[index][this.messages[index].length - 1].content }}
+                {{
+                  this.messages[index].length == 0
+                    ? "Aucun message"
+                    : this.messages[index][this.messages[index].length - 1].content
+                }}
               </p>
             </div>
           </div>
@@ -53,17 +57,17 @@ export default {
     };
   },
   async mounted() {
+    // On reforce le chargement des données
     const cs = useConversationStore();
 
-    if (!cs.isLoaded1) cs.load(this.user.id);
+    cs.isLoaded1 = false;
+    cs.load(this.user.id);
 
     await this.waitUntil(() => cs.isLoaded1);
 
     this.conversations = cs.conversations;
     this.usersTarget = cs.convUsersInfo;
     this.messages = cs.messages;
-    console.log(this.messages);
-    console.log(this.usersTarget);
   },
 
   methods: {
