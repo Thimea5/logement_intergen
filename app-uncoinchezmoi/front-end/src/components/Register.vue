@@ -459,50 +459,66 @@
                     <p>Ajoutez des photos à votre annonce</p>
                   </div>
 
-                  <div class="h-50 d-flex flex-column justify-content-center align-items-center">
-                    <div class="d-flex justify-content-center w-100 h-75">
+                  <div class="h-50 my-5 d-flex flex-column justify-content-center align-items-center">
+                    <div class="d-flex justify-content-center w-100 h-100">
                       <v-file-input
-                        class="rounded-xl w-100 h-100 mx-4"
+                        class="rounded-xl mx-4 position-relative"
                         hide-details
                         rounded
+                        height="250"
                         variant="solo-filled"
                         align-items:center
                         justify-content:center
-                        prepend-icon=""
-                      >
+                        aspect-ratio="1"
+                        prepend-icon="">
+                        <template v-slot:append-inner>
+                          <v-icon class="position-absolute start-50 translate-middle top-50" size="50" icon="mdi-plus"></v-icon>
+                        </template>
                       </v-file-input>
                       <v-file-input
-                        class="rounded-xl w-100 h-100 mx-4"
+                        class="rounded-xl mx-4 position-relative"
                         hide-details
                         rounded
+                        height="250"
                         variant="solo-filled"
                         align-items:center
                         justify-content:center
-                        prepend-icon=""
-                      >
+                        aspect-ratio="1"
+                        prepend-icon="">
+                        <template v-slot:append-inner>
+                          <v-icon class="position-absolute start-50 translate-middle top-50" size="50" icon="mdi-plus"></v-icon>
+                        </template>
                       </v-file-input>
                     </div>
 
-                    <div class="d-flex justify-content-center w-100 h-75">
+                    <div class="d-flex justify-content-center w-100 h-100">
                       <v-file-input
-                        class="rounded-xl w-100 h-100 mx-4"
+                        class="rounded-xl mx-4 position-relative"
                         hide-details
                         rounded
+                        height="250"
                         variant="solo-filled"
                         align-items:center
                         justify-content:center
-                        prepend-icon=""
-                      >
+                        aspect-ratio="1"
+                        prepend-icon="">
+                        <template v-slot:append-inner>
+                          <v-icon class="position-absolute start-50 translate-middle top-50" size="50" icon="mdi-plus"></v-icon>
+                        </template>
                       </v-file-input>
                       <v-file-input
-                        class="rounded-xl w-100 h-100 mx-4"
+                        class="rounded-xl mx-4 position-relative"
                         hide-details
                         rounded
+                        height="250"
                         variant="solo-filled"
                         align-items:center
                         justify-content:center
-                        prepend-icon=""
-                      >
+                        aspect-ratio="1"
+                        prepend-icon="">
+                        <template v-slot:append-inner>
+                          <v-icon class="position-absolute start-50 translate-middle top-50" size="50" icon="mdi-plus"></v-icon>
+                        </template>
                       </v-file-input>
                     </div>
                   </div>
@@ -701,40 +717,40 @@ export default {
     },
 
     validateStep1() {
-      if (!(this.user.mail && this.user.password && this.user.passwordConf)) {
-        //console.log(1);
-        return;
-      }
+      // if (!(this.user.mail && this.user.password && this.user.passwordConf)) {
+      //   //console.log(1);
+      //   return;
+      // }
 
-      if (this.user.password != this.user.passwordConf) {
-        //console.log(2);
-        return;
-      }
+      // if (this.user.password != this.user.passwordConf) {
+      //   //console.log(2);
+      //   return;
+      // }
 
-      if (this.user.code != code) {
-        //console.log(3);
-        return;
-      }
-      //console.log("ici ?");
+      // if (this.user.code != code) {
+      //   //console.log(3);
+      //   return;
+      // }
+      // //console.log("ici ?");
 
       this.step2 = true;
     },
 
     validateStep2() {
-      if (!(this.user.lastName && this.user.firstName && this.user.birthDate && this.user.telephone)) {
-        return;
-      }
+      // if (!(this.user.lastName && this.user.firstName && this.user.birthDate && this.user.telephone)) {
+      //   return;
+      // }
 
-      const phoneRegex = /^[0-9]{10}$/;
-      if (!phoneRegex.test(this.user.telephone)) {
-        return;
-      }
+      // const phoneRegex = /^[0-9]{10}$/;
+      // if (!phoneRegex.test(this.user.telephone)) {
+      //   return;
+      // }
 
-      const birthDate = new Date(this.user.birthDate);
-      const today = new Date();
-      if (birthDate >= today) {
-        return;
-      }
+      // const birthDate = new Date(this.user.birthDate);
+      // const today = new Date();
+      // if (birthDate >= today) {
+      //   return;
+      // }
       //console.log("hey !");
       this.step3 = true;
     },
