@@ -56,6 +56,7 @@ export const useListPostStore = defineStore("listPost", {
                   isGardening: resServices[i][0]["gardening"],
                   isPetsSitting: resServices[i][0]["petSitting"],
                   isTalking: resServices[i][0]["chatting"],
+                  time: resServices[i][0]["time"],
                 });
               }
             }

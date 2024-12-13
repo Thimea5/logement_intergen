@@ -42,29 +42,12 @@
             echo json_encode(['success' => false, 'message' => 'Aucun commentaire trouvé.']);
         }
     } else if ($request === "DELETE") {
-        /*$data = json_decode(file_get_contents("php://input"));   
-        
-        if ($data === null) {
-            echo json_encode(['error' => 'Données invalides']);
-            exit;
-        }
-        //var_dump($data);
-        if (!isset($data->content, $data->idUser, $data->idPost)) {
-            echo json_encode(["success" => false, "message" => "Paramètres manquants."]);
-            exit;
-        }
-
-        date_default_timezone_set('Europe/Paris');
-        if ($commentModel->insertNewComment(
-            $data->content, 
-            date('Y-m-d H:i:s'), 
-            $data->idUser, 
-            $data->idPost
-        )) {
-            echo json_encode(["success" => true, "message" => "Ajouté"]);
+        $data = json_decode(file_get_contents("php://input"), true);
+        if ($reviewModel->deleteReviewById($data['id'])) {
+            echo json_encode(["success" => true]);
         } else {
-            echo json_encode(["success" => false, "message" => "ratée"]);
-        }*/
+            echo json_encode(["success" => false]);
+        }
     } else if ($request === "POST") {
         // ajout d'un commentaire
         $data = json_decode(file_get_contents("php://input"));

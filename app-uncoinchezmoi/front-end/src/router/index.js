@@ -16,6 +16,7 @@ import ConversationComponent from "../components/ConversationComponent.vue";
 import ViewPost from "../components/ViewPost.vue";
 import MessageComponent from "../components/MessageComponent.vue";
 import NewReport from "../components/NewReport.vue";
+import Reservation from "../components/Reservation.vue";
 
 const routes = [
   {
@@ -117,6 +118,12 @@ const routes = [
     name: "ForgotPasswordForm",
     component: ForgotPasswordForm,
     meta: { requiresAuth: false },
+  },
+  {
+    path: "/reservation",
+    name: "Reservation",
+    component: Reservation,
+    meta: { requiresAuth: true },
   },
   {
     /* Note : le '*' n'est plus reconnu sur vue-router 4... 
