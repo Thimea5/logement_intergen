@@ -32,6 +32,7 @@ import "./assets/style.css";
 import { useUserStore } from "./stores/userStore";
 import { useListPostStore } from "./stores/listPostStore";
 import { useConversationStore } from "./stores/ConversationStore";
+import { useReservationStore } from "./stores/ReservationStore";
 
 export default {
   name: "App",
@@ -46,25 +47,30 @@ export default {
   },
 
   async mounted() {
+    // Chargement un peu long, c'est de l'asynchrone, mais j'ai pas mieux comme solution
     const ps = useListPostStore();
     const cs = useConversationStore();
+    const rs = useReservationStore();
 
     if (!ps.isLoaded) ps.loadPosts();
-
-    // C'est un peu long au chargement, mais j'ai pas trouvé de solution pour l'instant
     await this.waitUntil(() => ps.isLoaded);
-    console.log("chargement des listes ok");
+    console.log("Chargement du store des annonces OK");
+
     this.listDisplay = ps.listPost;
 
     if (this.isLoggedIn) {
-      console.log("connexion faite");
+      console.log("Connexion OK");
       this.userStore.loadUserFromSession();
       this.isComplete = this.userStore.user.complete;
+      console.log("Chargement du store utilisateur OK");
 
       if (!cs.isLoaded1) cs.load(this.userStore.user.id);
-
       await this.waitUntil(() => cs.isLoaded1);
-      console.log("chargeemnt des conv/msg ok");
+      console.log("Chargement du store des conversations OK");
+
+      if (!rs.isLoaded) rs.load(this.userStore.user.id);
+      await this.waitUntil(() => rs.isLoaded);
+      console.log("Chargement du store des réservations OK");
     }
   },
 

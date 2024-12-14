@@ -47,6 +47,7 @@ npm install vite-plugin-vuetify
 npm install pinia
 npm install jwt-decode
 npm install leaflet ?
+npm install v-calendar@next @popperjs/core
 
 
 composer require firebase/php-jwt

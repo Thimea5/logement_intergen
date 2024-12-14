@@ -11,16 +11,47 @@
 
     $reservationModel = new Reservation($db);
 
+    $requestInfo = $_SERVER['REQUEST_METHOD'];
 
-    $data = json_decode(file_get_contents('php://input'), associative: true);
+    if ($requestInfo === "POST") {
+        $data = json_decode(file_get_contents('php://input'));
 
-    if ($data === null) {
-        echo json_encode(['error' => 'Données invalides']);
-        exit;
+        if ($data === null) {
+            echo json_encode(['error' => 'Données invalides']);
+            exit;
+        }
+
+        $inserted = $reservationModel->insertNewReservation(
+            $data->idPost,
+            $data->startDate,
+            $data->endDate,
+            $data->idUser,
+            $data->cost
+        );
+
+        if ($inserted) {
+            echo json_encode(["success" => true, "message" => "Réservation ajoutée avec succès."]);
+        } else {
+            echo json_encode(["success" => false, "message" => "Erreur lors de l'ajout de la réservation."]);
+        }
+    } else if ($requestInfo === "GET") {
+        // TODO : ajouter un peu de blindage...
+        $inputData = $_GET;
+        if (!isset($inputData)) {
+            echo json_encode(["success" => false, "message" => "Aucune donnée reçue."]);
+            exit;
+        }
+
+        if (!isset($inputData['id'])) { 
+            echo json_encode(["success" => false, "message" => "Paramètres manquants."]);
+            exit;
+        }
+
+        $reservations = $reservationModel->getAllReservations();
+
+        $reservationsUsers = $reservationModel->getUserReservations($inputData['id']);
+
+        echo json_encode(["success"=> true, "reservations" => $reservations, "reservationsUsers" => $reservationsUsers]);
     }
-
-    //var_dump($data);
-
-    $res = $reservationModel->insertReservation($data['idPost'], $data['idUser']);
-    echo json_encode(["success"=>$res]);
+   
 ?>

@@ -10,7 +10,11 @@
 
       <!-- Parcours des conversations et affichage du destinataire -->
       <v-list v-for="(elt, index) in conversations" :key="index" class="m-auto">
-        <v-list-item class="m-1" @click="showConversation(elt.id)" style="border-bottom: 1px solid lightgray">
+        <v-list-item
+          class="m-1"
+          @click="showConversation(getUserTarget(elt.id_user1, elt.id_user2)?.id)"
+          style="border-bottom: 1px solid lightgray"
+        >
           <div style="display: flex; flex-direction: row; align-items: center">
             <div class="ms-1 me-2">
               <v-img
@@ -88,6 +92,7 @@ export default {
     },
 
     showConversation(pId) {
+      // en paramètre, c'est l'id du destinataire.
       this.$router.push({ name: "MessageComponent", params: { id: pId } });
     },
 

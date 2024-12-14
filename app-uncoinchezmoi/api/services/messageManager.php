@@ -18,7 +18,8 @@
     $requestInfo = $_SERVER['REQUEST_METHOD'];
 
     if ($requestInfo === "POST") {
-        $inputData = json_decode(file_get_contents("php://input"), true);  // Pour récupérer les données envoyées en POST
+        $inputData = json_decode(file_get_contents("php://input"), true);  
+
         if (!isset($inputData['content']) || !isset($inputData['conv_id']) || !isset($inputData['user_id'])) {
             echo json_encode(["success" => false, "message" => "Données manquantes."]);
             exit;

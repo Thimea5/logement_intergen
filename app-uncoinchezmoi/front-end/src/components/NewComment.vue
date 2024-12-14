@@ -21,7 +21,14 @@
       </v-card>
 
       <form id="form-login" @submit.prevent="addNewReview()" class="d-flex flex-column m-2">
-        <v-textarea clearable class="m-2" label="écrire un commentaire" variant="solo-filled" v-model="text">
+        <v-textarea
+          clearable
+          class="m-2"
+          label="écrire un commentaire"
+          variant="solo-filled"
+          v-model="text"
+          :rules="[(v) => (v || '').length <= 300 || 'Votre commentaire est trop long']"
+        >
         </v-textarea>
 
         <div class="text-center mt-0 m-2">

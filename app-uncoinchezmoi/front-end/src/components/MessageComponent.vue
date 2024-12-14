@@ -83,7 +83,8 @@ export default {
   data() {
     return {
       user: JSON.parse(sessionStorage.getItem("user")) || {},
-      id: -1,
+      idDest: -1,
+      convId: -1,
       age: 0,
       target: null,
       msgContent: "",
@@ -98,24 +99,26 @@ export default {
     const route = useRoute();
 
     if (!cs.isLoaded1) cs.load(this.user.id);
-
     await this.waitUntil(() => cs.isLoaded1);
 
-    if (cs.isLoaded1) {
-      this.id = route.params.id;
+    this.idDest = route.params.id;
 
-      let ci = cs.conversations.find((c) => {
-        return c.id == this.id;
-      });
+    let ci = cs.conversations.find((c) => {
+      return (
+        (c.id_user1 == this.idDest && c.id_user2 == this.user.id) ||
+        (c.id_user2 == this.idDest && c.id_user1 == this.user.id)
+      );
+    });
 
-      this.target = cs.convUsersInfo.find((usr) => {
-        return usr.id == ci.id_user1 || usr.id == ci.id_user2;
-      });
+    this.convId = ci.id;
 
-      this.age = this.calculateAge(this.target.birthdate);
+    this.target = cs.convUsersInfo.find((usr) => {
+      return usr.id == ci.id_user1 || usr.id == ci.id_user2;
+    });
 
-      this.loadMessages();
-    }
+    this.age = this.calculateAge(this.target.birthdate);
+
+    this.loadMessages();
   },
 
   methods: {
@@ -167,7 +170,7 @@ export default {
       const apiUrl = import.meta.env.VITE_API_URL;
       axios
         .get(apiUrl + "/services/messageManager.php", {
-          params: { id: this.id },
+          params: { id: this.convId },
           header: { "Content-Type": "application/json" },
         })
         .then((result) => {
@@ -200,12 +203,13 @@ export default {
             apiUrl + "/services/messageManager.php",
             {
               content: this.msgContent,
-              conv_id: this.id,
+              conv_id: this.convId,
               user_id: this.target.id,
             },
             { header: { "Content-Type": "application/json" } }
           )
           .then((result) => {
+            console.log(result);
             this.msgContent = "";
             this.loadMessages();
           })

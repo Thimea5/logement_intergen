@@ -120,9 +120,10 @@ const routes = [
     meta: { requiresAuth: false },
   },
   {
-    path: "/reservation",
+    path: "/reservation/:id",
     name: "Reservation",
     component: Reservation,
+    props: true,
     meta: { requiresAuth: true },
   },
   {

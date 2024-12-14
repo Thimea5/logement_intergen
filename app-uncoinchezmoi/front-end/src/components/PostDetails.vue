@@ -16,7 +16,7 @@
 
         <v-card class="p-1 m-2 w-100" v-if="post">
           <v-card-title>
-            {{ post.type_logement }} de {{ this.usersData.genre == "F" ? "Mme" : "M." }} {{ this.usersData.lastname }}
+            {{ post.type_logement }} de {{ this.usersData.genre == "F" ? "Mme " : "M. " }} {{ this.usersData.lastname }}
             {{ this.usersData.firstname }}
           </v-card-title>
           <v-card-subtitle>
@@ -65,8 +65,9 @@
               <v-carousel hide-delimiters :show-arrows="false" cycle class="h-100 w-80">
                 <v-carousel-item v-for="comment in comments" :key="comment.id">
                   <v-card class="m-1">
-                    <v-card-title height="100%">
-                      De {{ comment.author == " " ? "Anonyme" : comment.author }}
+                    <v-card-title height="100%" class="d-flex">
+                      <div class="mr-auto">De {{ comment.author == " " ? "Anonyme" : comment.author }}</div>
+                      <div v-if="comment.score != -1">{{ comment.score }}<v-icon>mdi-star</v-icon></div>
                     </v-card-title>
 
                     <v-card-text>
@@ -199,8 +200,6 @@ export default {
 
         if (
           this.comments.find((c) => {
-            console.log(c.author);
-            console.log(this.user.firstname + " " + this.user.lastname);
             return c.author == this.user.firstname + " " + this.user.lastname;
           })
         ) {
@@ -214,7 +213,9 @@ export default {
         axios
           .get(apiUrl + "/services/userManager.php")
           .then((response) => {
-            this.usersData = response.data[0][postId];
+            this.usersData = response.data[0].find((elt) => {
+              return elt.id == this.post.idUser;
+            });
           })
           .catch((error) => {
             console.error("Erreur lors de la récupération des utilisateurs:", error);
@@ -229,7 +230,6 @@ export default {
 
   methods: {
     deleteReview(pId) {
-      console.log(pId);
       const apiUrl = import.meta.env.VITE_API_URL;
       axios
         .delete(`${apiUrl}/services/reviewsManager.php`, {
@@ -242,15 +242,15 @@ export default {
           },
         })
         .then((result) => {
-          console.log(result);
           if (result.status === 200 && result.data["success"]) {
             this.$router.go(0);
           }
+
+          this.calculateAverage();
         })
         .catch((error) => {
           console.log(error);
         });
-      this.calculateAverage();
     },
 
     calculateAverage() {
@@ -274,24 +274,7 @@ export default {
     },
 
     reserver() {
-      const apiUrl = import.meta.env.VITE_API_URL;
-      axios
-        .post(
-          apiUrl + "/services/reservationManager.php",
-          { idPost: this.post.idPost, idUser: this.user.id },
-          {
-            header: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then((result) => {
-          console.log(result);
-          this.$router.push("/reservation");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      this.$router.push({ name: "Reservation", params: { id: this.post.idPost } });
     },
 
     getImageSrc(index) {
@@ -324,13 +307,14 @@ export default {
 
     contactHost() {
       const cs = useConversationStore();
-
       if (cs.isLoaded1) {
         let ci = cs.conversations.find((c) => {
-          return c.id == this.id;
+          return c.id_user1 == this.user.id && c.id_user2 == this.usersData.id;
         });
 
-        if (ci == undefined) {
+        if (ci != undefined) {
+          this.$router.push({ name: "MessageComponent", params: { id: this.usersData.id } });
+        } else {
           const apiUrl = import.meta.env.VITE_API_URL;
           axios
             .post(
@@ -344,7 +328,7 @@ export default {
             )
             .then((result) => {
               console.log(result);
-              this.$router.push({ name: "MessageComponent", params: { destUserId: this.usersData.id } });
+              this.$router.push({ name: "MessageComponent", params: { id: this.usersData.id } });
             })
             .catch((error) => {
               console.log(error);

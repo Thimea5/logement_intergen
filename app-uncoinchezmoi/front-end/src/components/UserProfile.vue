@@ -31,6 +31,13 @@
         </v-card-text>
       </v-card>
 
+      <v-card class="my-2" width="100%">
+        <v-card-title class="headline">Mes réservations</v-card-title>
+        <v-card-text>
+          <p>{{ this.reservations }}</p>
+        </v-card-text>
+      </v-card>
+
       <v-btn class="w-100 rounded-pill mb-5" color="#4F685D" @click="modifStep1 = true"> Modifier mon profil </v-btn>
 
       <v-btn v-if="user.type == 'host'" class="w-100 rounded-pill mb-5" color="#4F685D" @click="navigate('/view-post')"
@@ -64,6 +71,7 @@
 <script>
 import { VDateInput } from "vuetify/labs/VDateInput";
 import axios from "axios";
+import { useReservationStore } from "../stores/ReservationStore";
 
 export default {
   name: "UserProfile",
@@ -78,16 +86,34 @@ export default {
       modifStep1: false,
       isHost: false,
       dateModel: null,
+      reservations: null,
     };
   },
-  mounted() {
-    //console.log("mounted");
+  async mounted() {
     this.isHost = this.user.type == "host";
-    //console.log(this.user.birthdate);
     this.dateModel = new Date(this.user.birthdate);
+
+    const rs = useReservationStore();
+    if (!rs.isLoaded) rs.load(this.user.id);
+    await this.waitUntil(() => rs.isLoaded);
+
+    this.reservations = rs.reservationsUsers;
   },
 
   methods: {
+    waitUntil(conditionFn, interval = 250) {
+      return new Promise((resolve) => {
+        const checkCondition = () => {
+          if (conditionFn()) {
+            resolve();
+          } else {
+            setTimeout(checkCondition, interval);
+          }
+        };
+        checkCondition();
+      });
+    },
+
     logOut() {
       sessionStorage.clear();
 
