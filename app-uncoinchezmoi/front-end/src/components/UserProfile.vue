@@ -2,7 +2,7 @@
   <v-main class="d-flex flex-column justify-content-between align-items-center">
     <v-app-bar :elevation="0">
       <v-btn icon="mdi-keyboard-backspace" variant="plain" size="x-large" @click="goBack()"></v-btn>
-      <v-app-title>Bonjour, {{ user.firstname }} {{ user.lastname }}</v-app-title>
+      <v-toolbar-title>Bonjour, {{ user.firstname }} {{ user.lastname }}</v-toolbar-title>
     </v-app-bar>
 
     <v-container class="d-flex flex-column align-center">

@@ -8,7 +8,6 @@
     <v-container>
       <p style="display: inline-block; border-bottom: 2px solid black; padding-bottom: 4px">Messages</p>
 
-      <!-- Parcours des conversations et affichage du destinataire -->
       <v-list v-for="(elt, index) in conversations" :key="index" class="m-auto">
         <v-list-item
           class="m-1"
@@ -32,11 +31,7 @@
                   {{ getUserTarget(elt.id_user1, elt.id_user2)?.lastname }}</strong
                 >
                 <br />
-                {{
-                  this.messages[index].length == 0
-                    ? "Aucun message"
-                    : this.messages[index][this.messages[index].length - 1].content
-                }}
+                {{ this.displayLastMessage(index) }}
               </p>
             </div>
           </div>
@@ -61,12 +56,10 @@ export default {
     };
   },
   async mounted() {
-    // On reforce le chargement des données
     const cs = useConversationStore();
 
     cs.isLoaded1 = false;
     cs.load(this.user.id);
-
     await this.waitUntil(() => cs.isLoaded1);
 
     this.conversations = cs.conversations;
@@ -75,7 +68,16 @@ export default {
   },
 
   methods: {
-    waitUntil(conditionFn, interval = 250) {
+    displayLastMessage(index) {
+      let lastMsg =
+        this.messages[index].length == 0
+          ? "Aucun message"
+          : this.messages[index][this.messages[index].length - 1].content;
+
+      return lastMsg.length > 30 ? lastMsg.substring(0, 30) + "..." : lastMsg;
+    },
+
+    waitUntil(conditionFn, interval = 200) {
       return new Promise((resolve) => {
         const checkCondition = () => {
           if (conditionFn()) {

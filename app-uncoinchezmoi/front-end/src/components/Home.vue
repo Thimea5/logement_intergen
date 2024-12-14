@@ -113,13 +113,15 @@ export default {
   },
 
   mounted() {
-    console.log("mounted");
+    // Solution pas folle pour le bug du dédoublement des annonces
+    this.listDisplay = [];
+    this.listService = [];
     if (this.isLoggedIn) {
       setTimeout(() => {
         const ps = useListPostStore();
         this.listDisplay = ps.listPost;
         this.listService = ps.listServices;
-      }, 250);
+      }, 200);
     }
   },
 
@@ -155,6 +157,7 @@ export default {
   margin-top: 0;
   margin-bottom: 100%;
 }
+
 .home-link {
   margin-top: 20px;
   text-align: center;

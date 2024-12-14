@@ -54,7 +54,6 @@ export default {
 
     if (!ps.isLoaded) ps.loadPosts();
     await this.waitUntil(() => ps.isLoaded);
-    console.log("Chargement du store des annonces OK");
 
     this.listDisplay = ps.listPost;
 

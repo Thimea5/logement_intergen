@@ -12,15 +12,15 @@
         ></v-img>
       </div>
 
-      <v-app-title class="ms-5">
+      <v-toolbar-title class="ms-5">
         {{ this.target != null ? this.target.firstname : "Anonyme" }}
         {{ this.target != null ? this.target.lastname : "" }} | {{ this.age != 0 ? this.age : "??" }} ans
-      </v-app-title>
+      </v-toolbar-title>
     </v-app-bar>
 
     <v-container class="d-flex flex-column p-1">
       <div class="m-auto mt-2 mb-2">
-        <v-btn color="green" variant="outlined" @click="TODO"> Demander le logement </v-btn>
+        <v-btn color="green" variant="outlined" @click="showPostDetails = true"> Voir le logement </v-btn>
       </div>
       <!--BUG ICI, ne s'adapte pas à la taille d'écran-->
       <div style="position: static; height: 55vh; overflow: auto">
@@ -70,6 +70,61 @@
         ></v-textarea>
       </div>
     </v-container>
+
+    <v-dialog v-model="showPostDetails">
+      <v-card class="p-0 m-0">
+        <v-card-title class="d-flex flex-row m-1 p-1">
+          <h3 class="mr-auto">Informations</h3>
+          <v-icon @click="showPostDetails = false">mdi-close</v-icon>
+        </v-card-title>
+
+        <v-card-text class="m-1 p-1">
+          <h4>
+            {{ post.type_logement }} de {{ this.target.genre == "F" ? "Mme " : "M. " }} {{ this.target.lastname }}
+            {{ this.target.firstname }}
+          </h4>
+          <div class="d-flex flex-row m-0 p-0 align-items-center">
+            <v-icon size="x-large">mdi-map-marker</v-icon>
+            <div class="d-flex flex-column m-0 p-0">
+              <p class="m-0 p-0">{{ post.address }}</p>
+              <p class="m-0 p-0">{{ post.postalCode }} {{ post.city }}</p>
+            </div>
+          </div>
+
+          <p>
+            <strong>Description :</strong>
+            {{ post.description.length > 150 ? post.description.substring(0, 150) + "..." : post.description }}
+          </p>
+
+          <p>
+            Taille {{ post.size }} m² - <strong>[{{ post.price }} €/Mois]</strong>
+          </p>
+
+          <div class="d-flex flex-row">
+            <p>Services :</p>
+            <template v-for="(icon, key) in serviceIcons">
+              <v-icon
+                v-if="this.listService[post.idPost - 1]?.[key] === 1"
+                :key="`${post.idPost - 1}-${key}`"
+                class="mx-1"
+              >
+                {{ icon }}
+              </v-icon>
+            </template>
+          </div>
+
+          <p>
+            Fréquence :
+            {{ this.listService[post.idPost - 1]?.time != 0 ? this.listService[post.idPost - 1]?.time : 0 }}h / semaines
+          </p>
+        </v-card-text>
+
+        <!-- Bouton Réserver -->
+        <v-card-actions>
+          <v-btn color="primary" block @click="reserver"> Réserver </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-main>
 </template>
 
@@ -77,6 +132,7 @@
 import { useRoute } from "vue-router";
 import axios from "axios";
 import { useConversationStore } from "../stores/ConversationStore";
+import { useListPostStore } from "../stores/listPostStore";
 import "../assets/style.css";
 
 export default {
@@ -85,23 +141,46 @@ export default {
       user: JSON.parse(sessionStorage.getItem("user")) || {},
       idDest: -1,
       convId: -1,
+      post: null,
       age: 0,
       target: null,
       msgContent: "",
       messages: [],
       timeline: [],
+      showPostDetails: false,
+      serviceIcons: {
+        isCleaning: "mdi-broom",
+        isCarSharing: "mdi-car",
+        isCooking: "mdi-silverware-fork-knife",
+        isDiy: "mdi-hammer",
+        isErrand: "mdi-cart",
+        isGardening: "mdi-sprout",
+        isPetsSitting: "mdi-paw",
+        isTalking: "mdi-chat",
+      },
+      listService: [],
     };
   },
 
   async mounted() {
     // Chargement des messages
     const cs = useConversationStore();
+    const ps = useListPostStore();
     const route = useRoute();
 
     if (!cs.isLoaded1) cs.load(this.user.id);
     await this.waitUntil(() => cs.isLoaded1);
 
+    if (!ps.isLoaded) ps.loadPosts();
+    await this.waitUntil(() => ps.isLoaded);
+
     this.idDest = route.params.id;
+
+    this.post = ps.listPost.find((p) => {
+      return p.idUser == this.idDest;
+    });
+
+    this.listService = ps.listServices;
 
     let ci = cs.conversations.find((c) => {
       return (
@@ -122,6 +201,10 @@ export default {
   },
 
   methods: {
+    reserver() {
+      this.$router.push({ name: "Reservation", params: { id: this.post.idPost } });
+    },
+
     waitUntil(conditionFn, interval = 250) {
       return new Promise((resolve) => {
         const checkCondition = () => {
@@ -174,7 +257,6 @@ export default {
           header: { "Content-Type": "application/json" },
         })
         .then((result) => {
-          console.log(result.data);
           this.messages = result.data;
         })
         .catch((error) => {
@@ -209,7 +291,6 @@ export default {
             { header: { "Content-Type": "application/json" } }
           )
           .then((result) => {
-            console.log(result);
             this.msgContent = "";
             this.loadMessages();
           })

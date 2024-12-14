@@ -22,7 +22,8 @@
           <v-card-subtitle>
             <v-icon>mdi-map-marker</v-icon> {{ post.address }} - {{ post.postalCode }} {{ post.city }}
           </v-card-subtitle>
-          <v-card-text class="p-1">
+          <v-card-text class="p-1 mt-1">
+            <p>{{ post.description }}</p>
             <p>
               Taille {{ post.size }} m² - <strong>[{{ post.price }} €/Mois]</strong>
             </p>
@@ -327,7 +328,6 @@ export default {
               }
             )
             .then((result) => {
-              console.log(result);
               this.$router.push({ name: "MessageComponent", params: { id: this.usersData.id } });
             })
             .catch((error) => {

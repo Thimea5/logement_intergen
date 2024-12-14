@@ -26,8 +26,6 @@ export const useReservationStore = defineStore("reservation", {
               this.reservationsUsers = result.data["reservationsUsers"];
               this.isLoaded = true;
             }
-            console.log(this.reservations);
-            console.log(this.reservationsUsers);
           })
           .catch((error) => {
             console.error(error);

@@ -10,7 +10,6 @@ export const useListPostStore = defineStore("listPost", {
 
   actions: {
     loadPosts() {
-      ////console.log("this.loadPosts");
       if (!this.isLoaded) {
         const apiUrl = import.meta.env.VITE_API_URL;
         axios
@@ -20,14 +19,10 @@ export const useListPostStore = defineStore("listPost", {
             },
           })
           .then((result) => {
-            //console.log(result);
             if (result.status === 200 && result.data["success"]) {
               const resPosts = result.data["posts"];
               const resServices = result.data["services"];
-              //console.log(resPosts);
-              //console.log(resServices);
               for (let i = 0; i < resPosts.length; i++) {
-                ////console.log(resPosts[i]["id"]);
                 this.listPost.push({
                   idPost: resPosts[i]["post_id"],
                   address: resPosts[i]["address"],
@@ -61,13 +56,10 @@ export const useListPostStore = defineStore("listPost", {
               }
             }
 
-            //console.log("resPosts", this.listPost);
-            //console.log("resServices", this.listServices);
             this.isLoaded = true;
-            ////console.log("fini");
           })
           .catch((error) => {
-            //console.log(error);
+            console.error(error);
           });
       }
     },

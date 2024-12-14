@@ -62,7 +62,6 @@ export default {
   },
 
   computed: {
-    // Calcule les plages désactivées à partir des réservations existantes
     disabledDates() {
       if (!this.reservations || this.reservations.length === 0) {
         return [];
@@ -94,11 +93,6 @@ export default {
     this.reservations = rs.reservations.filter((r) => {
       return r.id_post == postId;
     });
-
-    console.log("chargement des données");
-    console.log(this.user);
-    console.log(this.post);
-    console.log(this.reservations);
   },
 
   methods: {

@@ -2,7 +2,7 @@
   <v-main>
     <v-app-bar :elevation="0">
       <v-btn icon="mdi-keyboard-backspace" variant="plain" @click="goBack"></v-btn>
-      <v-app-title class="ms-5"> Partagez votre avis avec les autres </v-app-title>
+      <v-toolbar-title class="ms-5"> Partagez votre avis avec les autres </v-toolbar-title>
     </v-app-bar>
 
     <v-container class="d-flex flex-column w-100 p-0 m-0">
