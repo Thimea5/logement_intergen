@@ -4,6 +4,9 @@
   header("Access-Control-Allow-Headers: Content-Type, Authorization");
   header('Content-Type: application/json');
 
+  ini_set('display_errors', 1);
+  error_reporting(E_ALL);
+  
   include_once '../config/database.php';
   include_once '../model/post.php';
   include_once '../model/service.php';

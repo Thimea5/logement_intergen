@@ -30,8 +30,8 @@
         <v-carousel-item v-for="(elt, i) in this.listDisplayByScore" :key="i">
           <v-card class="w-100 p-0 m-0 bg-blue-grey-lighten-4" @click="goToPostDetails(elt.idPost)">
             <div>
-              <v-img width="100vw" height="30vh" cover aspect-ratio="1" :src="getImageSrc(elt.img)">
-                <v-btn
+              <v-img width="100vw" height="30vh" cover aspect-ratio="1" :src="getImageSrc(elt.idUser)">
+                <!-- <v-btn
                   icon
                   color="white"
                   rounded="circle"
@@ -39,7 +39,7 @@
                   @click.stop="addFavouritesPost(elt.idHost)"
                 >
                   <v-icon>mdi-heart</v-icon>
-                </v-btn>
+                </v-btn> -->
               </v-img>
             </div>
 
@@ -179,9 +179,9 @@ export default {
       this.$router.push({ name: "PostDetails", params: { id: pPost } });
     },
 
-    getImageSrc(pImgPath) {
+    getImageSrc(pId) {
       const url = new URL(
-        `/src/assets/img/${pImgPath}/host_photo${pImgPath[pImgPath.length - 1]}_1.jpg`,
+        `/src/assets/img/host${pId}/post/1.jpg`,
         import.meta.url
       ).href;
 

@@ -455,72 +455,17 @@
                       size="x-large"
                       @click="step3_3 = false"
                     ></v-btn>
-                    <h1 class="headline text-center">Votre profil</h1>
+                    <h1 class="headline text-center">Votre annonce</h1>
                     <p>Ajoutez des photos à votre annonce</p>
                   </div>
 
-                  <div class="h-50 my-5 d-flex flex-column justify-content-center align-items-center">
-                    <div class="d-flex justify-content-center w-100 h-100">
-                      <v-file-input
-                        class="rounded-xl mx-4 position-relative"
-                        hide-details
-                        rounded
-                        height="250"
-                        variant="solo-filled"
-                        align-items:center
-                        justify-content:center
-                        aspect-ratio="1"
-                        prepend-icon="">
-                        <template v-slot:append-inner>
-                          <v-icon class="position-absolute start-50 translate-middle top-50" size="50" icon="mdi-plus"></v-icon>
-                        </template>
-                      </v-file-input>
-                      <v-file-input
-                        class="rounded-xl mx-4 position-relative"
-                        hide-details
-                        rounded
-                        height="250"
-                        variant="solo-filled"
-                        align-items:center
-                        justify-content:center
-                        aspect-ratio="1"
-                        prepend-icon="">
-                        <template v-slot:append-inner>
-                          <v-icon class="position-absolute start-50 translate-middle top-50" size="50" icon="mdi-plus"></v-icon>
-                        </template>
-                      </v-file-input>
-                    </div>
-
-                    <div class="d-flex justify-content-center w-100 h-100">
-                      <v-file-input
-                        class="rounded-xl mx-4 position-relative"
-                        hide-details
-                        rounded
-                        height="250"
-                        variant="solo-filled"
-                        align-items:center
-                        justify-content:center
-                        aspect-ratio="1"
-                        prepend-icon="">
-                        <template v-slot:append-inner>
-                          <v-icon class="position-absolute start-50 translate-middle top-50" size="50" icon="mdi-plus"></v-icon>
-                        </template>
-                      </v-file-input>
-                      <v-file-input
-                        class="rounded-xl mx-4 position-relative"
-                        hide-details
-                        rounded
-                        height="250"
-                        variant="solo-filled"
-                        align-items:center
-                        justify-content:center
-                        aspect-ratio="1"
-                        prepend-icon="">
-                        <template v-slot:append-inner>
-                          <v-icon class="position-absolute start-50 translate-middle top-50" size="50" icon="mdi-plus"></v-icon>
-                        </template>
-                      </v-file-input>
-                    </div>
+                  <div class="h-50 my-5 d-flex flex-wrap justify-content-around align-items-around">
+                    <v-file-input v-for="i in 4" class="d-none" :id="'img'+i" accept="image/*" v-model="post.imgs[i-1]"></v-file-input>
+                    
+                    <v-btn v-for="i in 4" class="m-4 text-muted rounded-xl" :id="'fInput'+i" width="35%" height="35%" @click="triggerInputFile(i)">
+                      <v-icon v-if="post.imgs[i-1] == null" class="position-absolute start-50 translate-middle top-50" size="50" icon="mdi-plus"></v-icon>
+                      <v-icon v-else class="position-absolute start-50 translate-middle top-50" size="50" icon="mdi-image-check-outline"></v-icon>
+                    </v-btn>
                   </div>
 
                   <v-btn class="w-100 rounded-pill mb-5" color="#4F685D" @click="registerHost()">S'inscrire</v-btn>
@@ -631,6 +576,7 @@ export default {
         size: 0,
         price: 0,
         services: [],
+        imgs: []
       },
 
       fullAddress: "",
@@ -794,23 +740,34 @@ export default {
     },
 
     async validateStep3_1() {
-      this.fullAddress = this.post.address + " " + this.post.city + " " + this.post.postal_code;
-      //console.log(this.fullAddress);
 
-      provider.search({ query: this.fullAddress }).then((result) => {
-        if (result.length > 0) {
-          const { x, y } = result[0];
+      if (this.post.address !== "" && this.post.city !== "" && this.post.postal_code !== "") {
+        this.fullAddress = this.post.address + " " + this.post.city + " " + this.post.postal_code;
+        console.log(this.fullAddress);
 
-          this.post.lat = y;
-          this.post.lng = x;
-        }
-      });
+        provider.search({ query: this.fullAddress }).then((result) => {
+          if (result.length > 0) {
+            const { x, y } = result[0];
+
+            this.post.lat = y;
+            this.post.lng = x;
+          }
+        });
+      }
 
       this.step3_2 = true;
     },
 
     validateStep3_2() {
       this.step3_3 = true;
+    },
+
+    triggerInputFile(index) {
+      const fileInput = document.getElementById('img'+index)
+
+      if (fileInput) {
+        fileInput.click()
+      }
     },
 
     registerGuest() {
@@ -866,29 +823,43 @@ export default {
         services: aServ,
       };
 
-      this.registerUser(data);
+      // Créer un objet FormData
+      const formData = new FormData();
+
+      // Ajouter toutes les données à FormData
+      for (let key in data) {
+        formData.append(key, data[key]);
+      }
+
+      // Ajouter les fichiers (photos) à FormData avec des noms basés sur leur index
+      if (this.post.imgs && this.post.imgs.length > 0) {
+        for (let i = 0; i < this.post.imgs.length; i++) {
+          const file = this.post.imgs[i];
+
+          // Ajouter le fichier à FormData avec son nouveau nom
+          formData.append('photos[]', file);
+        }
+      }
+
+      console.log(formData)
+      
+      this.registerUser(formData);
     },
 
     registerUser(pData) {
-      //console.log(pData);
+      console.log(pData)
       const apiUrl = import.meta.env.VITE_API_URL;
       axios
-        .post(apiUrl + "/services/register.php", pData, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
+        .post(apiUrl + "/services/register.php", pData)
         .then((result) => {
-          //console.log(result);
-          if (result.status == 200 && result.data["success"]) {
-            //console.log("L'utilisateur est bien créé en base");
+          if (result.status === 200 && result.data["success"]) {
             this.$router.push("/login");
           } else {
-            //console.log("raté");
+            console.log("Erreur lors de la création de l'utilisateur", result);
           }
         })
         .catch((error) => {
-          console.error(error);
+          console.error("Erreur : ", error);
         });
     },
 
