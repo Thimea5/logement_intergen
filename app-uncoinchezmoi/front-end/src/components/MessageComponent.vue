@@ -22,17 +22,18 @@
       <div class="m-auto mt-2 mb-2">
         <v-btn color="green" variant="outlined" @click="showPostDetails = true"> Voir le logement </v-btn>
       </div>
-      <!--BUG ICI, ne s'adapte pas à la taille d'écran-->
-      <div style="position: static; height: 55vh; overflow: auto">
+
+      <!-- Zone des messages -->
+      <div
+        class="messages-container flex-grow-1"
+        ref="messagesContainer"
+        style="overflow-y: auto; height: calc(93vh - 250px)"
+      >
         <template v-for="(messages, date) in groupMessagesByDate()" :key="date">
-          <!-- Séparateur de date -->
           <div class="date-separator">
-            <v-divider class="my-4" text>
-              {{ date }}
-            </v-divider>
+            <v-divider class="my-4" text>{{ date }}</v-divider>
           </div>
 
-          <!-- Conteneur des messages pour une date -->
           <div class="message-group">
             <div
               v-for="(msg, index) in messages"
@@ -47,7 +48,6 @@
                 <v-card-title style="white-space: normal; word-wrap: break-word; font-size: 10pt">
                   {{ msg.content }}
                 </v-card-title>
-
                 <v-card-subtitle class="text-caption grey-text text-end me-1 m-0 p-0">
                   {{ formatDate(msg.creation_date) }}
                 </v-card-subtitle>
@@ -169,10 +169,8 @@ export default {
     const route = useRoute();
 
     if (!cs.isLoaded1) cs.load(this.user.id);
-    await this.waitUntil(() => cs.isLoaded1);
-
     if (!ps.isLoaded) ps.loadPosts();
-    await this.waitUntil(() => ps.isLoaded);
+    await this.waitUntil(() => ps.isLoaded && cs.isLoaded1);
 
     this.idDest = route.params.id;
 
@@ -201,6 +199,12 @@ export default {
   },
 
   methods: {
+    scrollToBottom() {
+      const container = this.$refs.messagesContainer;
+      if (container) {
+        container.scrollTop = container.scrollHeight;
+      }
+    },
     reserver() {
       this.$router.push({ name: "Reservation", params: { id: this.post.idPost } });
     },
@@ -313,9 +317,10 @@ export default {
 <style scoped>
 .message-input-container {
   margin-top: 1%;
-  margin-bottom: 10%;
+  margin-bottom: 0px;
   padding: 10px;
-  position: fixed;
+  padding-bottom: 0px;
+  position: sticky;
   bottom: 0;
   left: 0;
   right: 0;

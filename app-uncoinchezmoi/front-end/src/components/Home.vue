@@ -15,80 +15,61 @@
     <!-- Section avec connexion-->
     <v-container v-if="isLoggedIn" class="d-flex flex-column justify-center">
       <img src="../assets/logo.png" alt="Logo de l'application" class="home-small-logo" />
+      <h1 class="m-auto mb-5">Bienvenue chez toi !</h1>
+      <h3 class="mt-1">Regarde nos meilleures annonces :</h3>
 
-      <div class="d-flex justify-space-between align-center" style="width: 100%">
-        <v-btn
-          v-if="this.user.type == 'guest'"
-          @click="navigate('/advanced-search')"
-          color="primary"
-          style="flex: 1; margin-right: 5px"
-        >
-          Rechercher
-        </v-btn>
-        <v-btn v-else @click="navigate('/view-post')" color="primary" style="flex: 1; margin-right: 5px">
-          Mon logement
-        </v-btn>
-        <v-btn @click="navigate('/TODO_ICI')" color="secondary" style="flex: 1; margin-left: 5px">
-          Favoris
-          <v-icon>mdi-heart</v-icon>
-        </v-btn>
-      </div>
+      <v-carousel
+        :show-arrows="false"
+        width="100"
+        height="50vh"
+        class="p-0 m-0"
+        cycle
+        v-if="listDisplayByScore.length > 0"
+        hide-delimiters
+      >
+        <v-carousel-item v-for="(elt, i) in this.listDisplayByScore" :key="i">
+          <v-card class="w-100 p-0 m-0 bg-blue-grey-lighten-4" @click="goToPostDetails(elt.idPost)">
+            <div>
+              <v-img width="100vw" height="30vh" cover aspect-ratio="1" :src="getImageSrc(elt.img)">
+                <v-btn
+                  icon
+                  color="white"
+                  rounded="circle"
+                  class="position-absolute top-0 right-0 m-1"
+                  @click.stop="addFavouritesPost(elt.idHost)"
+                >
+                  <v-icon>mdi-heart</v-icon>
+                </v-btn>
+              </v-img>
+            </div>
 
-      <h4 style="margin-top: 5%">Recommandées pour vous</h4>
+            <v-card-title>
+              {{ elt.type_logement }} - {{ (elt.size === null ? 0 : elt.size) + "m²" }} [{{ elt.price }}€/mois]
+            </v-card-title>
+            <v-card-subtitle> {{ elt.address }} - {{ elt.city }} {{ elt.postalCode }} </v-card-subtitle>
+            <v-card-text>
+              <p>Note moyenne : {{ elt.averageScore.toFixed(1) }}</p>
+            </v-card-text>
+          </v-card>
+        </v-carousel-item>
+      </v-carousel>
 
-      <!-- Affichage des cartes de logement (le contenu sera ajouté plus tard) -->
-      <div>
-        <!-- Partie v-if -->
-        <v-card v-if="listDisplay.length === 0" class="bg-blue-grey-lighten-4">
-          <v-card-title>Aucune annonce trouvée pour le moment</v-card-title>
-          <v-card-text>
-            <p>Essayez de modifier vos critères de recherche.</p>
-          </v-card-text>
-        </v-card>
+      <v-btn class="mb-4 m-auto" @click="navigate('/map')">Voir plus d'annonces</v-btn>
 
-        <!-- Partie v-else -->
-        <div v-else>
-          <v-row>
-            <v-col v-for="elt in listDisplay" :key="elt.id" cols="12" sm="6" md="4">
-              <v-card @click="goToPostDetails(elt.idPost)" class="bg-blue-grey-lighten-4">
-                <v-img :src="getImageSrc(elt.img)">
-                  <v-btn
-                    icon
-                    color="white"
-                    rounded="circle"
-                    class="position-absolute top-0 right-0 m-1"
-                    @click.stop="addFavouritesPost(elt.idHost)"
-                  >
-                    <v-icon>mdi-heart</v-icon>
-                  </v-btn>
-                </v-img>
-                <v-card-title>
-                  {{ elt.type_logement }} - {{ (elt.size === null ? 0 : elt.size) + "m²" }} [{{ elt.price }}€/mois]
-                </v-card-title>
-                <v-card-subtitle>{{ elt.address }} - {{ elt.city }} {{ elt.postalCode }}</v-card-subtitle>
-                <v-card-text class="d-flex flex-row">
-                  <p>Services :</p>
-                  <template v-for="(icon, key) in serviceIcons">
-                    <v-icon
-                      v-if="listService[elt.idPost - 1]?.[key] === 1"
-                      :key="`${elt.idPost - 1}-${key}`"
-                      class="mx-1"
-                    >
-                      {{ icon }}
-                    </v-icon>
-                  </template>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-        </div>
-      </div>
+      <h3 class="mt-1">Lancez la discussion :</h3>
+
+      <v-btn class="mt-4 mb-4 m-auto" @click="navigate('/conversations')">Messagerie</v-btn>
+
+      <h3 class="mt-1">Vos informations :</h3>
+      <v-btn class="mt-4 mb-4 m-auto" @click="navigate('/user-profile')">Mon profil</v-btn>
+      <v-btn class="mt-4 mb-4 m-auto" v-if="user.type === 'host'" @click="navigate('/view-post')"> Mon logement </v-btn>
     </v-container>
   </v-main>
 </template>
 
 <script>
 import { useListPostStore } from "../stores/listPostStore";
+import axios from "axios";
 
 export default {
   name: "Home",
@@ -98,6 +79,7 @@ export default {
       user: JSON.parse(sessionStorage.getItem("user")) || {},
       listDisplay: [],
       listService: [],
+      listDisplayByScore: [],
       isLoggedIn: sessionStorage.getItem("user") != null,
       serviceIcons: {
         isCleaning: "mdi-broom",
@@ -112,20 +94,87 @@ export default {
     };
   },
 
-  mounted() {
-    // Solution pas folle pour le bug du dédoublement des annonces
+  async mounted() {
+    // Réinitialisation des listes à chaque montage
     this.listDisplay = [];
     this.listService = [];
-    if (this.isLoggedIn) {
-      setTimeout(() => {
-        const ps = useListPostStore();
-        this.listDisplay = ps.listPost;
-        this.listService = ps.listServices;
-      }, 200);
-    }
+    this.listDisplayByScore = [];
+
+    const ps = useListPostStore();
+    if (!ps.isLoaded) ps.loadPosts();
+    await this.waitUntil(() => ps.isLoaded);
+
+    this.listDisplay = ps.listPost;
+    this.listService = ps.listServices;
+
+    const apiUrl = import.meta.env.VITE_API_URL;
+    axios
+      .get(apiUrl + "/services/reviewsManager.php", {
+        headers: { "Content-Type": "application/json" },
+      })
+      .then((result) => {
+        if (result.status === 200 && result.data["success"]) {
+          const reviews = result.data["reviews"];
+          this.calculateAverageScores(reviews);
+          this.sortByScore("desc"); // Tri décroissant par défaut
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   },
 
   methods: {
+    waitUntil(conditionFn, interval = 200) {
+      return new Promise((resolve) => {
+        const checkCondition = () => {
+          if (conditionFn()) {
+            resolve();
+          } else {
+            setTimeout(checkCondition, interval);
+          }
+        };
+        checkCondition();
+      });
+    },
+
+    sortByScore(order) {
+      this.listDisplayByScore = [...this.listDisplay].sort((a, b) => {
+        if (order === "asc") return a.averageScore - b.averageScore;
+        if (order === "desc") return b.averageScore - a.averageScore;
+      });
+    },
+
+    calculateAverageScores(reviews) {
+      const scores = {};
+
+      reviews.forEach((review) => {
+        if (!scores[review.id_post]) {
+          scores[review.id_post] = { totalScore: 0, count: 0 };
+        }
+        scores[review.id_post].totalScore += review.score;
+        scores[review.id_post].count++;
+      });
+
+      this.listDisplay = this.listDisplay.map((post) => {
+        const scoreData = scores[post.idPost];
+        return {
+          ...post,
+          averageScore: scoreData ? scoreData.totalScore / scoreData.count : 0,
+        };
+      });
+
+      // Unicité pour éviter les doublons, on remercie l'IA
+      const uniquePosts = new Map();
+      this.listDisplay.forEach((post) => {
+        if (!uniquePosts.has(post.idPost)) {
+          uniquePosts.set(post.idPost, post);
+        }
+      });
+
+      this.listDisplayByScore = Array.from(uniquePosts.values());
+    },
+
     goToPostDetails(pPost) {
       this.$router.push({ name: "PostDetails", params: { id: pPost } });
     },

@@ -77,7 +77,7 @@ export default {
       return lastMsg.length > 30 ? lastMsg.substring(0, 30) + "..." : lastMsg;
     },
 
-    waitUntil(conditionFn, interval = 200) {
+    waitUntil(conditionFn, interval = 10) {
       return new Promise((resolve) => {
         const checkCondition = () => {
           if (conditionFn()) {
@@ -89,6 +89,7 @@ export default {
         checkCondition();
       });
     },
+
     goBack() {
       this.$router.go(-1);
     },

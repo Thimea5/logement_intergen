@@ -22,6 +22,8 @@ export const useListPostStore = defineStore("listPost", {
             if (result.status === 200 && result.data["success"]) {
               const resPosts = result.data["posts"];
               const resServices = result.data["services"];
+              this.listPost = [];
+              this.listServices = [];
               for (let i = 0; i < resPosts.length; i++) {
                 this.listPost.push({
                   idPost: resPosts[i]["post_id"],

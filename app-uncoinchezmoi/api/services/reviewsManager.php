@@ -18,29 +18,31 @@
     if ($request === "GET") {
         $input = $_GET;       
 
-        if (!isset($input) || (!isset($input) && !isset($input['id'])) ) {
-            echo json_encode(["success" => false, "message" => "données d'entrées invalides"]);
-            exit;
-        }
+        if (isset($input) && isset($input['id'])) {
+            //var_dump($input);
+            $outputReviews  = $reviewModel->getReviewsByPost($input['id']);
+        
+            if ($outputReviews) {
+                foreach ($outputReviews  as $keys => $values) {
+                    foreach($values as $key => $value) {
+                        if ($key === 'id_user') {
+                            $userInfo = $userModel->getUsersById($value);
+                            $nameAuthor = $userInfo["firstname"] . ' ' . $userInfo['lastname'];
 
-        //var_dump($input);
-        $outputReviews  = $reviewModel->getReviewsByPost($input['id']);
-    
-        if ($outputReviews) {
-            foreach ($outputReviews  as $keys => $values) {
-                foreach($values as $key => $value) {
-                    if ($key === 'id_user') {
-                        $userInfo = $userModel->getUsersById($value);
-                        $nameAuthor = $userInfo["firstname"] . ' ' . $userInfo['lastname'];
-
-                        $outputReviews[$keys]["nameAuthor"] = $nameAuthor;
+                            $outputReviews[$keys]["nameAuthor"] = $nameAuthor;
+                        }
                     }
                 }
+                echo json_encode(['success' => true, 'reviews' => $outputReviews ]);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Aucun commentaire trouvé.']);
             }
-            echo json_encode(['success' => true, 'reviews' => $outputReviews ]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Aucun commentaire trouvé.']);
+            $outputReviews = $reviewModel->getAllReviews();
+            echo json_encode(["success" => true, "reviews" => $outputReviews]);
         }
+
+        
     } else if ($request === "DELETE") {
         $data = json_decode(file_get_contents("php://input"), true);
         if ($reviewModel->deleteReviewById($data['id'])) {

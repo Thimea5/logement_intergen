@@ -52,11 +52,6 @@ export default {
     const cs = useConversationStore();
     const rs = useReservationStore();
 
-    if (!ps.isLoaded) ps.loadPosts();
-    await this.waitUntil(() => ps.isLoaded);
-
-    this.listDisplay = ps.listPost;
-
     if (this.isLoggedIn) {
       console.log("Connexion OK");
       this.userStore.loadUserFromSession();
@@ -64,11 +59,14 @@ export default {
       console.log("Chargement du store utilisateur OK");
 
       if (!cs.isLoaded1) cs.load(this.userStore.user.id);
-      await this.waitUntil(() => cs.isLoaded1);
-      console.log("Chargement du store des conversations OK");
-
       if (!rs.isLoaded) rs.load(this.userStore.user.id);
-      await this.waitUntil(() => rs.isLoaded);
+      if (!ps.isLoaded) ps.loadPosts();
+
+      await this.waitUntil(() => ps.isLoaded && cs.isLoaded1 && rs.isLoaded);
+
+      console.log(ps.listPost);
+      console.log("Chargement du store des annonces OK");
+      console.log("Chargement du store des conversations OK");
       console.log("Chargement du store des réservations OK");
     }
   },
