@@ -1,24 +1,35 @@
 <template>
   <v-main>
-    <!-- Barre de recherche -->
-    <v-btn class="btn position-absolute top-0 left-0 m-3 mapBtn bg-light" icon="mdi-tune" rounded="pill"
-      @click="navigate('/advanced-search')">
-    </v-btn>
-    <v-btn class="btn position-absolute top-0 right-0 m-3 mapBtn bg-light" icon="mdi-format-list-bulleted"
-      rounded="pill" @click="navigate('/advance-search')">
-    </v-btn>
+    <v-text-field
+      v-model="searchQuery"
+      prepend-inner-icon="mdi-tune"
+      append-inner-icon="mdi-magnify"
+      hide-details
+      single-line
+      placeholder="Rechercher un lieu..."
+      class="custom-toolbar"
+      @click:prepend-inner="navigate('/advanced-search')"
+      @click:append-inner="sampleSearch"
+      @keydown.enter.prevent="sampleSearch"
+    ></v-text-field>
 
     <!-- Carte -->
     <l-map :zoom="zoom" :center="center" style="height: 100%" ref="mapRef" @update:bounds="refreshMapWithNearPosts">
+      <v-btn @click="navigate('/list-post')" class="custom-switch-button">liste</v-btn>
+
       <!-- Tuiles -->
       <l-tile-layer :url="tileLayerUrl" :attribution="attribution" ref="tileLayer" />
 
       <!-- Marqueurs -->
-      <l-marker v-for="post in filteredPosts" :key="post.id" :lat-lng="[post.latitude, post.longitude]"
-        @click="onMarkerClick(post)">
-
+      <l-marker
+        v-for="post in filteredPosts"
+        :key="post.id"
+        :lat-lng="[post.latitude, post.longitude]"
+        @click="onMarkerClick(post)"
+      >
       </l-marker>
     </l-map>
+
     <v-bottom-sheet class="mb-14 shadow-none" z-index="1000" v-model="popup">
       <v-card class="position-relative">
         <v-btn class="position-absolute right-0" variant="solo" icon="mdi-close" @click="popup = false"></v-btn>
@@ -26,15 +37,13 @@
           <v-card-text @click="goToPostDetails(selectedPost)">
             <div class="h-100 d-flex justify-content-between align-items-center">
               <div class="w-50 h-100">
-                <v-img :src="getImageSrc('host_photo'+selectedPost.idPost)" cover height="200">
+                <v-img :src="getImageSrc('host_photo' + selectedPost.idPost)" cover height="200">
                   <template v-slot:placeholder>
                     <v-row align="center" class="fill-height ma-0" justify="center">
-                      <v-progress-circular color="#4f685d" indeterminate>
-                      </v-progress-circular>
+                      <v-progress-circular color="#4f685d" indeterminate> </v-progress-circular>
                     </v-row>
                   </template>
                 </v-img>
-
               </div>
               <div class="d-flex flex-column justify-content-between ms-5 mb-3">
                 <div class="d-flex flex-column justify-content-between">
@@ -54,7 +63,6 @@
         </template>
       </v-card>
     </v-bottom-sheet>
-
   </v-main>
 </template>
 
@@ -88,7 +96,7 @@ export default {
       streetUrl: "https://api.maptiler.com/maps/streets-v2/256/{z}/{x}/{y}.png?key=aRVKZ0fk9aEUzL9b5GZs",
       attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> contributors',
 
-      selectedPost: null
+      selectedPost: null,
     };
   },
 
@@ -104,11 +112,11 @@ export default {
           // création et application des calques (tuiles)
           this.tileLayer = L.tileLayer(this.tileLayerUrl, {
             attribution: this.attribution,
-          })
+          });
 
           const layers = {
             "Carte de base": this.tileLayer,
-          }
+          };
 
           // L.control.layers(layers).addTo(map);
 
@@ -126,10 +134,10 @@ export default {
 
     onMarkerClick(post) {
       const map = this.$refs.mapRef.leafletObject;
-      map.flyTo([post.latitude, post.longitude], 12)
+      map.flyTo([post.latitude, post.longitude], 12);
 
-      this.selectedPost = post
-      this.popup = true
+      this.selectedPost = post;
+      this.popup = true;
 
       // console.log(this.selectedPost)
     },

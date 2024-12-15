@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { useUserStore } from "../stores/userStore";
 import Home from "../components/Home.vue";
-import About from "../components/About.vue";
+import ListPost from "../components/ListPostComponent.vue";
 import Login from "../components/LogIn.vue";
 import Register from "../components/Register.vue";
 import UserProfile from "../components/UserProfile.vue";
@@ -71,10 +71,10 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: "/about",
-    name: "About",
-    component: About,
-    meta: { requiresAuth: false },
+    path: "/list-post",
+    name: "ListPost",
+    component: ListPost,
+    meta: { requiresAuth: true },
   },
   {
     path: "/login",

@@ -40,6 +40,7 @@ export const useListPostStore = defineStore("listPost", {
                   nbPhoto: resPosts[i]["nb_photo"],
                   idUser: resPosts[i]["id_user"],
                   available: resPosts[i]["available"],
+                  roomSize: resPosts[i]["room_size"],
                 });
 
                 this.listServices.push({

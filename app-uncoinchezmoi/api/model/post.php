@@ -42,6 +42,7 @@
                   post.nb_photo, 
                   post.available, 
                   post.id_user, 
+                  post.room_size,
                   users.id AS user_id, 
                   users.mail, 
                   users.firstname, 

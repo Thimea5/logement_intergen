@@ -180,10 +180,7 @@ export default {
     },
 
     getImageSrc(pId) {
-      const url = new URL(
-        `/src/assets/img/host${pId}/post/1.jpg`,
-        import.meta.url
-      ).href;
+      const url = new URL(`/src/assets/img/host${pId}/post/1.jpg`, import.meta.url).href;
 
       if (!url.includes("undefined")) {
         return url;

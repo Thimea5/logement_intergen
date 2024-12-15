@@ -110,3 +110,26 @@ main {
 .mapBtn {
   z-index: 1000;
 }
+
+.custom-toolbar {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 100px);
+  background-color: rgba(255, 255, 255, 0.738);
+  border-radius: 8px;
+  z-index: 1000;
+}
+
+.custom-switch-button {
+  position: absolute;
+  top: 2%;
+  left: 85%;
+  transform: translateX(-50%);
+  width: calc(100% - 100px);
+  background-color: rgba(255, 255, 255, 0.738);
+  border-radius: 8px;
+  z-index: 800;
+  width: 25%;
+}
