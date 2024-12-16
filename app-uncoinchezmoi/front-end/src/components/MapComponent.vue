@@ -48,10 +48,10 @@
               <div class="d-flex flex-column justify-content-between ms-5 mb-3">
                 <div class="d-flex flex-column justify-content-between">
                   <h6 class="pb-0 mb-0 fw-bold">{{ selectedPost.address }}</h6>
-                  <h7>{{ selectedPost.city }}, {{ selectedPost.postalCode }}</h7>
+                  <h6>{{ selectedPost.city }}, {{ selectedPost.postalCode }}</h6>
                 </div>
                 <div class="d-flex flex-column justify-content-between mt-3">
-                  <h7>{{ this.selectedPost.type_logement }}, {{ this.selectedPost.size }} m²</h7>
+                  <h6>{{ this.selectedPost.type_logement }}, {{ this.selectedPost.size }} m²</h6>
                   <h6 class="fw-bold">{{ this.selectedPost.price }} €</h6>
                 </div>
               </div>

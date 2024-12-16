@@ -15,11 +15,17 @@
         hide-details
         single-line
         @click:append-inner="performSearch"
+        ref="autoCompleteInput"
       ></v-text-field>
+      <v-list v-if="suggestions.length">
+        <v-list-item v-for="(suggestion, index) in suggestions" :key="index" @click="selectSuggestion(suggestion)">
+          <v-list-item-title>{{ suggestion.description }}</v-list-item-title>
+        </v-list-item>
+      </v-list>
 
       <!-- Types de logement en v-carousel -->
       <v-card outlined class="p-1 mt-4">
-        <v-card-title>Types de logement</v-card-title>
+        <v-card-title>Types de logement :</v-card-title>
         <v-card-text>
           <v-carousel hide-delimiters height="100%" class="pt-1 m-0" :show-arrows="false">
             <v-carousel-item v-for="(group, index) in groupedTypes" :key="index">
@@ -42,7 +48,7 @@
 
       <!-- Types de services en v-carousel -->
       <v-card outlined class="pa-3 mt-1">
-        <v-card-title>Types de services</v-card-title>
+        <v-card-title>Types de services :</v-card-title>
         <v-card-text>
           <v-carousel hide-delimiters height="100%" class="pt-1 m-0" :show-arrows="false">
             <v-carousel-item v-for="(group, index) in groupedServices" :key="index">
@@ -63,7 +69,8 @@
         </v-card-text>
       </v-card>
 
-      <v-card rounded="lg" class="d-flex flex-column justify-center align-center m-2">
+      <v-card rounded="lg" class="pa-3 mt-1">
+        <v-card-title>Notation : </v-card-title>
         <v-item-group v-model="selectedRating" class="d-flex justify-center">
           <v-item v-for="n in 5" :key="n">
             <template v-slot:default="{ toggle }">
@@ -77,12 +84,23 @@
         </v-item-group>
       </v-card>
 
+      <v-card rounded="lg" class="pa-3 mt-1">
+        <v-slider
+          class="mt-5"
+          max="1600"
+          min="45"
+          v-model="cost"
+          label="Loyer (€/mois)"
+          thumb-label="always"
+        ></v-slider>
+        <v-slider class="mt-2" max="25" min="5" v-model="roomSize" label="Taille (m²)" thumb-label="always"></v-slider>
+      </v-card>
+
       <!-- Bouton Rechercher -->
-      <v-row>
-        <v-col cols="12">
-          <v-btn @click="performSearch" color="primary" block class="mt-4"> Rechercher </v-btn>
-        </v-col>
-      </v-row>
+      <div class="d-flex flex-row align-items-center w-100 mt-4">
+        <v-btn @click="cleanSearch" color="primary" class="mr-auto"> Effacer </v-btn>
+        <v-btn @click="performSearch" color="primary"> Rechercher </v-btn>
+      </div>
 
       <!-- Résultats de la recherche -->
       <v-bottom-sheet v-model="sheet" scrollable height="60vh">
@@ -128,7 +146,11 @@ export default {
       listPost: [],
       sheet: false,
       selectedRating: null,
+      cost: null,
+      roomSize: null,
       results: [],
+      autocompleteService: null,
+      suggestions: [],
 
       typesOptions: [
         { key: "Studio", label: "Studio", icon: "mdi-door" },
@@ -173,8 +195,9 @@ export default {
       },
     };
   },
+
   computed: {
-    // Split typesOptions into groups of 2
+    // formation de groupe de 2
     groupedTypes() {
       const groups = [];
       for (let i = 0; i < this.typesOptions.length; i += 2) {
@@ -191,7 +214,19 @@ export default {
       return groups;
     },
   },
+
   async mounted() {
+    this.loadGoogleMapsAPI()
+      .then(() => {
+        if (window.google && window.google.maps) {
+          this.autocompleteService = new google.maps.places.AutocompleteService();
+          console.log("AutocompleteService initialized");
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to load Google Maps API", error);
+      });
+
     const ps = useListPostStore();
     if (!ps.isLoaded) ps.loadPosts();
     await this.waitUntil(() => ps.isLoaded);
@@ -212,7 +247,85 @@ export default {
         console.error(error);
       });
   },
+  watch: {
+    searchQuery(newQuery) {
+      if (newQuery.length > 2) {
+        this.fetchSuggestions(newQuery);
+      } else {
+        this.suggestions = [];
+      }
+    },
+  },
   methods: {
+    loadGoogleMapsAPI() {
+      return new Promise((resolve, reject) => {
+        if (window.google && window.google.maps) {
+          resolve(); // L'API est déjà chargée
+          return;
+        }
+
+        const script = document.createElement("script");
+        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAzP1jU_5lO_65-P_Hk_kZcFEQyVu5MqIg&libraries=places`;
+        script.async = true;
+        script.defer = true;
+        script.onload = () => resolve();
+        script.onerror = (error) => reject(error);
+        document.head.appendChild(script);
+      });
+    },
+    fetchSuggestions(query) {
+      if (!this.autocompleteService) return;
+
+      // Options pour limiter les résultats à la France
+      const options = {
+        input: query,
+        componentRestrictions: { country: "fr" }, // Limiter à la France
+      };
+
+      // Requête à l'API Google Places
+      this.autocompleteService.getPlacePredictions(options, (predictions, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
+          this.suggestions = predictions;
+        } else {
+          this.suggestions = [];
+        }
+      });
+    },
+
+    selectSuggestion(suggestion) {
+      this.searchQuery = suggestion.description; // Mettre à jour le champ avec la suggestion sélectionnée
+      this.suggestions = []; // Réinitialiser les suggestions
+    },
+
+    cleanSearch() {
+      this.cost = null;
+      this.roomSize = null;
+      this.selectedRating = null;
+      this.searchQuery = "";
+
+      this.selectedServices = {
+        isGardening: false,
+        isCooking: false,
+        isDiy: false,
+        isTalking: false,
+        isCleaning: false,
+        isCarSharing: false,
+        isErrand: false,
+        isPetsSitting: false,
+        isRepairs: false,
+      };
+
+      this.selectedTypes = {
+        studio: false,
+        appartement: false,
+        maison: false,
+        chambre: false,
+        villa: false,
+        chalet: false,
+        grenier: false,
+      };
+    },
+
     toggleType(key) {
       this.selectedTypes[key] = !this.selectedTypes[key];
     },
@@ -250,6 +363,7 @@ export default {
 
       console.log("fin", this.cardList);
     },
+
     waitUntil(conditionFn, interval = 200) {
       return new Promise((resolve) => {
         const checkCondition = () => {
@@ -262,11 +376,11 @@ export default {
         checkCondition();
       });
     },
+
     performSearch() {
       let score = this.selectedRating !== null && this.selectedRating !== undefined ? this.selectedRating : -2;
       score++;
-      console.log("rating", this.selectedRating);
-      console.log("score", score);
+
       this.loading = true;
       const ps = useListPostStore();
       const apiUrl = import.meta.env.VITE_API_URL;
@@ -284,7 +398,6 @@ export default {
         .catch((error) => {
           console.error(error);
         });
-      console.log("listCard", this.cardList);
 
       const activeServices = Object.entries(this.selectedServices)
         .filter(([key, value]) => value)
@@ -316,14 +429,14 @@ export default {
               type_logement: listing.type_logement,
               img: listing.img,
               size: listing.size,
-              averageScore: listing.averageScore || 0, // Ajout de la note moyenne
+              averageScore: listing.averageScore || 0,
             };
           }
         })
         .filter((item) => {
           if (!item) return false;
 
-          // Filtrage par mot-clé
+          // Filtrage par adresse
           const matchQuery =
             item.address.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
             item.city.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
@@ -373,3 +486,12 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.v-list {
+  max-height: 200px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+}
+</style>

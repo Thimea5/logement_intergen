@@ -1,8 +1,22 @@
 <template>
-  <v-main class="d-flex flex-column justify-content-between align-items-center">
-    <v-app-bar :elevation="0">
-      <v-btn icon="mdi-keyboard-backspace" variant="plain" size="x-large" @click="goBack()"></v-btn>
+  <v-main class="d-flex flex-column justify-content-between w-100">
+    <v-app-bar :elevation="0" class="w-100 d-flex align-items-center">
+      <v-btn icon="mdi-keyboard-backspace" variant="plain" size="x-large" @click="goBack()" class="mr-auto"></v-btn>
+      <v-btn @click="navigate('/map')" class="bg-dark">carte</v-btn>
     </v-app-bar>
+
+    <v-text-field
+      v-model="searchQuery"
+      prepend-inner-icon="mdi-tune"
+      append-inner-icon="mdi-magnify"
+      hide-details
+      single-line
+      placeholder="Rechercher un lieu..."
+      class="w-100 ps-4 pe-4"
+      @click:prepend-inner="navigate('/advanced-search')"
+      @click:append-inner="sampleSearch"
+      @keydown.enter.prevent="sampleSearch"
+    ></v-text-field>
 
     <v-container class="d-flex flex-column align-center">
       <div>
@@ -73,6 +87,7 @@ export default {
         isPetsSitting: "mdi-paw",
         isTalking: "mdi-chat",
       },
+      searchQuery: "",
     };
   },
 
@@ -80,7 +95,6 @@ export default {
     const ps = useListPostStore();
     this.listDisplay = ps.listPost;
     this.listService = ps.listServices;
-    console.log(this.listDisplay);
   },
 
   methods: {
@@ -107,6 +121,10 @@ export default {
 
     navigate(path) {
       this.$router.push(path);
+    },
+
+    sampleSearch() {
+      console.log("recherche simple");
     },
   },
 };
