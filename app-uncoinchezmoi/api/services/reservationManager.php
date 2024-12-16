@@ -41,7 +41,6 @@
     } else if ($requestInfo === "GET") {
         // TODO : ajouter un peu de blindage...
         $inputData = $_GET;
-        var_dump($inputData);
         if (!isset($inputData)) {
             echo json_encode(["success" => false, "message" => "Aucune donnée reçue."]);
             exit;
@@ -53,8 +52,6 @@
         }
 
         $reservations = $reservationModel->getAllReservations();
-        var_dump($reservations);
-
         $today = date('Y-m-d H:i:s');
 
         for ($i=0; $i<count($reservations); $i++) {
