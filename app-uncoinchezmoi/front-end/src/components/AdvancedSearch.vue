@@ -322,8 +322,8 @@ export default {
     },
 
     selectSuggestion(suggestion) {
-      this.searchQuery = suggestion.description;
-      console.log("Selected Address Details:", suggestion.fullDetails);
+      this.searchQuery = suggestion.fullDetails["formatted_address"];
+      console.log("Selected Address Details:", suggestion.fullDetails["formatted_address"]);
       this.suggestions = [];
     },
 
@@ -413,8 +413,8 @@ export default {
     },
 
     performSearch() {
-      console.log(this.searchQuery);
-      console.log(this.suggestions);
+      const decoupage = this.searchQuery.split(", ");
+
       let score = this.selectedRating !== null && this.selectedRating !== undefined ? this.selectedRating : -2;
       score++;
 
@@ -467,17 +467,27 @@ export default {
               img: listing.img,
               size: listing.size,
               averageScore: listing.averageScore || 0,
+              roomSize: listing.roomSize,
+              price: listing.price,
             };
           }
         })
         .filter((item) => {
           if (!item) return false;
-
           // Filtrage par adresse
-          const matchQuery =
-            item.address.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-            item.city.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-            item.postalCode.toLowerCase().includes(this.searchQuery.toLowerCase());
+          // On a saisie que la ville...
+          let matchQuery;
+          if (decoupage.length == 2) {
+            matchQuery =
+              item.city.toLowerCase().includes(decoupage[0].substring(5).toLowerCase()) ||
+              item.postalCode.toLowerCase().includes(decoupage[0].substring(0, 5).toLowerCase());
+          } else {
+            // on a la saisie complète
+            matchQuery =
+              item.address.toLowerCase().includes(decoupage[0].toLowerCase()) ||
+              item.city.toLowerCase().includes(decoupage[1].substring(0, 5).toLowerCase()) ||
+              item.postalCode.toLowerCase().includes(decoupage[1].substring(5).toLowerCase());
+          }
 
           // Filtrage par services
           const matchServices = activeServices.every((service) => {
@@ -493,7 +503,17 @@ export default {
           // Filtrage par note moyenne (averageScore)
           const matchRating = score == -1 || item.averageScore >= score;
 
-          return matchQuery && matchServices && matchTypes && matchRating;
+          //console.log(item);
+          //console.log(item.roomSize, item.price);
+
+          console.log(this.roomSize);
+          const matchRoomSize = this.roomSize == null || item.roomSize >= this.roomSize;
+
+          console.log(this.cost);
+          const matchCost = this.cost == null || item.price <= this.cost;
+
+          console.log(matchRoomSize, matchCost);
+          return matchQuery && matchServices && matchTypes && matchRating && matchRoomSize && matchCost;
         });
 
       this.loading = false;
