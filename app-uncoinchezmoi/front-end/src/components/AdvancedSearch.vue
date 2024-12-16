@@ -20,6 +20,13 @@
       <v-list v-if="suggestions.length">
         <v-list-item v-for="(suggestion, index) in suggestions" :key="index" @click="selectSuggestion(suggestion)">
           <v-list-item-title>{{ suggestion.description }}</v-list-item-title>
+          <v-list-item-subtitle>
+            <span v-if="suggestion.city">Ville : {{ suggestion.city }}</span
+            ><br />
+            <span v-if="suggestion.postalCode">Code postal : {{ suggestion.postalCode }}</span
+            ><br />
+            <span v-if="suggestion.country">Pays : {{ suggestion.country }}</span>
+          </v-list-item-subtitle>
         </v-list-item>
       </v-list>
 
@@ -276,16 +283,38 @@ export default {
     fetchSuggestions(query) {
       if (!this.autocompleteService) return;
 
-      // Options pour limiter les résultats à la France
       const options = {
         input: query,
         componentRestrictions: { country: "fr" }, // Limiter à la France
       };
 
-      // Requête à l'API Google Places
+      // Requête à l'API Google Places pour récupérer les prédictions
       this.autocompleteService.getPlacePredictions(options, (predictions, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
-          this.suggestions = predictions;
+          // Récupérer les détails des prédictions via place_id
+          const placeDetailsPromises = predictions.map((prediction) => {
+            return new Promise((resolve) => {
+              const placeService = new google.maps.places.PlacesService(document.createElement("div"));
+              placeService.getDetails({ placeId: prediction.place_id }, (details, status) => {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                  resolve({
+                    description: prediction.description,
+                    city: this.extractComponent(details.address_components, "locality"),
+                    postalCode: this.extractComponent(details.address_components, "postal_code"),
+                    country: this.extractComponent(details.address_components, "country"),
+                    fullDetails: details,
+                  });
+                } else {
+                  resolve(null);
+                }
+              });
+            });
+          });
+
+          // Attendre que toutes les promesses soient résolues pour mettre à jour les suggestions
+          Promise.all(placeDetailsPromises).then((detailedSuggestions) => {
+            this.suggestions = detailedSuggestions.filter(Boolean); // Retirer les éléments nuls
+          });
         } else {
           this.suggestions = [];
         }
@@ -293,8 +322,14 @@ export default {
     },
 
     selectSuggestion(suggestion) {
-      this.searchQuery = suggestion.description; // Mettre à jour le champ avec la suggestion sélectionnée
-      this.suggestions = []; // Réinitialiser les suggestions
+      this.searchQuery = suggestion.description;
+      console.log("Selected Address Details:", suggestion.fullDetails);
+      this.suggestions = [];
+    },
+
+    extractComponent(components, type) {
+      const component = components.find((comp) => comp.types.includes(type));
+      return component ? component.long_name : null;
     },
 
     cleanSearch() {
@@ -378,6 +413,8 @@ export default {
     },
 
     performSearch() {
+      console.log(this.searchQuery);
+      console.log(this.suggestions);
       let score = this.selectedRating !== null && this.selectedRating !== undefined ? this.selectedRating : -2;
       score++;
 
