@@ -21,6 +21,7 @@ export const useReservationStore = defineStore("reservation", {
             headers: { "Content-Type": "application/json" },
           })
           .then((result) => {
+            console.log(result);
             if (result.status === 200 && result.data["success"]) {
               this.reservations = result.data["reservations"];
               this.reservationsUsers = result.data["reservationsUsers"];

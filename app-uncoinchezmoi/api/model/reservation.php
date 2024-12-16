@@ -38,5 +38,16 @@
 
             return $query->fetchAll(PDO::FETCH_ASSOC);
         }
+
+        public function deleteReservation($idPost, $start_date, $end_date, $idUser) {
+            $sql = "DELETE r.* FROM reservation r WHERE r.id_post = :pIdPost AND r.start_date = :pStartDate AND r.end_date = :pEndDate AND r.id_user = :pIdUser";
+
+            $query = $this->conn->prepare($sql);
+            $query->bindParam("pIdPost", $idPost);
+            $query->bindParam("pStartDate", $start_date);
+            $query->bindParam("pEndDate", $end_date);
+            $query->bindParam("pIdUser", $idUser);
+            return $query->execute();
+        }
     }
 ?>
