@@ -13,68 +13,38 @@
             </div>
             <div>
               <label class="custom-label mb-3" for="email">Adresse Email</label>
-              <v-text-field
-                id="email"
-                placeholder="Adresse Email"
-                rounded="pill"
-                clearable
-                variant="solo-filled"
-                v-model="user.mail"
-                :rules="[rules.email, rules.emailExists, rules.required]"
-                @input="validate()"
-              >
+              <v-text-field id="email" placeholder="Adresse Email" rounded="pill" clearable variant="solo-filled"
+                v-model="user.mail" :rules="[rules.email, rules.emailExists, rules.required]" @input="validate()">
               </v-text-field>
 
               <div class="text-end">
                 <v-btn class="rounded-pill" color="#8DA399" id="sendCode" @click="sendCode()" :disabled="disabled">{{
                   sendCodeLabel
-                }}</v-btn>
+                  }}</v-btn>
               </div>
 
               <v-expansion-panels class="my-5" v-model="panel" flat>
                 <v-expansion-panel value="otpShow">
                   <v-expansion-panel-text>
-                    <v-otp-input
-                      v-model="user.code"
-                      :error="otpError"
-                      @input="validateOtp()"
-                      :rules="[rules.codeMatch]"
-                    >
+                    <v-otp-input v-model="user.code" :error="otpError" @input="validateOtp()"
+                      :rules="[rules.codeMatch]">
                     </v-otp-input>
                   </v-expansion-panel-text>
                 </v-expansion-panel>
               </v-expansion-panels>
 
               <label class="custom-label mb-3" for="pwd">Mot de passe</label>
-              <v-text-field
-                id="pwd"
-                placeholder="Mot de passe"
-                autocomplete="nope"
-                :type="marker[0] ? 'password' : 'text'"
-                rounded="pill"
-                clearable
-                variant="solo-filled"
-                v-model="user.password"
-                :append-inner-icon="marker[0] ? 'mdi-eye-off' : 'mdi-eye'"
-                @click:append-inner="toggleMarker(0)"
-                :rules="[rules.required]"
-              >
+              <v-text-field id="pwd" placeholder="Mot de passe" autocomplete="nope"
+                :type="marker[0] ? 'password' : 'text'" rounded="pill" clearable variant="solo-filled"
+                v-model="user.password" :append-inner-icon="marker[0] ? 'mdi-eye-off' : 'mdi-eye'"
+                @click:append-inner="toggleMarker(0)" :rules="[rules.required]">
               </v-text-field>
 
               <label class="custom-label mb-3" for="pwdConf">Confirmez votre mot de passe</label>
-              <v-text-field
-                id="pwdConf"
-                placeholder="Confirmez votre mot de passe"
-                autocomplete="none"
-                :type="marker[1] ? 'password' : 'text'"
-                rounded="pill"
-                clearable
-                variant="solo-filled"
-                v-model="user.passwordConf"
-                :append-inner-icon="marker[1] ? 'mdi-eye-off' : 'mdi-eye'"
-                @click:append-inner="toggleMarker(1)"
-                :rules="[rules.required, rules.passwordsMatch]"
-              >
+              <v-text-field id="pwdConf" placeholder="Confirmez votre mot de passe" autocomplete="none"
+                :type="marker[1] ? 'password' : 'text'" rounded="pill" clearable variant="solo-filled"
+                v-model="user.passwordConf" :append-inner-icon="marker[1] ? 'mdi-eye-off' : 'mdi-eye'"
+                @click:append-inner="toggleMarker(1)" :rules="[rules.required, rules.passwordsMatch]">
               </v-text-field>
             </div>
 
@@ -92,92 +62,45 @@
                     <div class="d-flex justify-content-around">
                       <div class="w-100 mr-5">
                         <label class="custom-label mb-3" for="lName">Nom</label>
-                        <v-text-field
-                          id="lName"
-                          placeholder="Nom"
-                          type="text"
-                          rounded="pill"
-                          clearable
-                          variant="solo-filled"
-                          v-model="user.lastName"
-                          :rules="[rules.required]"
-                        >
+                        <v-text-field id="lName" placeholder="Nom" type="text" rounded="pill" clearable
+                          variant="solo-filled" v-model="user.lastName" :rules="[rules.required]">
                         </v-text-field>
                       </div>
                       <div class="w-100 ml-5">
                         <label class="custom-label mb-3" for="fName">Prénom</label>
-                        <v-text-field
-                          id="fName"
-                          placeholder="Prénom"
-                          type="text"
-                          rounded="pill"
-                          clearable
-                          variant="solo-filled"
-                          v-model="user.firstName"
-                          :rules="[rules.required]"
-                        >
+                        <v-text-field id="fName" placeholder="Prénom" type="text" rounded="pill" clearable
+                          variant="solo-filled" v-model="user.firstName" :rules="[rules.required]">
                         </v-text-field>
                       </div>
                     </div>
 
                     <label class="custom-label mb-3" for="bDate">Date de naissance</label>
-                    <v-date-input
-                      id="bDate"
-                      rounded
-                      clearable
-                      variant="solo-filled"
-                      v-model="user.birthDate"
-                      prepend-icon=""
-                      append-inner-icon="mdi-calendar-month"
-                      :rules="[rules.required]"
-                    >
+                    <v-date-input id="bDate" rounded clearable variant="solo-filled" v-model="user.birthDate"
+                      prepend-icon="" append-inner-icon="mdi-calendar-month" :rules="[rules.required]">
                     </v-date-input>
 
                     <label class="custom-label mb-3" for="tel">N° Téléphone</label>
-                    <v-text-field
-                      id="tel"
-                      placeholder="Numéro de téléphone"
-                      rounded="pill"
-                      clearable
-                      variant="solo-filled"
-                      v-model="user.telephone"
-                      :rules="[rules.required]"
-                    >
+                    <v-text-field id="tel" placeholder="Numéro de téléphone" rounded="pill" clearable
+                      variant="solo-filled" v-model="user.telephone" :rules="[rules.required]">
                     </v-text-field>
 
                     <div class="d-flex w-100">
                       <div class="d-flex flex-column w-50 mr-2">
                         <label class="custom-label mb-3" for="gender">Genre</label>
-                        <v-select
-                          v-model="user.gender"
-                          rounded="pill"
-                          variant="solo-filled"
-                          :items="genders"
-                          item-title="text"
-                          item-value="value"
-                          :rules="[rules.required]"
-                        >
+                        <v-select v-model="user.gender" rounded="pill" variant="solo-filled" :items="genders"
+                          item-title="text" item-value="value" :rules="[rules.required]">
                         </v-select>
                       </div>
                       <div class="d-flex flex-column w-50 ml-2">
                         <label class="custom-label mb-3" for="marital">Statut marital</label>
-                        <v-select
-                          id="marital"
-                          v-model="user.maritalStatus"
-                          rounded="pill"
-                          variant="solo-filled"
-                          :items="status"
-                          item-title="text"
-                          item-value="value"
-                          :rules="[rules.required]"
-                        >
+                        <v-select id="marital" v-model="user.maritalStatus" rounded="pill" variant="solo-filled"
+                          :items="status" item-title="text" item-value="value" :rules="[rules.required]">
                         </v-select>
                       </div>
                     </div>
                   </div>
 
-                  <v-btn class="w-100 rounded-pill mb-5" color="#8DA399" @click="validateStep2()"
-                    >Etape suivante
+                  <v-btn class="w-100 rounded-pill mb-5" color="#8DA399" @click="validateStep2()">Etape suivante
                   </v-btn>
                 </v-card>
               </v-dialog>
@@ -192,12 +115,8 @@
                     <p>Souhaitez-vous proposer un logement ou cherchez-vous un logement ?</p>
                   </div>
 
-                  <v-btn-toggle
-                    class="h-100 d-flex flex-column justify-content-center align-items-center"
-                    v-model="user.type"
-                    mandatory
-                    color="#E6CDB5"
-                  >
+                  <v-btn-toggle class="h-100 d-flex flex-column justify-content-center align-items-center"
+                    v-model="user.type" mandatory color="#E6CDB5">
                     <v-btn class="w-100 h-25 m-3 rounded-xl" value="guest"> Locataire </v-btn>
                     <v-btn class="w-100 h-25 m-3 rounded-xl" value="host"> Propriétaire </v-btn>
                   </v-btn-toggle>
@@ -211,12 +130,8 @@
               <v-dialog v-model="step3_1" transition="dialog-bottom-transition" fullscreen>
                 <v-card class="p-3 d-flex flex-column justify-content-between">
                   <div>
-                    <v-btn
-                      icon="mdi-keyboard-backspace"
-                      variant="plain"
-                      size="x-large"
-                      @click="step3_1 = false"
-                    ></v-btn>
+                    <v-btn icon="mdi-keyboard-backspace" variant="plain" size="x-large"
+                      @click="step3_1 = false"></v-btn>
                     <h1 class="headline text-center">Votre logement</h1>
                     <p>Bonjour {{ user.firstName }}, décrivez votre logement</p>
                   </div>
@@ -226,55 +141,37 @@
                       <div class="d-flex justify-content-between">
                         <div class="w-50 me-5">
                           <label class="custom-label mb-3" for="city">Ville</label>
-                          <v-text-field
-                            id="city"
-                            placeholder="Ville"
-                            rounded="pill"
-                            clearable
-                            variant="solo-filled"
-                            v-model="post.city"
-                            :rules="[rules.required]"
-                          >
+                          <v-text-field id="city" placeholder="Ville" rounded="pill" clearable variant="solo-filled"
+                            v-model="post.city" :rules="[rules.required]">
                           </v-text-field>
                         </div>
 
                         <div class="w-50 me-5">
                           <label class="custom-label mb-3" for="postal_code">Code postal</label>
-                          <v-text-field
-                            id="postal_code"
-                            placeholder="Code postal"
-                            rounded="pill"
-                            clearable
-                            variant="solo-filled"
-                            v-model="post.postal_code"
-                            :rules="[rules.required]"
-                          >
+                          <v-text-field id="postal_code" placeholder="Code postal" rounded="pill" clearable
+                            variant="solo-filled" v-model="post.postal_code" :rules="[rules.required]">
                           </v-text-field>
                         </div>
                       </div>
 
                       <label class="custom-label mb-3" for="address">Adresse</label>
-                      <v-text-field
-                        id="address"
-                        placeholder="Numéro de rue"
-                        rounded="pill"
-                        clearable
-                        variant="solo-filled"
-                        v-model="post.address"
-                        :rules="[rules.required]"
-                      >
+                      <v-text-field id="address" placeholder="Numéro de rue" rounded="pill" clearable
+                        variant="solo-filled" v-model="searchQuery" :rules="[rules.required]" ref="autoCompleteInput">
                       </v-text-field>
+
+                      <v-list v-if="suggestions.length">
+                        <v-list-item v-for="(suggestion, index) in suggestions" :key="index"
+                          @click="selectSuggestion(suggestion)">
+                          <v-list-item-title>{{ suggestion.description }}</v-list-item-title>
+                        </v-list-item>
+                      </v-list>
+
                     </div>
 
                     <div>
                       <label class="custom-label mb-3" for="property">Type de propriété</label>
-                      <v-btn-toggle
-                        id="property"
-                        class="d-flex flex-wrap justify-content-between h-auto"
-                        v-model="post.type_logement"
-                        mandatory
-                        color="#E6CDB5"
-                      >
+                      <v-btn-toggle id="property" class="d-flex flex-wrap justify-content-between h-auto"
+                        v-model="post.type_logement" mandatory color="#E6CDB5">
                         <v-btn class="rounded-xl m-1 p-3 border" value="Maison"> Maison </v-btn>
                         <v-btn class="rounded-xl m-1 p-3 border" value="Appartement"> Appartement </v-btn>
                         <v-btn class="rounded-xl m-1 p-3 border" value="Villa"> Villa </v-btn>
@@ -284,16 +181,8 @@
 
                     <div>
                       <label class="custom-label mb-3" for="size">Surface</label>
-                      <v-text-field
-                        id="size"
-                        placeholder="Surface"
-                        rounded="pill"
-                        clearable
-                        variant="solo-filled"
-                        v-model="post.size"
-                        :rules="[rules.required]"
-                        suffix="m²"
-                      >
+                      <v-text-field id="size" placeholder="Surface" rounded="pill" clearable variant="solo-filled"
+                        v-model="post.size" :rules="[rules.required]" suffix="m²">
                       </v-text-field>
                     </div>
                   </div>
@@ -307,66 +196,27 @@
               <v-dialog v-model="step3_1" transition="dialog-bottom-transition" fullscreen>
                 <v-card class="p-3 d-flex flex-column justify-content-between">
                   <div>
-                    <v-btn
-                      icon="mdi-keyboard-backspace"
-                      variant="plain"
-                      size="x-large"
-                      @click="step3_1 = false"
-                    ></v-btn>
+                    <v-btn icon="mdi-keyboard-backspace" variant="plain" size="x-large"
+                      @click="step3_1 = false"></v-btn>
                     <h1 class="headline text-center">Votre profil</h1>
                     <p>Bonjour {{ user.firstName }}, veuillez finaliser votre inscription</p>
                   </div>
 
                   <div class="h-100 d-flex flex-column justify-content-around">
                     <div>
-                      <!-- <label class="custom-label mb-3" for="services">Services proposés</label>
-                      <v-select
-                        id="services"
-                        v-model="guest.services"
-                        :items="services"
-                        rounded="pill"
-                        clearable
-                        variant="solo-filled"
-                        multiple>
-                          <template v-slot:selection="{ item, index }">
-                          <v-chip v-if="index < 3">
-                            <span>{{ item.title }}</span>
-                          </v-chip>
-                          <span v-if="index === 3" class="text-grey text-caption align-self-center" color="">
-                            (+{{ guest.features.length - 3 }})
-                          </span>
-                      </template>
-                      </v-select> -->
 
                       <label class="custom-label mb-3" for="services">Services proposés</label>
-                      <v-btn-toggle
-                        id="services"
-                        class="d-flex flex-wrap justify-content-between h-auto"
-                        v-model="guest.services"
-                        multiple
-                        color="#E6CDB5"
-                      >
-                        <v-btn
-                          class="mx-1 my-3 p-3 rounded-pill border"
-                          v-for="service in services"
-                          :value="service"
-                          :text="service"
-                        ></v-btn>
+                      <v-btn-toggle id="services" class="d-flex flex-wrap justify-content-between h-auto"
+                        v-model="guest.services" multiple color="#E6CDB5">
+                        <v-btn class="mx-1 my-3 p-3 rounded-pill border" v-for="service in services" :value="service"
+                          :text="service"></v-btn>
                       </v-btn-toggle>
                     </div>
 
                     <div>
                       <label class="custom-label mb-3" for="max_price">Prix maximum souhaité</label>
-                      <v-text-field
-                        id="max_price"
-                        placeholder="Prix max"
-                        rounded="pill"
-                        clearable
-                        variant="solo-filled"
-                        v-model="guest.max_price"
-                        :rules="[rules.required]"
-                        suffix="€"
-                      >
+                      <v-text-field id="max_price" placeholder="Prix max" rounded="pill" clearable variant="solo-filled"
+                        v-model="guest.max_price" :rules="[rules.required]" suffix="€">
                       </v-text-field>
                     </div>
                   </div>
@@ -380,12 +230,8 @@
               <v-dialog v-model="step3_2" transition="dialog-bottom-transition" fullscreen>
                 <v-card class="p-3 d-flex flex-column justify-content-between">
                   <div>
-                    <v-btn
-                      icon="mdi-keyboard-backspace"
-                      variant="plain"
-                      size="x-large"
-                      @click="step3_2 = false"
-                    ></v-btn>
+                    <v-btn icon="mdi-keyboard-backspace" variant="plain" size="x-large"
+                      @click="step3_2 = false"></v-btn>
                     <h1 class="headline text-center">Votre logement</h1>
                     <p>Bonjour {{ user.firstName }}, décrivez votre logement</p>
                   </div>
@@ -393,49 +239,25 @@
                   <div class="h-100 d-flex flex-column justify-content-around">
                     <div>
                       <label class="custom-label mb-3" for="services">Services demandés</label>
-                      <v-btn-toggle
-                        id="services"
-                        class="d-flex flex-wrap justify-content-between h-auto"
-                        v-model="post.services"
-                        multiple
-                        color="#E6CDB5">
-                        <v-btn
-                          class="mx-1 my-2 p-2 rounded-pill border"
-                          v-for="service in services"
-                          :value="service"
-                          :text="service"
-                        ></v-btn>
+                      <v-btn-toggle id="services" class="d-flex flex-wrap justify-content-between h-auto"
+                        v-model="post.services" multiple color="#E6CDB5">
+                        <v-btn class="mx-1 my-2 p-2 rounded-pill border" v-for="service in services" :value="service"
+                          :text="service"></v-btn>
                       </v-btn-toggle>
                     </div>
 
                     <div>
                       <label class="custom-label mb-3" for="description">Description du bien</label>
-                      <v-textarea
-                        id="description"
-                        placeholder="Description"
-                        v-model="post.description"
-                        no-resize
-                        rounded
-                        variant="solo-filled"
-                      >
+                      <v-textarea id="description" placeholder="Description" v-model="post.description" no-resize
+                        rounded variant="solo-filled">
                       </v-textarea>
                     </div>
 
                     <div>
                       <label class="custom-label mb-3" for="price">Prix du loyer</label>
-                      <v-number-input
-                        id="price"
-                        placeholder="Prix"
-                        rounded="pill"
-                        clearable
-                        variant="solo-filled"
-                        v-model="post.price"
-                        :rules="[rules.required]"
-                        suffix="€"
-                        controlVariant="split"
-                        :step="10"
-                        :min="0"
-                      >
+                      <v-number-input id="price" placeholder="Prix" rounded="pill" clearable variant="solo-filled"
+                        v-model="post.price" :rules="[rules.required]" suffix="€" controlVariant="split" :step="10"
+                        :min="0">
                       </v-number-input>
                     </div>
                   </div>
@@ -449,22 +271,22 @@
               <v-dialog v-model="step3_3" transition="dialog-bottom-transition" fullscreen>
                 <v-card class="p-3 d-flex flex-column justify-content-between">
                   <div>
-                    <v-btn
-                      icon="mdi-keyboard-backspace"
-                      variant="plain"
-                      size="x-large"
-                      @click="step3_3 = false"
-                    ></v-btn>
+                    <v-btn icon="mdi-keyboard-backspace" variant="plain" size="x-large"
+                      @click="step3_3 = false"></v-btn>
                     <h1 class="headline text-center">Votre annonce</h1>
                     <p>Ajoutez des photos à votre annonce</p>
                   </div>
 
                   <div class="h-50 my-5 d-flex flex-wrap justify-content-around align-items-around">
-                    <v-file-input v-for="i in 4" class="d-none" :id="'img'+i" accept="image/*" v-model="post.imgs[i-1]"></v-file-input>
-                    
-                    <v-btn v-for="i in 4" class="m-4 text-muted rounded-xl" :id="'fInput'+i" width="35%" height="35%" @click="triggerInputFile(i)">
-                      <v-icon v-if="post.imgs[i-1] == null" class="position-absolute start-50 translate-middle top-50" size="50" icon="mdi-plus"></v-icon>
-                      <v-icon v-else class="position-absolute start-50 translate-middle top-50" size="50" icon="mdi-image-check-outline"></v-icon>
+                    <v-file-input v-for="i in 4" class="d-none" :id="'img'+i" accept="image/*"
+                      v-model="post.imgs[i-1]"></v-file-input>
+
+                    <v-btn v-for="i in 4" class="m-4 text-muted rounded-xl" :id="'fInput'+i" width="35%" height="35%"
+                      @click="triggerInputFile(i)">
+                      <v-icon v-if="post.imgs[i-1] == null" class="position-absolute start-50 translate-middle top-50"
+                        size="50" icon="mdi-plus"></v-icon>
+                      <v-icon v-else class="position-absolute start-50 translate-middle top-50" size="50"
+                        icon="mdi-image-check-outline"></v-icon>
                     </v-btn>
                   </div>
 
@@ -565,6 +387,10 @@ export default {
       step3_2: false,
       step3_3: false,
 
+      suggestions: [],
+      autocompleteService: "",
+      searchQuery: "",
+
       post: {
         city: "",
         postal_code: "",
@@ -598,11 +424,107 @@ export default {
     };
   },
 
-  mounted() {
-    this.getAllUsers();
+  async mounted() {
+    this.loadGoogleMapsAPI()
+      .then(() => {
+        if (window.google && window.google.maps) {
+          this.autocompleteService = new google.maps.places.AutocompleteService();
+          console.log("AutocompleteService initialized");
+        }
+      })
+      .catch((error) => {
+        console.error("Failed to load Google Maps API", error);
+      });
+
+    this.getAllUsers()
+  },
+  watch: {
+    searchQuery(newQuery) {
+      if (newQuery.length > 2) {
+        console.log(newQuery)
+        this.fetchSuggestions(newQuery);
+      } else {
+        this.suggestions = [];
+      }
+    },
   },
 
   methods: {
+    loadGoogleMapsAPI() {
+      return new Promise((resolve, reject) => {
+        if (window.google && window.google.maps) {
+          resolve(); // L'API est déjà chargée
+          return;
+        }
+
+        const script = document.createElement("script");
+        script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyAzP1jU_5lO_65-P_Hk_kZcFEQyVu5MqIg&libraries=places`;
+        script.async = true;
+        script.defer = true;
+        script.onload = () => resolve();
+        script.onerror = (error) => reject(error);
+        document.head.appendChild(script);
+      });
+    },
+    fetchSuggestions(query) {
+      if (!this.autocompleteService) return;
+
+      const options = {
+        input: query,
+        componentRestrictions: { country: "fr" }, // Limiter à la France
+      };
+
+      // Requête à l'API Google Places pour récupérer les prédictions
+      this.autocompleteService.getPlacePredictions(options, (predictions, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
+          // Récupérer les détails des prédictions via place_id
+          const placeDetailsPromises = predictions.map((prediction) => {
+            return new Promise((resolve) => {
+              const placeService = new google.maps.places.PlacesService(document.createElement("div"));
+              placeService.getDetails({ placeId: prediction.place_id }, (details, status) => {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                  resolve({
+                    description: prediction.description,
+                    city: this.extractComponent(details.address_components, "locality"),
+                    postalCode: this.extractComponent(details.address_components, "postal_code"),
+                    country: this.extractComponent(details.address_components, "country"),
+                    fullDetails: details,
+                  });
+                } else {
+                  resolve(null);
+                }
+              });
+            });
+          });
+
+          // Attendre que toutes les promesses soient résolues pour mettre à jour les suggestions
+          Promise.all(placeDetailsPromises).then((detailedSuggestions) => {
+            this.suggestions = detailedSuggestions.filter(Boolean); // Retirer les éléments nuls
+          });
+        } else {
+          this.suggestions = [];
+        }
+      });
+    },
+
+    selectSuggestion(suggestion) {
+      let pc = extractPostalCode(suggestion.fullDetails["formatted_address"])
+      console.log("Selected Address Details:", pc)
+
+      this.searchQuery = suggestion.description
+      this.post.address = suggestion.description
+      this.post.city = suggestion.city
+      this.post.postal_code = pc
+
+      this.suggestions = [];
+    },
+
+    extractComponent(components, type) {
+      const component = components.find((comp) => comp.types.includes(type));
+      return component ? component.long_name : null;
+    },
+
+
     goBack() {
       this.$router.go(-1);
     },
@@ -876,6 +798,19 @@ export default {
 function _(id) {
   return document.querySelector("#" + id);
 }
+
+function extractPostalCode(address) {
+  // Séparer l'adresse en fonction des virgules
+  const parts = address.split(',');
+
+  // Récupérer le deuxième élément (code postal + ville)
+  const secondPart = parts[1].trim();
+
+  // Extraire les 5 premiers caractères pour obtenir le code postal
+  const postalCode = secondPart.substring(0, 5);
+
+  return postalCode;
+}
 </script>
 
 <style scoped>
@@ -894,4 +829,12 @@ function _(id) {
   font-size: 32px;
   text-align: center;
 }
+
+.v-list {
+  max-height: 200px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+}
+
 </style>
