@@ -5,8 +5,8 @@
     </v-app-bar>
 
     <v-container class="d-flex flex-column m-0 p-1">
-      <!-- DatePicker avec dates désactivées -->
       <DatePicker
+        :color="colorCustom"
         class="w-100"
         v-model.range="range"
         mode="dateTime"
@@ -15,7 +15,7 @@
         :disabled-dates="disabledDates"
       ></DatePicker>
 
-      <v-card class="mt-5 mb-5 bg-light">
+      <v-card class="mt-5 mb-5" color="var(--background-color)">
         <v-card-title> Réservation :</v-card-title>
         <v-card-subtitle>
           Du {{ formatDateWithTime(range.start) }} au {{ formatDateWithTime(range.end) }}
@@ -25,7 +25,7 @@
           <p>
             Coût de la réservation : <strong>{{ calculateCost() }}€</strong>
           </p>
-          <v-btn color="primary" class="d-flex m-auto mt-1" @click="validateReservation()">
+          <v-btn color="var(--green-color)" class="text-white d-flex m-auto mt-1 mb-0" @click="validateReservation()">
             Validez la réservation
           </v-btn>
         </v-card-text>
@@ -58,6 +58,7 @@ export default {
       }),
       minDate: new Date(),
       reservations: null,
+      colorCustom: ref("green"),
     };
   },
 

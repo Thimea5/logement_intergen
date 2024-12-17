@@ -46,6 +46,7 @@
         :show-arrows="false"
         height="100%"
         class="p-0 m-1"
+        cycle
         v-if="listDisplayByScore.length > 0"
         hide-delimiters
       >
