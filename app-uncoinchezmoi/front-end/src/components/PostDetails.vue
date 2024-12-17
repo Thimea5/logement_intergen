@@ -168,7 +168,7 @@ export default {
     if (this.post) {
       for (let i = 1; i <= this.post.nbPhoto; i++) {
         this.imgList.push(
-          `/src/assets/img/${this.post.img}/host_photo${this.post.img[this.post.img.length - 1]}_${i}.jpg`
+          `/src/assets/img/host${this.post.idUser}/post/${i}.jpg`
         );
       }
     }

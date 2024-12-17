@@ -15,7 +15,7 @@
 
     <!-- Carte -->
     <l-map :zoom="zoom" :center="center" style="height: 100%" ref="mapRef" @update:bounds="refreshMapWithNearPosts">
-      <v-btn @click="navigate('/list-post')" class="custom-switch-button">liste</v-btn>
+      <v-btn @click="navigate('/list-post')" class="custom-switch-button" append-inner-icon="mdi-format-list-bulleted">liste</v-btn>
 
       <!-- Tuiles -->
       <l-tile-layer :url="tileLayerUrl" :attribution="attribution" ref="tileLayer" />
@@ -37,7 +37,7 @@
           <v-card-text @click="goToPostDetails(selectedPost)">
             <div class="h-100 d-flex justify-content-between align-items-center">
               <div class="w-50 h-100">
-                <v-img :src="getImageSrc('host_photo' + selectedPost.idPost)" cover height="200">
+                <v-img :src="getImageSrc(selectedPost.idUser)" cover height="200">
                   <template v-slot:placeholder>
                     <v-row align="center" class="fill-height ma-0" justify="center">
                       <v-progress-circular color="#4f685d" indeterminate> </v-progress-circular>
@@ -178,12 +178,9 @@ export default {
       this.$router.push({ name: "PostDetails", params: { id: listing.idPost } });
     },
 
-    getImageSrc(pImgPath) {
-      const url = new URL(
-        `/src/assets/img/${pImgPath}/host_photo${pImgPath[pImgPath.length - 1]}_1.jpg`,
-        import.meta.url
-      ).href;
-      //console.log(url);
+    getImageSrc(pId) {
+      const url = new URL(`/src/assets/img/host${pId}/post/1.jpg`, import.meta.url).href;
+
       if (!url.includes("undefined")) {
         return url;
       } else {

@@ -33,7 +33,7 @@
           <v-row>
             <v-col v-for="elt in listDisplay" :key="elt.idPost" cols="12" sm="6" md="4">
               <v-card @click="goToPostDetails(elt.idPost)" class="bg-blue-grey-lighten-4">
-                <v-img :src="getImageSrc(elt.img)"> </v-img>
+                <v-img :src="getImageSrc(elt.idUser)"> </v-img>
                 <v-card-title>
                   {{ elt.type_logement }} ({{ (elt.size === null ? 0 : elt.size) + "m²" }}) [{{ elt.price }}€/mois]
                 </v-card-title>
@@ -106,11 +106,8 @@ export default {
       this.$router.push({ name: "PostDetails", params: { id: pPost } });
     },
 
-    getImageSrc(pImgPath) {
-      const url = new URL(
-        `/src/assets/img/${pImgPath}/host_photo${pImgPath[pImgPath.length - 1]}_1.jpg`,
-        import.meta.url
-      ).href;
+    getImageSrc(pId) {
+      const url = new URL(`/src/assets/img/host${pId}/post/1.jpg`, import.meta.url).href;
 
       if (!url.includes("undefined")) {
         return url;
