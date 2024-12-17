@@ -44,16 +44,15 @@
 
       <v-carousel
         :show-arrows="false"
-        height="55vh"
+        height="100%"
         class="p-0 m-1"
-        cycle
         v-if="listDisplayByScore.length > 0"
         hide-delimiters
       >
         <v-carousel-item v-for="(elt, i) in this.listDisplayByScore" :key="i">
-          <v-card class="p-0 m-0" color="var(--background-color)" @click="goToPostDetails(elt.idPost)">
+          <v-card class="p-0 m-0" height="100%" color="var(--background-color)" @click="goToPostDetails(elt.idPost)">
             <div>
-              <v-img width="100vw" height="30vh" cover aspect-ratio="1" :src="getImageSrc(elt.idUser)">
+              <v-img width="100vw" height="25vh" cover aspect-ratio="1" :src="getImageSrc(elt.idUser)">
                 <v-rating
                   class="position-absolute top-0 right-0 m-1"
                   half-increments
@@ -98,17 +97,34 @@
         </v-carousel-item>
       </v-carousel>
 
-      <v-btn class="mb-4 m-1 text-white" color="var(--green-color)" @click="navigate('/map')"
-        >Voir plus d'annonces</v-btn
+      <v-btn class="mb-4 m-1 text-white w-100" color="var(--green-color)" @click="navigate('/map')"
+        >Découvrir plus d'annonces</v-btn
       >
 
-      <h3 class="mt-1">Lancez la discussion :</h3>
+      <h3 class="mt-2 m-0 p-1">Reprendre la discussion :</h3>
 
-      <v-btn class="mt-4 mb-4 m-auto" @click="navigate('/conversations')">Messagerie</v-btn>
+      <v-btn class="m-1 mb-4 w-100 text-white" color="var(--green-color)" @click="navigate('/conversations')"
+        >Messagerie</v-btn
+      >
 
-      <h3 class="mt-1">Vos informations :</h3>
-      <v-btn class="mt-4 mb-4 m-auto" @click="navigate('/user-profile')">Mon profil</v-btn>
-      <v-btn class="mt-4 mb-4 m-auto" v-if="user.type === 'host'" @click="navigate('/view-post')"> Mon logement </v-btn>
+      <h3 class="mt-2">Vos informations :</h3>
+      <div v-if="user.type === 'host'" class="d-flex flew-row align-items-center m-0 p-0 w-100">
+        <v-btn class="text-white m-0 mr-auto mb-4" color="var(--green-color)" @click="navigate('/user-profile')"
+          >Mon profil</v-btn
+        >
+        <v-btn class="text-white m-0 ml-auto mb-4" color="var(--green-color)" @click="navigate('/view-post')">
+          Mon logement
+        </v-btn>
+      </div>
+
+      <v-btn
+        v-if="user.type === 'guest'"
+        class="text-white m-1 mb-4 w-100"
+        color="var(--green-color)"
+        @click="navigate('/user-profile')"
+      >
+        Mon profil
+      </v-btn>
     </v-container>
   </v-main>
 </template>

@@ -96,7 +96,7 @@ export default {
   --green-color: #669b83;
   --dark-green-color: #4f685d;
   --green-disabled-color: #547e6b;
-  --background-color: #e6cdb5;
+  --background-color: #b79a84;
   --text-color: #343a40;
 }
 </style>
