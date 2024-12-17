@@ -20,7 +20,14 @@
 
     <v-container class="d-flex flex-column p-1">
       <div class="m-auto mt-2 mb-2">
-        <v-btn color="green" variant="outlined" @click="showPostDetails = true"> Voir le logement </v-btn>
+        <v-btn
+          :disabled="this.user.type === 'guest' ? false : true"
+          :color="this.user.type === 'guest' ? 'green' : 'white'"
+          variant="outlined"
+          @click="showPostDetails = true"
+        >
+          Voir le logement
+        </v-btn>
       </div>
 
       <!-- Zone des messages -->
@@ -73,17 +80,17 @@
 
     <v-dialog v-model="showPostDetails">
       <v-card class="p-0 m-0">
-        <v-card-title class="d-flex flex-row m-1 p-1">
-          <h3 class="mr-auto">Informations</h3>
-          <v-icon @click="showPostDetails = false">mdi-close</v-icon>
+        <v-card-title class="d-flex flex-row align-items-center m-1 p-1">
+          <h3 class="m-2 mr-auto">Informations</h3>
+          <v-icon class="m-2" @click="showPostDetails = false">mdi-close</v-icon>
         </v-card-title>
 
-        <v-card-text class="m-1 p-1">
+        <v-card-text class="mt-0 m-1 p-2">
           <h4>
             {{ post.type_logement }} de {{ this.target.genre == "F" ? "Mme " : "M. " }} {{ this.target.lastname }}
             {{ this.target.firstname }}
           </h4>
-          <div class="d-flex flex-row m-0 p-0 align-items-center">
+          <div class="d-flex flex-row mt-1 mb-1 p-0 align-items-center">
             <v-icon size="x-large">mdi-map-marker</v-icon>
             <div class="d-flex flex-column m-0 p-0">
               <p class="m-0 p-0">{{ post.address }}</p>
@@ -91,17 +98,15 @@
             </div>
           </div>
 
-          <p>
-            <strong>Description :</strong>
+          <p class="pb-1 m-0">
+            Description :
             {{ post.description.length > 150 ? post.description.substring(0, 150) + "..." : post.description }}
           </p>
 
-          <p>
-            Taille {{ post.size }} m² - <strong>[{{ post.price }} €/Mois]</strong>
-          </p>
+          <p>Taille de la chambre : {{ post.roomSize }} m²</p>
 
           <div class="d-flex flex-row">
-            <p>Services :</p>
+            <p class="p-0 m-0">Services :</p>
             <template v-for="(icon, key) in serviceIcons">
               <v-icon
                 v-if="this.listService[post.idPost - 1]?.[key] === 1"
@@ -113,7 +118,7 @@
             </template>
           </div>
 
-          <p>
+          <p class="m-0 p-0">
             Fréquence :
             {{ this.listService[post.idPost - 1]?.time != 0 ? this.listService[post.idPost - 1]?.time : 0 }}h / semaines
           </p>
@@ -121,7 +126,9 @@
 
         <!-- Bouton Réserver -->
         <v-card-actions>
-          <v-btn color="primary" block @click="reserver"> Réserver </v-btn>
+          <v-btn color="var(--green-color)" style="border: 1px solid var(--dark-green-color)" block @click="reserver">
+            Réserver
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

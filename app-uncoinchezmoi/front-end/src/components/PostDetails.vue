@@ -4,106 +4,117 @@
       <v-btn icon="mdi-keyboard-backspace" variant="plain" @click="goBack"></v-btn>
     </v-app-bar>
 
-    <v-container class="d-flex flex-column justify-content-between">
-      <v-row class="justify-center">
-        <v-carousel hide-delimiters class="w-100 h-100" v-if="imgList.length > 0">
-          <v-carousel-item v-for="(imgPath, i) in this.imgList" :key="i">
-            <div class="w-100 h-100 m-0 p-0">
-              <v-img :src="getImageSrc(i)" class="fixed-image" @click="zoomDialog = true"></v-img>
-            </div>
-          </v-carousel-item>
-        </v-carousel>
+    <v-container class="d-flex flex-column justify-content-center w-100 p-1 pt-0">
+      <v-carousel hide-delimiters class="w-100 h-100" v-if="imgList.length > 0">
+        <v-carousel-item v-for="(imgPath, i) in this.imgList" :key="i">
+          <div class="w-100 h-100 m-0 p-0">
+            <v-img :src="getImageSrc(i)" class="fixed-image" @click="zoomDialog = true"></v-img>
+          </div>
+        </v-carousel-item>
+      </v-carousel>
 
-        <v-card class="p-1 m-2 w-100" v-if="post">
-          <v-card-title>
-            {{ post.type_logement }} de {{ this.usersData.genre == "F" ? "Mme " : "M. " }} {{ this.usersData.lastname }}
-            {{ this.usersData.firstname }}
-          </v-card-title>
-          <v-card-subtitle>
-            <v-icon>mdi-map-marker</v-icon> {{ post.address }} - {{ post.postalCode }} {{ post.city }}
-          </v-card-subtitle>
-          <v-card-text class="p-1 mt-1">
-            <p>{{ post.description }}</p>
-            <p>
-              Taille {{ post.size }} m² - <strong>[{{ post.price }} €/Mois]</strong>
-            </p>
-            <div class="d-flex flex-row">
-              <p>Services :</p>
-              <template v-for="(icon, key) in serviceIcons">
-                <v-icon
-                  v-if="this.listService[post.idPost - 1]?.[key] === 1"
-                  :key="`${post.idPost - 1}-${key}`"
-                  class="mx-1"
-                >
-                  {{ icon }}
-                </v-icon>
-              </template>
-            </div>
-            <p>
-              Fréquence :
-              {{ this.listService[post.idPost - 1]?.time != 0 ? this.listService[post.idPost - 1]?.time : 0 }}h /
-              semaines
-            </p>
-            <v-btn v-if="this.user.type == 'guest'" color="primary" class="d-flex m-auto mt-1" @click="contactHost()">
-              Contacter le propriétaire
-            </v-btn>
-          </v-card-text>
-        </v-card>
-
-        <v-card class="p-1 m-2 w-100 bg-blue-lighten-2">
-          <v-card-title class="d-flex flex-row m-0">
-            <div class="mr-auto">Commentaires & Avis</div>
-            <div>{{ this.moyenne ? this.moyenne : "??" }}<v-icon>mdi-star</v-icon></div>
-          </v-card-title>
-          <!--<v-card-subtitle class="m-0">{{ this.comments.length }} avis</v-card-subtitle>-->
-          <v-row>
-            <v-col v-if="comments.length == 0">
-              <v-card class="m-auto">
-                <v-card-title class="text-h6 font-weight-bold">Aucun Commentaire</v-card-title>
-              </v-card>
-            </v-col>
-            <v-col v-else>
-              <v-carousel hide-delimiters :show-arrows="false" cycle class="h-100 w-80">
-                <v-carousel-item v-for="comment in comments" :key="comment.id">
-                  <v-card class="m-1">
-                    <v-card-title height="100%" class="d-flex">
-                      <div class="mr-auto">De {{ comment.author == " " ? "Anonyme" : comment.author }}</div>
-                      <div v-if="comment.score != -1">{{ comment.score }}<v-icon>mdi-star</v-icon></div>
-                    </v-card-title>
-
-                    <v-card-text>
-                      {{ comment.text }}
-                    </v-card-text>
-                    <v-card-subtitle class="d-flex align-items-center p-2 mt-0">
-                      <div class="mr-auto text-caption grey--text">Posté le {{ formatDate(comment.createdAt) }}</div>
-                      <v-icon
-                        v-if="comment.author === `${user.firstname} ${user.lastname}`"
-                        size="small"
-                        @click="deleteReview(comment.id)"
-                      >
-                        mdi-delete
-                      </v-icon>
-                    </v-card-subtitle>
-                  </v-card>
-                </v-carousel-item>
-              </v-carousel>
-            </v-col>
-          </v-row>
-
-          <!-- On limite à un seul commentaire par annonce pour chaque utilisateur -->
+      <v-card class="p-1 m-2" color="var(--background-color)" v-if="post">
+        <v-card-title>
+          {{ post.type_logement }} de {{ this.usersData.genre == "F" ? "Mme " : "M. " }} {{ this.usersData.lastname }}
+          {{ this.usersData.firstname }}
+        </v-card-title>
+        <v-card-subtitle>
+          <v-icon>mdi-map-marker</v-icon> {{ post.address }} - {{ post.postalCode }} {{ post.city }}
+        </v-card-subtitle>
+        <v-card-text class="p-1 mt-1">
+          <p>Description : {{ post.description }}</p>
+          <p>
+            Taille de la chambre <strong>{{ post.roomSize }} m²</strong> <br />
+            Loyer : <strong>[{{ post.price }} €/Mois]</strong>
+          </p>
+          <div class="d-flex flex-row">
+            <p class="m-0 p-0">Services :</p>
+            <template v-for="(icon, key) in serviceIcons">
+              <v-icon
+                v-if="this.listService[post.idPost - 1]?.[key] === 1"
+                :key="`${post.idPost - 1}-${key}`"
+                class="mx-1"
+              >
+                {{ icon }}
+              </v-icon>
+            </template>
+          </div>
+          <p>
+            Fréquence :
+            <strong
+              >{{ this.listService[post.idPost - 1]?.time != 0 ? this.listService[post.idPost - 1]?.time : 0 }}h /
+              semaines</strong
+            >
+          </p>
           <v-btn
-            v-if="this.user.type == 'guest' && this.canAddReview"
-            color="secondary"
-            class="d-flex m-auto mt-1"
-            @click="commentPostById(post.idHost)"
+            v-if="this.user.type == 'guest'"
+            color="var(--green-color)"
+            class="text-white d-flex m-auto mb-0"
+            @click="contactHost()"
           >
-            Partagez votre Avis
+            Contacter le propriétaire
           </v-btn>
-        </v-card>
-        <v-btn v-if="this.user.type == 'guest'" color="primary" class="d-flex m-auto mt-1 mb-2" @click="reserver()"
-          >Réserver l'offre</v-btn
+        </v-card-text>
+      </v-card>
+
+      <v-card class="p-1 m-2" color="var(--background-color)">
+        <v-card-title class="d-flex flex-row m-0 align-items-center">
+          <div class="mr-auto">Commentaires & Avis</div>
+          <div>{{ this.moyenne ? this.moyenne : "??" }}<v-icon size="large">mdi-star</v-icon></div>
+        </v-card-title>
+        <v-row>
+          <v-col v-if="comments.length == 0">
+            <v-card class="m-auto">
+              <v-card-title class="text-h6 font-weight-bold">Aucun Commentaire</v-card-title>
+            </v-card>
+          </v-col>
+          <v-col v-else>
+            <v-carousel hide-delimiters :show-arrows="false" cycle class="h-100 w-80">
+              <v-carousel-item v-for="comment in comments" :key="comment.id">
+                <v-card class="m-1">
+                  <v-card-title height="100%" class="d-flex">
+                    <div class="mr-auto">De {{ comment.author == " " ? "Anonyme" : comment.author }}</div>
+                    <div v-if="comment.score != -1">{{ comment.score }}<v-icon>mdi-star</v-icon></div>
+                  </v-card-title>
+
+                  <v-card-text>
+                    {{ comment.text }}
+                  </v-card-text>
+                  <v-card-subtitle class="d-flex align-items-center p-2 mt-0">
+                    <div class="mr-auto text-caption grey--text">Posté le {{ formatDate(comment.createdAt) }}</div>
+                    <v-icon
+                      v-if="comment.author === `${user.firstname} ${user.lastname}`"
+                      size="small"
+                      @click="deleteReview(comment.id)"
+                    >
+                      mdi-delete
+                    </v-icon>
+                  </v-card-subtitle>
+                </v-card>
+              </v-carousel-item>
+            </v-carousel>
+          </v-col>
+        </v-row>
+
+        <!-- On limite à un seul commentaire par annonce pour chaque utilisateur -->
+        <v-btn
+          v-if="this.user.type == 'guest' && this.canAddReview"
+          color="secondary"
+          class="d-flex m-auto mt-1"
+          @click="commentPostById(post.idHost)"
         >
-      </v-row>
+          Partagez votre Avis
+        </v-btn>
+      </v-card>
+
+      <v-btn
+        v-if="this.user.type == 'guest'"
+        color="var(--green-color)"
+        class="text-white mt-1 m-2"
+        @click="reserver()"
+      >
+        Réserver l'offre
+      </v-btn>
 
       <v-dialog v-model="zoomDialog" fullscreen class="dialog-black-background">
         <v-img :src="getImageSrc(currentImageIndex)" class="zoomed-image">
@@ -167,9 +178,7 @@ export default {
     this.post = ps.listPost.find((ph) => ph.idPost == postId);
     if (this.post) {
       for (let i = 1; i <= this.post.nbPhoto; i++) {
-        this.imgList.push(
-          `/src/assets/img/host${this.post.idUser}/post/${i}.jpg`
-        );
+        this.imgList.push(`/src/assets/img/host${this.post.idUser}/post/${i}.jpg`);
       }
     }
 
