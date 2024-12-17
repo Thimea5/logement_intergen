@@ -1,38 +1,28 @@
 <template>
   <v-main>
-    <v-text-field
-      v-model="searchQuery"
-      prepend-inner-icon="mdi-tune"
-      append-inner-icon="mdi-magnify"
-      hide-details
-      single-line
-      placeholder="Rechercher un lieu..."
-      class="custom-toolbar"
-      @click:prepend-inner="navigate('/advanced-search')"
-      @click:append-inner="sampleSearch"
-      @keydown.enter.prevent="sampleSearch"
-    ></v-text-field>
-    <v-list v-if="suggestions.length" class="custom-suggestions-list">
-      <v-list-item
-        v-for="(suggestion, index) in suggestions"
-        :key="index"
-        @click="selectSuggestion(suggestion)"
-        class="custom-suggestion-item"
-      >
-        <v-list-item-title>{{ suggestion.description }}</v-list-item-title>
-        <v-list-item-subtitle>
-          <span v-if="suggestion.city">Ville : {{ suggestion.city }}</span
-          ><br />
-          <span v-if="suggestion.postalCode">Code postal : {{ suggestion.postalCode }}</span
-          ><br />
-          <span v-if="suggestion.country">Pays : {{ suggestion.country }}</span>
-        </v-list-item-subtitle>
-      </v-list-item>
-    </v-list>
 
     <!-- Carte -->
     <l-map :zoom="zoom" :center="center" style="height: 100%" ref="mapRef" @update:bounds="refreshMapWithNearPosts">
-      <v-btn @click="navigate('/list-post')" class="custom-switch-button">
+
+      <v-text-field v-model="searchQuery" prepend-inner-icon="mdi-tune" append-inner-icon="mdi-magnify" hide-details
+        single-line placeholder="Rechercher un lieu..." class="custom-toolbar"
+        @click:prepend-inner="navigate('/advanced-search')" @click:append-inner="sampleSearch"
+        @keydown.enter.prevent="sampleSearch">
+      </v-text-field>
+
+      <v-list v-if="suggestions.length" class="custom-suggestions-list position-absolute">
+        <v-list-item v-for="(suggestion, index) in suggestions" :key="index" @click="selectSuggestion(suggestion)"
+          class="custom-suggestion-item">
+          <v-list-item-title>{{ suggestion.description }}</v-list-item-title>
+          <v-list-item-subtitle>
+            <span v-if="suggestion.city">Ville : {{ suggestion.city }}</span><br />
+            <span v-if="suggestion.postalCode">Code postal : {{ suggestion.postalCode }}</span><br />
+            <span v-if="suggestion.country">Pays : {{ suggestion.country }}</span>
+          </v-list-item-subtitle>
+        </v-list-item>
+      </v-list>
+
+      <v-btn @click="navigate('/list-post')" class="custom-switch-button me-3 mt-6" position="absolute" rounded="pill">
         liste
         <v-icon class="ml-2">mdi-format-list-bulleted</v-icon>
       </v-btn>
@@ -41,12 +31,8 @@
       <l-tile-layer :url="tileLayerUrl" :attribution="attribution" ref="tileLayer" />
 
       <!-- Marqueurs -->
-      <l-marker
-        v-for="post in filteredPosts"
-        :key="post.id"
-        :lat-lng="[post.latitude, post.longitude]"
-        @click="onMarkerClick(post)"
-      >
+      <l-marker v-for="post in filteredPosts" :key="post.id" :lat-lng="[post.latitude, post.longitude]"
+        @click="onMarkerClick(post)">
       </l-marker>
     </l-map>
 

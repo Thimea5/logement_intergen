@@ -43,15 +43,10 @@ main {
 }
 
 .custom-switch-button {
-  position: absolute;
-  top: 2%;
-  left: 85%;
-  transform: translateX(-50%);
-  width: calc(100% - 100px);
+  top: 0;
+  right: 0;
   background-color: rgba(255, 255, 255, 0.738);
-  border-radius: 8px;
   z-index: 800;
-  width: 25%;
 }
 
 /* Liste de suggestions */

@@ -30,8 +30,8 @@
         <v-card class="my-2" width="100%">
           <v-card-title class="headline">Mes réservations</v-card-title>
           <v-card-text @click="goToPostDetails(selectedPost)">
-            <v-card class="my-5" v-for="res in this.reservations" @click="goToPostDetails(res.post[0])" color="#385F73">
-              <v-card-title> <v-img :src="getImageSrc(res.id_post)" cover height="50px"
+            <v-card class="mb-5" v-for="res in this.reservations" @click="goToPostDetails(res.post[0])" color="var(--background-color)">
+              <v-card-title class="mt-3"> <v-img :src="getImageSrc(res.id_post)" cover height="50px"
                   rounded="lg"></v-img></v-card-title>
               <v-card-subtitle class="text-end"> {{ res.post[0].address }} </v-card-subtitle>
               <v-card-text>
@@ -62,10 +62,10 @@
           prepend-icon="mdi-home">
           Mon logement
         </v-btn>
-      </div>
 
-      <v-btn class="w-50 rounded-pill mb-2 bg-danger text-light" @click="logOut()"
-        prepend-icon="mdi-power">Déconnexion</v-btn>
+        <v-btn class="rounded-pill mb-2 bg-danger text-light" @click="logOut()"
+          prepend-icon="mdi-power">Déconnexion</v-btn>
+      </div>
     </v-container>
 
     <template>
