@@ -31,8 +31,8 @@
       </v-list>
 
       <!-- Types de logement en v-carousel -->
-      <v-card outlined class="p-1 mt-4">
-        <v-card-title>Types de logement :</v-card-title>
+      <v-card outlined class="p-2 mt-3 mb-0" color="var(--background-color)">
+        <v-card-title class="m-0 p-0">Choix du logement :</v-card-title>
         <v-card-text>
           <v-carousel hide-delimiters height="100%" class="pt-1 m-0" :show-arrows="false">
             <v-carousel-item v-for="(group, index) in groupedTypes" :key="index">
@@ -40,8 +40,8 @@
                 <v-col cols="6" v-for="(type, typeIndex) in group" :key="typeIndex">
                   <v-btn
                     @click="toggleType(type.key)"
-                    :color="selectedTypes[type.key] ? 'primary' : 'grey'"
-                    class="rounded-pill d-flex flex-column align-center justify-center m-auto"
+                    :color="selectedTypes[type.key] ? 'var(--green-color)' : 'grey'"
+                    class="text-white rounded-pill d-flex flex-column align-center justify-center m-auto"
                     style="width: 100%; height: 50px"
                   >
                     <span>{{ type.label }}</span>
@@ -54,8 +54,8 @@
       </v-card>
 
       <!-- Types de services en v-carousel -->
-      <v-card outlined class="pa-3 mt-1">
-        <v-card-title>Types de services :</v-card-title>
+      <v-card outlined class="p-2 mt-3 mb-0" color="var(--background-color)">
+        <v-card-title class="m-0 p-0">Choix des services :</v-card-title>
         <v-card-text>
           <v-carousel hide-delimiters height="100%" class="pt-1 m-0" :show-arrows="false">
             <v-carousel-item v-for="(group, index) in groupedServices" :key="index">
@@ -63,8 +63,8 @@
                 <v-col cols="6" v-for="(service, serviceIndex) in group" :key="serviceIndex">
                   <v-btn
                     @click="toggleService(service.key)"
-                    :color="selectedServices[service.key] ? 'primary' : 'grey'"
-                    class="rounded-pill d-flex flex-column align-center justify-center m-auto"
+                    :color="selectedServices[service.key] ? 'var(--green-color)' : 'grey'"
+                    class="text-white rounded-pill d-flex flex-column align-center justify-center m-auto"
                     style="width: auto; height: 50px"
                   >
                     <span>{{ service.label }}</span>
@@ -76,13 +76,14 @@
         </v-card-text>
       </v-card>
 
-      <v-card rounded="lg" class="pa-3 mt-1">
-        <v-card-title>Notation : </v-card-title>
+      <!-- étoiles -->
+      <v-card rounded="lg" class="p-2 mt-3 mb-0" color="var(--background-color)">
+        <v-card-title class="m-0 p-0">Notation : </v-card-title>
         <v-item-group v-model="selectedRating" class="d-flex justify-center">
           <v-item v-for="n in 5" :key="n">
             <template v-slot:default="{ toggle }">
               <v-btn :icon="true" variant="text" class="m-1 h-40" @click="toggle">
-                <v-icon :class="selectedRating != null && selectedRating + 1 >= n ? 'text-warning' : 'text-grey'">
+                <v-icon :class="selectedRating != null && selectedRating + 1 >= n ? 'text-white' : 'text-white'">
                   {{ selectedRating != null && selectedRating + 1 >= n ? "mdi-star" : "mdi-star-outline" }}
                 </v-icon>
               </v-btn>
@@ -91,7 +92,8 @@
         </v-item-group>
       </v-card>
 
-      <v-card rounded="lg" class="pa-3 mt-1">
+      <!-- sliders -->
+      <v-card rounded="lg" class="p-3 pb-0 mt-3 mb-0" color="var(--background-color)">
         <v-slider
           class="mt-5"
           max="1600"
@@ -104,9 +106,9 @@
       </v-card>
 
       <!-- Bouton Rechercher -->
-      <div class="d-flex flex-row align-items-center w-100 mt-4">
-        <v-btn @click="cleanSearch" color="primary" class="mr-auto"> Effacer </v-btn>
-        <v-btn @click="performSearch" color="primary"> Rechercher </v-btn>
+      <div class="d-flex flex-row align-items-center mt-4 mb-4">
+        <v-btn @click="cleanSearch" color="var(--green-color)" class="text-white mr-auto"> Effacer </v-btn>
+        <v-btn @click="performSearch" color="var(--green-color)" class="text-white"> Rechercher </v-btn>
       </div>
 
       <!-- Résultats de la recherche -->
@@ -121,7 +123,7 @@
                 <v-col v-for="listing in this.results" :key="listing.id" cols="6">
                   <v-card @click="goToPostDetails(listing.id)">
                     <v-card-title class="p-0">
-                      <v-img :src="getImageSrc(listing.img)"></v-img>
+                      <v-img :src="getImageSrc(listing.idUser)"></v-img>
                     </v-card-title>
                     <v-card-subtitle>
                       {{ listing.type_logement }} -
@@ -469,6 +471,7 @@ export default {
               averageScore: listing.averageScore || 0,
               roomSize: listing.roomSize,
               price: listing.price,
+              idUser: listing.idUser,
             };
           }
         })
@@ -500,19 +503,11 @@ export default {
             matchTypes = activeTypes.map((type) => type.toLowerCase()).includes(item.type_logement.toLowerCase());
           }
 
-          // Filtrage par note moyenne (averageScore)
+          // Filtrage par note, taille, loyer
           const matchRating = score == -1 || item.averageScore >= score;
-
-          //console.log(item);
-          //console.log(item.roomSize, item.price);
-
-          console.log(this.roomSize);
           const matchRoomSize = this.roomSize == null || item.roomSize >= this.roomSize;
-
-          console.log(this.cost);
           const matchCost = this.cost == null || item.price <= this.cost;
 
-          console.log(matchRoomSize, matchCost);
           return matchQuery && matchServices && matchTypes && matchRating && matchRoomSize && matchCost;
         });
 
@@ -541,12 +536,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.v-list {
-  max-height: 200px;
-  overflow-y: auto;
-  background: white;
-  border: 1px solid #ddd;
-}
-</style>

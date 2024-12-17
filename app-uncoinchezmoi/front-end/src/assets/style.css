@@ -53,3 +53,35 @@ main {
   z-index: 800;
   width: 25%;
 }
+
+/* Liste de suggestions */
+.custom-suggestions-list {
+  position: absolute;
+  top: 10%; /* Ajuste cette valeur pour aligner parfaitement la liste */
+  left: 35%;
+  transform: translateX(-50%);
+  width: calc(100% - 140px);
+  max-height: 300px; /* Limite la hauteur pour éviter le débordement */
+  overflow-y: auto; /* Ajoute un scroll si nécessaire */
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 999;
+}
+
+/* Éléments individuels dans la liste */
+.custom-suggestion-item {
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.custom-suggestion-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.custom-toolbar-wrapper {
+  position: relative; /* Définit ce conteneur comme référence pour les enfants en position absolue */
+  width: 100%; /* Prend toute la largeur de l'écran ou du conteneur parent */
+  z-index: 1000; /* S'assure que les éléments enfants restent au-dessus de la carte */
+}

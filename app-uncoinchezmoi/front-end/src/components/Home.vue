@@ -46,7 +46,6 @@
         :show-arrows="false"
         height="100%"
         class="p-0 m-1"
-        cycle
         v-if="listDisplayByScore.length > 0"
         hide-delimiters
       >
@@ -98,15 +97,15 @@
         </v-carousel-item>
       </v-carousel>
 
-      <v-btn class="mb-4 m-1 text-white w-100" color="var(--green-color)" @click="navigate('/map')"
-        >Découvrir plus d'annonces</v-btn
-      >
+      <v-btn class="mb-4 m-1 text-white w-100" color="var(--green-color)" @click="navigate('/map')">
+        Découvrir plus d'annonces
+      </v-btn>
 
       <h3 class="mt-2 m-0 p-1">Reprendre la discussion :</h3>
 
-      <v-btn class="m-1 mb-4 w-100 text-white" color="var(--green-color)" @click="navigate('/conversations')"
-        >Messagerie</v-btn
-      >
+      <v-btn class="m-1 mb-4 w-100 text-white" color="var(--green-color)" @click="navigate('/conversations')">
+        Messagerie
+      </v-btn>
 
       <h3 class="mt-2">Vos informations :</h3>
       <div v-if="user.type === 'host'" class="d-flex flew-row align-items-center m-0 p-0 w-100">
