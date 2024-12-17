@@ -5,46 +5,67 @@
       <v-toolbar-title>Bonjour, {{ user.firstname }} {{ user.lastname }}</v-toolbar-title>
     </v-app-bar>
 
-    <v-container class="d-flex flex-column align-center">
-      <p class="text-danger" v-if="!user.complete">
-        Attention, veuillez compléter les informations de votre profil pour profiter de toutes les fonctionnalités de
-        l'application
-      </p>
+    <v-container class="h-100 d-flex flex-column justify-content-around">
+      <div class="w-100">
+        <v-card class="my-2" width="100%">
+          <v-card-title>Informations</v-card-title>
+          <v-card-text>
+            <ul class="list-unstyled ms-5">
+              <li><v-icon class="me-5 my-1">mdi-check-decagram</v-icon>Identité vérifié</li>
+              <li><v-icon class="me-5 my-1">mdi-phone-outline</v-icon>{{ user.tel }}</li>
+              <li><v-icon class="me-5 my-1">mdi-email-outline</v-icon>{{ user.mail }}</li>
+              <li><v-icon class="me-5 my-1">mdi-cake-variant-outline</v-icon>{{ user.birthdate }}</li>
+            </ul>
+          </v-card-text>
+        </v-card>
 
-      <v-card class="my-2" width="100%">
-        <v-card-title>Informations</v-card-title>
-        <v-card-text>
-          <ul class="list-unstyled ms-5">
-            <li><v-icon class="me-5 my-1">mdi-check-decagram</v-icon>Identité vérifié</li>
-            <li><v-icon class="me-5 my-1">mdi-phone-outline</v-icon>{{ user.tel }}</li>
-            <li><v-icon class="me-5 my-1">mdi-email-outline</v-icon>{{ user.mail }}</li>
-            <li><v-icon class="me-5 my-1">mdi-calendar</v-icon>{{ user.birthdate }}</li>
-          </ul>
-        </v-card-text>
-      </v-card>
-
-      <v-card class="my-2" width="100%">
+        <!-- <v-card class="my-2" width="100%">
         <v-card-title class="headline">A propos de vous</v-card-title>
         <v-card-text
           >TODO ici ?
           <p>{{ user }}</p>
         </v-card-text>
-      </v-card>
+      </v-card> -->
 
-      <v-card class="my-2" width="100%">
-        <v-card-title class="headline">Mes réservations</v-card-title>
-        <v-card-text>
-          <p>{{ this.reservations }}</p>
-        </v-card-text>
-      </v-card>
+        <v-card class="my-2" width="100%">
+          <v-card-title class="headline">Mes réservations</v-card-title>
+          <v-card-text @click="goToPostDetails(selectedPost)">
+            <v-card class="my-5" v-for="res in this.reservations" @click="goToPostDetails(res.post[0])" color="#385F73">
+              <v-card-title> <v-img :src="getImageSrc(res.id_post)" cover height="50px"
+                  rounded="lg"></v-img></v-card-title>
+              <v-card-subtitle class="text-end"> {{ res.post[0].address }} </v-card-subtitle>
+              <v-card-text>
+                <div class="d-flex justify-content-between align-items-center">
+                  <h4 class="w-100">{{ res.cost }}€ / mois</h4>
+                  <div class="d-flex flex-column align-items-center">
+                    <v-chip>
+                      {{ new Date(res.start_date).toLocaleDateString('fr-CA').split('-').reverse().join(' / ') }}
+                    </v-chip>
+                    <v-icon class="text-center my-1">mdi-arrow-down-thin</v-icon>
+                    <v-chip>
+                      {{ new Date(res.end_date).toLocaleDateString('fr-CA').split('-').reverse().join(' / ') }}
+                    </v-chip>
+                  </div>
+                </div>
+                <!-- <p>{{ res }}</p> -->
+              </v-card-text>
+            </v-card>
+          </v-card-text>
+        </v-card>
+      </div>
 
-      <v-btn class="w-100 rounded-pill mb-5" color="#4F685D" @click="modifStep1 = true"> Modifier mon profil </v-btn>
+      <div class="mx-10 text-center">
+        <v-btn class="rounded-pill mb-5" color="#4F685D" @click="modifStep1 = true" prepend-icon="mdi-pencil">
+          Modifier mon profil </v-btn>
 
-      <v-btn v-if="user.type == 'host'" class="w-100 rounded-pill mb-5" color="#4F685D" @click="navigate('/view-post')"
-        >Mon logement</v-btn
-      >
+        <v-btn v-if="user.type == 'host'" class="rounded-pill mb-5" color="#4F685D" @click="navigate('/view-post')"
+          prepend-icon="mdi-home">
+          Mon logement
+        </v-btn>
+      </div>
 
-      <v-btn class="w-100 rounded-pill mb-2" color="#4F685D" @click="logOut()">Déconnexion</v-btn>
+      <v-btn class="w-50 rounded-pill mb-2 bg-danger text-light" @click="logOut()"
+        prepend-icon="mdi-power">Déconnexion</v-btn>
     </v-container>
 
     <template>
@@ -72,6 +93,7 @@
 import { VDateInput } from "vuetify/labs/VDateInput";
 import axios from "axios";
 import { useReservationStore } from "../stores/ReservationStore";
+import {useListPostStore} from "../stores/listPostStore"
 
 export default {
   name: "UserProfile",
@@ -87,6 +109,7 @@ export default {
       isHost: false,
       dateModel: null,
       reservations: null,
+      listPost: []
     };
   },
   async mounted() {
@@ -98,6 +121,14 @@ export default {
     await this.waitUntil(() => rs.isLoaded);
 
     this.reservations = rs.reservationsUsers;
+
+    const ps = useListPostStore()
+
+    for (let r of this.reservations) {
+      r.post = ps.listPost.filter(p => p.idPost == r.id_post)
+    }
+
+    // console.log(this.reservations)
   },
 
   methods: {
@@ -156,6 +187,18 @@ export default {
     navigate(path) {
       this.$router.push(path);
     },
+    getImageSrc(pId) {
+      const url = new URL(`/src/assets/img/host${pId}/post/1.jpg`, import.meta.url).href;
+
+      if (!url.includes("undefined")) {
+        return url;
+      } else {
+        return new URL(`/src/assets/img/error.jpg`, import.meta.url).href;
+      }
+    },
+    goToPostDetails(listing) {
+      this.$router.push({ name: "PostDetails", params: { id: listing.idPost } });
+    }
   },
 };
 </script>
