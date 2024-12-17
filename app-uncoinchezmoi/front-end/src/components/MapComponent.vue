@@ -15,7 +15,7 @@
 
     <!-- Carte -->
     <l-map :zoom="zoom" :center="center" style="height: 100%" ref="mapRef" @update:bounds="refreshMapWithNearPosts">
-      <v-btn @click="navigate('/list-post')" class="custom-switch-button" append-inner-icon="mdi-format-list-bulleted">
+      <v-btn @click="navigate('/list-post')" class="custom-switch-button">
         liste
         <v-icon class="ml-2">mdi-format-list-bulleted</v-icon>
       </v-btn>

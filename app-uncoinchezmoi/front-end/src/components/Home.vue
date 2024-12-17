@@ -37,14 +37,13 @@
     </v-container>
 
     <!-- Section avec connexion-->
-    <v-container v-if="isLoggedIn" class="d-flex flex-column justify-center">
-      <img src="../assets/logo.png" alt="Logo de l'application" class="home-small-logo" />
-      <h1 class="m-auto mb-5">Bienvenue chez toi !</h1>
+    <v-container v-if="isLoggedIn" class="d-flex flex-column justify-content-center align-items-center w-100">
+      <img src="../assets/logo.png" alt="Logo de l'application" class="m-1" width="100" />
+      <h1 class="text-align-center">Bienvenue chez toi !</h1>
       <h3 class="mt-1">Regarde nos meilleures annonces :</h3>
 
       <v-carousel
         :show-arrows="false"
-        width="100"
         height="55vh"
         class="p-0 m-1"
         cycle
@@ -52,19 +51,18 @@
         hide-delimiters
       >
         <v-carousel-item v-for="(elt, i) in this.listDisplayByScore" :key="i">
-          <v-card class="w-100 p-0 m-0 bg-blue-grey-lighten-4" @click="goToPostDetails(elt.idPost)">
+          <v-card class="p-0 m-0" color="var(--background-color)" @click="goToPostDetails(elt.idPost)">
             <div>
               <v-img width="100vw" height="30vh" cover aspect-ratio="1" :src="getImageSrc(elt.idUser)">
-                <!--<v-rating
-                  class="position-absolute top-0 right-0 mt-1 me-1"
-                  :value="elt.averageScore"
-                  background-color="white"
-                  color="grey-lighten-1"
-                  dense
-                  readonly
+                <v-rating
+                  class="position-absolute top-0 right-0 m-1"
                   half-increments
-                  size="30"
-                ></v-rating>-->
+                  size="24"
+                  color="var(--background-color)"
+                  v-model="elt.averageScore"
+                  :length="Math.ceil(elt.averageScore)"
+                  icon-label="custom icon label text {0} of {1}"
+                ></v-rating>
               </v-img>
             </div>
 
@@ -74,20 +72,7 @@
             </v-card-title>
             <v-card-subtitle class="m-0"> {{ elt.address }} - {{ elt.city }} {{ elt.postalCode }} </v-card-subtitle>
             <v-card-text class="p-3">
-              <v-rating
-                background-color="red lighten-2"
-                color="red"
-                empty-icon="mdi-star-outline"
-                full-icon="mdi-star"
-                half-icon="mdi-star-half-full"
-                half-increments
-                length="5"
-                readonly
-                size="60"
-                value="3.5"
-              ></v-rating>
               <div class="d-flex flex-row align-items-center">
-                <p>{{ elt.averageScore.toFixed(1) }}</p>
                 <p class="m-0">Taille de la chambre : {{ elt.roomSize }} m²</p>
               </div>
 
@@ -113,7 +98,9 @@
         </v-carousel-item>
       </v-carousel>
 
-      <v-btn class="mb-4 m-auto" @click="navigate('/map')">Voir plus d'annonces</v-btn>
+      <v-btn class="mb-4 m-1 text-white" color="var(--green-color)" @click="navigate('/map')"
+        >Voir plus d'annonces</v-btn
+      >
 
       <h3 class="mt-1">Lancez la discussion :</h3>
 
@@ -262,14 +249,5 @@ export default {
   margin-top: 0;
   margin-bottom: auto;
   border: none;
-}
-
-.home-small-logo {
-  width: 30%;
-  height: auto;
-  margin-top: 0;
-  margin-bottom: 5%;
-  margin-left: auto;
-  margin-right: auto;
 }
 </style>
