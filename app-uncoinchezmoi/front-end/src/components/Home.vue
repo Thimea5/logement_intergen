@@ -28,8 +28,14 @@
       <h1 class="text-align-center">Bienvenue chez toi !</h1>
       <h3 class="mt-1">Regarde nos meilleures annonces :</h3>
 
-      <v-carousel :show-arrows="false" height="100%" class="p-0 m-1" v-if="listDisplayByScore.length > 0"
-        hide-delimiters>
+      <v-carousel
+        :show-arrows="false"
+        height="100%"
+        class="p-0 m-1"
+        cycle
+        v-if="listDisplayByScore.length > 0"
+        hide-delimiters
+      >
         <v-carousel-item v-for="(elt, i) in this.listDisplayByScore" :key="i">
           <v-card class="p-0 m-0" height="100%" color="var(--background-color)" @click="goToPostDetails(elt.idPost)">
             <div>
