@@ -64,7 +64,6 @@ export default {
 
       await this.waitUntil(() => ps.isLoaded && cs.isLoaded1 && rs.isLoaded);
 
-      console.log(ps.listPost);
       console.log("Chargement du store des annonces OK");
       console.log("Chargement du store des conversations OK");
       console.log("Chargement du store des réservations OK");
@@ -91,3 +90,13 @@ export default {
   },
 };
 </script>
+
+<style>
+:root {
+  --green-color: #669b83;
+  --dark-green-color: #4f685d;
+  --green-disabled-color: #547e6b;
+  --background-color: #f8f9fa;
+  --text-color: #343a40;
+}
+</style>

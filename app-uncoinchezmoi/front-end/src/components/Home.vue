@@ -4,12 +4,36 @@
     <v-container v-if="!isLoggedIn" class="d-flex flex-column justify-center align-center" style="height: 100vh">
       <img src="../assets/logo.png" alt="Logo de l'application" class="home-logo" />
 
-      <div class="d-flex align-center" style="width: 100%">
-        <v-btn @click="navigate('/register')" color="#8DA399" style="flex: 1; margin-right: 5px"> S'inscrire </v-btn>
-        <v-btn @click="navigate('/login')" color="#8DA399" style="flex: 1; margin-left: 5px"> Se connecter </v-btn>
+      <div class="d-flex flex-column justify-content-around w-100 mb-4">
+        <v-btn
+          @click="navigate('/register')"
+          class="h-35 p-1 m-2 text-white"
+          rounded="pill"
+          color="var(--green-color)"
+          style="border: 1px solid var(--dark-green-color)"
+        >
+          S'inscrire
+        </v-btn>
+        <v-btn
+          @click="navigate('/login')"
+          class="p-1 m-2 text-white"
+          rounded="pill"
+          color="var(--green-color)"
+          style="border: 1px solid var(--dark-green-color)"
+        >
+          Se connecter
+        </v-btn>
       </div>
 
-      <router-link to="/legal-notices" class="home-link"> Mentions légales </router-link>
+      <router-link
+        to="/legal-notices"
+        rounded="pill"
+        class="d-flex align-items-center p-1 m-1 mt-4"
+        style="border: 2px solid var(--dark-green-color); border-radius: 10px; text-decoration: none; color: black"
+      >
+        <v-icon class="mr-2">mdi-scale-balance</v-icon>
+        Mentions légales
+      </router-link>
     </v-container>
 
     <!-- Section avec connexion-->
@@ -21,8 +45,8 @@
       <v-carousel
         :show-arrows="false"
         width="100"
-        height="50vh"
-        class="p-0 m-0"
+        height="55vh"
+        class="p-0 m-1"
         cycle
         v-if="listDisplayByScore.length > 0"
         hide-delimiters
@@ -31,24 +55,59 @@
           <v-card class="w-100 p-0 m-0 bg-blue-grey-lighten-4" @click="goToPostDetails(elt.idPost)">
             <div>
               <v-img width="100vw" height="30vh" cover aspect-ratio="1" :src="getImageSrc(elt.idUser)">
-                <!-- <v-btn
-                  icon
-                  color="white"
-                  rounded="circle"
-                  class="position-absolute top-0 right-0 m-1"
-                  @click.stop="addFavouritesPost(elt.idHost)"
-                >
-                  <v-icon>mdi-heart</v-icon>
-                </v-btn> -->
+                <!--<v-rating
+                  class="position-absolute top-0 right-0 mt-1 me-1"
+                  :value="elt.averageScore"
+                  background-color="white"
+                  color="grey-lighten-1"
+                  dense
+                  readonly
+                  half-increments
+                  size="30"
+                ></v-rating>-->
               </v-img>
             </div>
 
-            <v-card-title>
-              {{ elt.type_logement }} - {{ (elt.size === null ? 0 : elt.size) + "m²" }} [{{ elt.price }}€/mois]
+            <v-card-title class="d-flex flex-row align-items-center m-0">
+              <p class="m-0">{{ elt.type_logement }} - {{ (elt.size === null ? 0 : elt.size) + "m²" }}</p>
+              <p class="m-0 ml-auto">[{{ elt.price }}€/mois]</p>
             </v-card-title>
-            <v-card-subtitle> {{ elt.address }} - {{ elt.city }} {{ elt.postalCode }} </v-card-subtitle>
-            <v-card-text>
-              <p>Note moyenne : {{ elt.averageScore.toFixed(1) }}</p>
+            <v-card-subtitle class="m-0"> {{ elt.address }} - {{ elt.city }} {{ elt.postalCode }} </v-card-subtitle>
+            <v-card-text class="p-3">
+              <v-rating
+                background-color="red lighten-2"
+                color="red"
+                empty-icon="mdi-star-outline"
+                full-icon="mdi-star"
+                half-icon="mdi-star-half-full"
+                half-increments
+                length="5"
+                readonly
+                size="60"
+                value="3.5"
+              ></v-rating>
+              <div class="d-flex flex-row align-items-center">
+                <p>{{ elt.averageScore.toFixed(1) }}</p>
+                <p class="m-0">Taille de la chambre : {{ elt.roomSize }} m²</p>
+              </div>
+
+              <div class="d-flex flex-row">
+                <p class="p-0 m-0">Services :</p>
+                <template v-for="(icon, key) in serviceIcons">
+                  <v-icon
+                    v-if="this.listService[elt.idPost - 1]?.[key] === 1"
+                    :key="`${elt.idPost - 1}-${key}`"
+                    class="mx-1"
+                  >
+                    {{ icon }}
+                  </v-icon>
+                </template>
+              </div>
+              <p class="p-0 m-0">
+                Fréquence :
+                {{ this.listService[elt.idPost - 1]?.time != 0 ? this.listService[elt.idPost - 1]?.time : 0 }}h /
+                semaines
+              </p>
             </v-card-text>
           </v-card>
         </v-carousel-item>
@@ -198,21 +257,15 @@ export default {
 
 <style scoped>
 .home-logo {
-  width: 50%;
+  width: 60%;
   height: auto;
   margin-top: 0;
-  margin-bottom: 100%;
-}
-
-.home-link {
-  margin-top: 20px;
-  text-align: center;
-  text-decoration: none;
-  color: black;
+  margin-bottom: auto;
+  border: none;
 }
 
 .home-small-logo {
-  width: 20%;
+  width: 30%;
   height: auto;
   margin-top: 0;
   margin-bottom: 5%;

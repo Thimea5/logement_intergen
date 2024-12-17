@@ -48,15 +48,7 @@
 
         <div class="text-center mt-5">
           <p class="link">Pas de compte ? <router-link to="/register" class="link">S'inscrire</router-link></p>
-          <v-btn
-            type="submit"
-            color="#8DA399"
-            rounded="xl"
-            variant="flat"
-            block
-            class="login-button"
-            :disabled="!isFormValid"
-          >
+          <v-btn type="submit" rounded="xl" variant="flat" block class="login-button" :disabled="!isFormValid">
             Connexion
           </v-btn>
         </div>
@@ -118,7 +110,6 @@ export default {
           //console.log(result);
           if (result.status === 200) {
             if (result.data["success"]) {
-              //console.log("here");
               const token = result.data["token"];
 
               sessionStorage.setItem("token", token);
@@ -129,8 +120,6 @@ export default {
 
               const user = result.data["user-info"];
               const serv = result.data["user-services"];
-              //console.log(user);
-              //console.log(serv);
 
               this.userStore.setUser(user);
               this.userStore.setServices(serv);
@@ -152,16 +141,6 @@ export default {
 </script>
 
 <style scoped>
-@font-face {
-  font-family: "GillSansMT";
-  src: url("../assets/fonts/gill-sans-mt-regular.ttf") format("truetype");
-  font-style: normal;
-}
-
-* {
-  font-family: "GillSansMT", sans-serif;
-}
-
 .full-height {
   min-height: 100vh;
 }
@@ -203,7 +182,19 @@ export default {
 
 .login-button {
   height: 56px;
+  background-color: var(--green-color);
+  border: 1px solid var(--dark-green-color);
   text-transform: none;
+  color: white;
+  font-size: 18pt;
+}
+
+.login-button:disabled {
+  height: 56px;
+  background-color: var(--green-disabled-color);
+  border: none;
+  text-transform: none;
+  color: white;
   font-size: 18pt;
 }
 </style>
