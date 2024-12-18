@@ -62,7 +62,16 @@ export default {
     cs.load(this.user.id);
     await this.waitUntil(() => cs.isLoaded1);
 
-    this.conversations = cs.conversations;
+    this.conversations = cs.conversations
+
+    this.conversations.sort((a, b) => {
+      return new Date(b.creation_date) - new Date(a.creation_date);
+    });
+
+    // for (let c of this.conversations) {
+    //   console.log(c.creation_date)
+    // }
+
     this.usersTarget = cs.convUsersInfo;
     this.messages = cs.messages;
   },
