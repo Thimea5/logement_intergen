@@ -1,6 +1,6 @@
 <?php
     header("Access-Control-Allow-Origin: *");
-    header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+    header("Access-Control-Allow-Methods: POST, GET, DELETE, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
     include_once '../config/database.php';
@@ -38,7 +38,14 @@
         } else {
             echo json_encode(["success" => false, "message" => "Erreur lors de l'envoi du message."]);
         }
-    } else {
+    } else if ($requestInfo === "DELETE") {
+        $data = json_decode(file_get_contents("php://input"), true);
+         if ($msgModel->deleteMessageById($data['id'])) {
+            echo json_encode(["success" => true]);
+        } else {
+            echo json_encode(["success" => false]);
+        }
+    }else {
         $inputData = $_GET;
 
         if (!isset($inputData)) {
@@ -56,5 +63,5 @@
         $listMsg = $msgModel->getConversationMessage($inputData['id']);
         //var_dump($listMsg);
         echo json_encode($listMsg);
-    }
+    } 
 ?>

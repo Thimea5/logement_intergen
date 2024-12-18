@@ -46,6 +46,7 @@
               v-for="(msg, index) in messages"
               :key="index"
               :class="{ 'message-left': msg.id_user != target.id, 'message-right': msg.id_user == target.id }"
+              @click="openPopup(msg)"
             >
               <v-card
                 class="m-1"
@@ -56,7 +57,7 @@
                   {{ msg.content }}
                 </v-card-title>
                 <v-card-subtitle class="text-caption grey-text text-end me-1 m-0 p-0">
-                  {{ formatDate(msg.creation_date) }}
+                  {{ formatDate(msg.creation_date, 1) }}
                 </v-card-subtitle>
               </v-card>
             </div>
@@ -132,6 +133,36 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <v-dialog v-model="showPopup" max-width="600px">
+      <v-card>
+        <v-card-title class="d-flex justify-space-between align-center">
+          <h1>
+            De {{ selectedMessage.id_user == target.id ? "Moi" : this.target.firstname + " " + this.target.lastname }}
+          </h1>
+          <v-icon @click="showPopup = false">mdi-close</v-icon>
+        </v-card-title>
+
+        <v-card-subtitle class="text-caption text-start me-3">
+          {{ selectedMessage ? formatDate(selectedMessage.creation_date, 2) : "" }}
+        </v-card-subtitle>
+
+        <v-card-text style="font-size: 14pt; line-height: 1.5; text-align: center">
+          {{ selectedMessage ? selectedMessage.content : "" }}
+        </v-card-text>
+
+        <v-card-actions v-if="selectedMessage.id_user == target.id">
+          <v-btn
+            color="var(--green-color)"
+            style="border: 1px solid var(--dark-green-color)"
+            block
+            @click="deleteMessage"
+          >
+            Supprimer mon message
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-main>
 </template>
 
@@ -166,6 +197,8 @@ export default {
         isTalking: "mdi-chat",
       },
       listService: [],
+      selectedMessage: null,
+      showPopup: false,
     };
   },
 
@@ -195,6 +228,7 @@ export default {
     });
 
     this.convId = ci.id;
+    console.log(ci);
 
     this.target = cs.convUsersInfo.find((usr) => {
       return usr.id == ci.id_user1 || usr.id == ci.id_user2;
@@ -203,9 +237,15 @@ export default {
     this.age = this.calculateAge(this.target.birthdate);
 
     this.loadMessages();
+    console.log(this.messages);
   },
 
   methods: {
+    openPopup(msg) {
+      this.selectedMessage = msg;
+      this.showPopup = true;
+    },
+
     scrollToBottom() {
       const container = this.$refs.messagesContainer;
       if (container) {
@@ -229,11 +269,23 @@ export default {
       });
     },
 
-    formatDate(date) {
-      const options = {
-        hour: "2-digit",
-        minute: "2-digit",
-      };
+    formatDate(date, mode) {
+      let options;
+      if (mode === 1) {
+        options = {
+          hour: "2-digit",
+          minute: "2-digit",
+        };
+      } else {
+        options = {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        };
+      }
+
       return new Date(date).toLocaleTimeString("fr-FR", options).replace(":", "h");
     },
 
@@ -269,6 +321,7 @@ export default {
         })
         .then((result) => {
           this.messages = result.data;
+          console.log(this.messages);
         })
         .catch((error) => {
           console.log(error);
@@ -285,6 +338,30 @@ export default {
         grouped[dateKey].push(msg);
       });
       return grouped;
+    },
+
+    deleteMessage() {
+      console.log(this.selectedMessage);
+      const apiUrl = import.meta.env.VITE_API_URL;
+      axios
+        .delete(`${apiUrl}/services/messageManager.php`, {
+          data: {
+            id: this.selectedMessage.id,
+          },
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .then((result) => {
+          console.log(result);
+          if (result.status === 200 && result.data["success"]) {
+            this.$router.go(0);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
 
     sendMessage() {

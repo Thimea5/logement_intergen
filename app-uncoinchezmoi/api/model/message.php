@@ -37,5 +37,14 @@
             
             return $query->execute();
         }
+
+        public function deleteMessageById($pId) {
+            $sql = "DELETE m.* FROM `message` m WHERE m.id = :pId;";
+
+            $query = $this->conn->prepare($sql);
+            $query->bindParam("pId", $pId);
+
+            return $query->execute();
+        }
     }
 ?>
