@@ -30,24 +30,29 @@
         <v-card class="my-2" width="100%">
           <v-card-title class="headline">Mes réservations</v-card-title>
           <v-card-text @click="goToPostDetails(selectedPost)">
-            <v-card class="mb-5" v-for="res in this.reservations" @click="goToPostDetails(res.post[0])" color="var(--background-color)">
-              <v-card-title class="mt-3"> <v-img :src="getImageSrc(res.id_post)" cover height="50px"
-                  rounded="lg"></v-img></v-card-title>
+            <v-card
+              class="mb-5"
+              v-for="res in this.reservations"
+              @click="goToPostDetails(res.post[0].idPost)"
+              color="var(--background-color)"
+            >
+              <v-card-title class="mt-3">
+                <v-img :src="getImageSrc(res.id_post)" cover height="50px" rounded="lg"></v-img
+              ></v-card-title>
               <v-card-subtitle class="text-end"> {{ res.post[0].address }} </v-card-subtitle>
               <v-card-text>
                 <div class="d-flex justify-content-between align-items-center">
                   <h4 class="w-100">{{ res.cost }}€ / mois</h4>
                   <div class="d-flex flex-column align-items-center">
                     <v-chip>
-                      {{ new Date(res.start_date).toLocaleDateString('fr-CA').split('-').reverse().join(' / ') }}
+                      {{ new Date(res.start_date).toLocaleDateString("fr-CA").split("-").reverse().join(" / ") }}
                     </v-chip>
                     <v-icon class="text-center my-1">mdi-arrow-down-thin</v-icon>
                     <v-chip>
-                      {{ new Date(res.end_date).toLocaleDateString('fr-CA').split('-').reverse().join(' / ') }}
+                      {{ new Date(res.end_date).toLocaleDateString("fr-CA").split("-").reverse().join(" / ") }}
                     </v-chip>
                   </div>
                 </div>
-                <!-- <p>{{ res }}</p> -->
               </v-card-text>
             </v-card>
           </v-card-text>
@@ -56,15 +61,22 @@
 
       <div class="mx-10 text-center">
         <v-btn class="rounded-pill mb-5" color="#4F685D" @click="modifStep1 = true" prepend-icon="mdi-pencil">
-          Modifier mon profil </v-btn>
+          Modifier mon profil
+        </v-btn>
 
-        <v-btn v-if="user.type == 'host'" class="rounded-pill mb-5" color="#4F685D" @click="navigate('/view-post')"
-          prepend-icon="mdi-home">
+        <v-btn
+          v-if="user.type == 'host'"
+          class="rounded-pill mb-5"
+          color="#4F685D"
+          @click="navigate('/view-post')"
+          prepend-icon="mdi-home"
+        >
           Mon logement
         </v-btn>
 
-        <v-btn class="rounded-pill mb-2 bg-danger text-light" @click="logOut()"
-          prepend-icon="mdi-power">Déconnexion</v-btn>
+        <v-btn class="rounded-pill mb-2 bg-danger text-light" @click="logOut()" prepend-icon="mdi-power"
+          >Déconnexion</v-btn
+        >
       </div>
     </v-container>
 
@@ -93,7 +105,7 @@
 import { VDateInput } from "vuetify/labs/VDateInput";
 import axios from "axios";
 import { useReservationStore } from "../stores/ReservationStore";
-import {useListPostStore} from "../stores/listPostStore"
+import { useListPostStore } from "../stores/listPostStore";
 
 export default {
   name: "UserProfile",
@@ -109,7 +121,7 @@ export default {
       isHost: false,
       dateModel: null,
       reservations: null,
-      listPost: []
+      listPost: [],
     };
   },
   async mounted() {
@@ -122,10 +134,10 @@ export default {
 
     this.reservations = rs.reservationsUsers;
 
-    const ps = useListPostStore()
+    const ps = useListPostStore();
 
     for (let r of this.reservations) {
-      r.post = ps.listPost.filter(p => p.idPost == r.id_post)
+      r.post = ps.listPost.filter((p) => p.idPost == r.id_post);
     }
 
     // console.log(this.reservations)
@@ -198,7 +210,7 @@ export default {
     },
     goToPostDetails(listing) {
       this.$router.push({ name: "PostDetails", params: { id: listing.idPost } });
-    }
+    },
   },
 };
 </script>

@@ -5,18 +5,32 @@
       <img src="../assets/logo.png" alt="Logo de l'application" class="home-logo" />
 
       <div class="d-flex flex-column justify-content-around w-100 mb-4">
-        <v-btn @click="navigate('/register')" class="h-35 p-1 m-2 text-white" rounded="pill" color="var(--green-color)"
-          style="border: 1px solid var(--dark-green-color)">
+        <v-btn
+          @click="navigate('/register')"
+          class="h-35 p-1 m-2 text-white"
+          rounded="pill"
+          color="var(--green-color)"
+          style="border: 1px solid var(--dark-green-color)"
+        >
           S'inscrire
         </v-btn>
-        <v-btn @click="navigate('/login')" class="p-1 m-2 text-white" rounded="pill" color="var(--green-color)"
-          style="border: 1px solid var(--dark-green-color)">
+        <v-btn
+          @click="navigate('/login')"
+          class="p-1 m-2 text-white"
+          rounded="pill"
+          color="var(--green-color)"
+          style="border: 1px solid var(--dark-green-color)"
+        >
           Se connecter
         </v-btn>
       </div>
 
-      <router-link to="/legal-notices" rounded="pill" class="d-flex align-items-center p-1 m-1 mt-4"
-        style="border: 2px solid var(--dark-green-color); border-radius: 10px; text-decoration: none; color: black">
+      <router-link
+        to="/legal-notices"
+        rounded="pill"
+        class="d-flex align-items-center p-1 m-1 mt-4"
+        style="border: 2px solid var(--dark-green-color); border-radius: 10px; text-decoration: none; color: black"
+      >
         <v-icon class="mr-2">mdi-scale-balance</v-icon>
         Mentions légales
       </router-link>
@@ -26,6 +40,41 @@
     <v-container v-if="isLoggedIn" class="d-flex flex-column justify-content-center align-items-center w-100">
       <img src="../assets/logo.png" alt="Logo de l'application" class="m-1" width="100" />
       <h1 class="text-align-center">Bienvenue chez toi !</h1>
+
+      <h3 class="mt-1">Voir mes réservations :</h3>
+      <v-carousel
+        :show-arrows="false"
+        height="100%"
+        class="p-0 m-1"
+        cycle
+        v-if="this.reservations.length > 0"
+        hide-delimiters
+      >
+        <v-carousel-item v-for="res in this.reservations">
+          <v-card class="mb-5" @click="goToPostDetails(res.post[0].idPost)" color="var(--background-color)">
+            <v-card-title class="mt-3">
+              <v-img :src="getImageSrc(res.id_post)" cover height="50px" rounded="lg"></v-img>
+            </v-card-title>
+            <v-card-subtitle class="text-end"> {{ res.post[0].address }} </v-card-subtitle>
+            <v-card-text>
+              <div class="d-flex justify-content-between align-items-center">
+                <h4 class="w-100">{{ res.cost }}€ / mois</h4>
+                <div class="d-flex flex-column align-items-center">
+                  <v-chip>
+                    {{ new Date(res.start_date).toLocaleDateString("fr-CA").split("-").reverse().join(" / ") }}
+                  </v-chip>
+                  <v-icon class="text-center my-1">mdi-arrow-down-thin</v-icon>
+                  <v-chip>
+                    {{ new Date(res.end_date).toLocaleDateString("fr-CA").split("-").reverse().join(" / ") }}
+                  </v-chip>
+                </div>
+              </div>
+              <!-- <p>{{ res }}</p> -->
+            </v-card-text>
+          </v-card>
+        </v-carousel-item>
+      </v-carousel>
+
       <h3 class="mt-1">Regarde nos meilleures annonces :</h3>
 
       <v-carousel
@@ -40,9 +89,15 @@
           <v-card class="p-0 m-0" height="100%" color="var(--background-color)" @click="goToPostDetails(elt.idPost)">
             <div>
               <v-img width="100vw" height="25vh" cover aspect-ratio="1" :src="getImageSrc(elt.idUser)">
-                <v-rating class="position-absolute top-0 right-0 m-1" half-increments size="24"
-                  color="var(--background-color)" v-model="elt.averageScore" :length="Math.ceil(elt.averageScore)"
-                  icon-label="custom icon label text {0} of {1}"></v-rating>
+                <v-rating
+                  class="position-absolute top-0 right-0 m-1"
+                  half-increments
+                  size="24"
+                  color="var(--background-color)"
+                  v-model="elt.averageScore"
+                  :length="Math.ceil(elt.averageScore)"
+                  icon-label="custom icon label text {0} of {1}"
+                ></v-rating>
               </v-img>
             </div>
 
@@ -59,8 +114,11 @@
               <div class="d-flex flex-row">
                 <p class="p-0 m-0">Services :</p>
                 <template v-for="(icon, key) in serviceIcons">
-                  <v-icon v-if="this.listService[elt.idPost - 1]?.[key] === 1" :key="`${elt.idPost - 1}-${key}`"
-                    class="mx-1">
+                  <v-icon
+                    v-if="this.listService[elt.idPost - 1]?.[key] === 1"
+                    :key="`${elt.idPost - 1}-${key}`"
+                    class="mx-1"
+                  >
                     {{ icon }}
                   </v-icon>
                 </template>
@@ -74,11 +132,10 @@
           </v-card>
         </v-carousel-item>
       </v-carousel>
-      
+
       <v-btn class="my-5 m-1 text-white w-100" rounded="pill" color="var(--green-color)" @click="navigate('/map')">
         Découvrir plus d'annonces
       </v-btn>
-
 
       <div class="text-center">
         <h3 class="my-2 p-1">Reprendre la discussion :</h3>
@@ -87,30 +144,34 @@
           Messagerie
         </v-btn>
       </div>
-      
 
       <div class="text-center">
         <h3 class="my-5">Vos informations :</h3>
         <div v-if="user.type === 'host'" class="d-flex justify-content-between align-items-center w-100">
-          <v-btn class="text-white mx-5" rounded="pill" color="var(--green-color)"
-            @click="navigate('/user-profile')">Mon profil</v-btn>
+          <v-btn class="text-white mx-5" rounded="pill" color="var(--green-color)" @click="navigate('/user-profile')"
+            >Mon profil</v-btn
+          >
           <v-btn class="text-white mx-5" rounded="pill" color="var(--green-color)" @click="navigate('/view-post')">
             Mon logement
           </v-btn>
         </div>
 
-        <v-btn v-if="user.type === 'guest'" class="text-white m-1 mb-4 w-100" color="var(--green-color)"
-          @click="navigate('/user-profile')">
+        <v-btn
+          v-if="user.type === 'guest'"
+          class="text-white m-1 mb-4 w-100"
+          color="var(--green-color)"
+          @click="navigate('/user-profile')"
+        >
           Mon profil
         </v-btn>
       </div>
-
     </v-container>
   </v-main>
 </template>
 
 <script>
 import { useListPostStore } from "../stores/listPostStore";
+import { useReservationStore } from "../stores/ReservationStore";
 import axios from "axios";
 
 export default {
@@ -133,6 +194,7 @@ export default {
         isPetsSitting: "mdi-paw",
         isTalking: "mdi-chat",
       },
+      reservations: [],
     };
   },
 
@@ -148,6 +210,16 @@ export default {
 
     this.listDisplay = ps.listPost;
     this.listService = ps.listServices;
+
+    const rs = useReservationStore();
+    if (!rs.isLoaded) rs.load(this.user.id);
+    await this.waitUntil(() => rs.isLoaded);
+
+    this.reservations = rs.reservationsUsers;
+
+    for (let r of this.reservations) {
+      r.post = ps.listPost.filter((p) => p.idPost == r.id_post);
+    }
 
     const apiUrl = import.meta.env.VITE_API_URL;
     axios
