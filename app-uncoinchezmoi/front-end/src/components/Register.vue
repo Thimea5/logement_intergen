@@ -585,41 +585,41 @@ export default {
     },
 
     validateStep1() {
-      // if (!(this.user.mail && this.user.password && this.user.passwordConf)) {
-      //   //console.log(1);
-      //   return;
-      // }
+      if (!(this.user.mail && this.user.password && this.user.passwordConf)) {
+        //console.log(1);
+        return;
+      }
 
-      // if (this.user.password != this.user.passwordConf) {
-      //   //console.log(2);
-      //   return;
-      // }
+      if (this.user.password != this.user.passwordConf) {
+        //console.log(2);
+        return;
+      }
 
-      // if (this.user.code != code) {
-      //   //console.log(3);
-      //   return;
-      // }
-      // //console.log("ici ?");
+      if (this.user.code != code) {
+        //console.log(3);
+        return;
+      }
+      //console.log("ici ?");
 
       this.step2 = true;
     },
 
     validateStep2() {
-      // if (!(this.user.lastName && this.user.firstName && this.user.birthDate && this.user.telephone)) {
-      //   return;
-      // }
+      if (!(this.user.lastName && this.user.firstName && this.user.birthDate && this.user.telephone)) {
+        return;
+      }
 
-      // const phoneRegex = /^[0-9]{10}$/;
-      // if (!phoneRegex.test(this.user.telephone)) {
-      //   return;
-      // }
+      const phoneRegex = /^[0-9]{10}$/;
+      if (!phoneRegex.test(this.user.telephone)) {
+        return;
+      }
 
-      // const birthDate = new Date(this.user.birthDate);
-      // const today = new Date();
-      // if (birthDate >= today) {
-      //   return;
-      // }
-      //console.log("hey !");
+      const birthDate = new Date(this.user.birthDate);
+      const today = new Date();
+      if (birthDate >= today) {
+        return;
+      }
+      console.log("hey !");
       this.step3 = true;
     },
 
