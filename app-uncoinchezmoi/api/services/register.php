@@ -95,8 +95,13 @@ if ($userInserted["status"]) {
 
     // Si l'utilisateur est un 'host', insérer un post et enregistrer les services
     if ($type === 'host') {
+        $tableau = explode(',', $sd);
+        $servf = array_map(function($val) {
+            return strtolower($val) === "true" ? 1 : 0;
+        }, $tableau);
         if ($post->insertPost($city, $postal_code, $address, $lat, $lng, "host_photo" . $idUser, $type_logement, $description, $price, $size, 4, 1, $idUser)
-            && $services->insertServices($sd[0], $sd[1], $sd[2], $sd[3], $sd[4], $sd[5], $sd[6], $sd[7], $idUser)) {
+            && $services->insertServices($servf[0], $servf[1], $servf[2], $servf[3], $servf[4], $servf[5], $servf[6], $servf[7], $idUser)) {
+
             echo json_encode(["success" => true, "message" => "Utilisateur créé en tant que host"]);
         } else {
             echo json_encode(["success" => false, "message" => "Erreur dans l'enregistrement des services"]);

@@ -60,6 +60,7 @@ export const useListPostStore = defineStore("listPost", {
             }
 
             this.isLoaded = true;
+            console.log(this.listServices);
           })
           .catch((error) => {
             console.error(error);
