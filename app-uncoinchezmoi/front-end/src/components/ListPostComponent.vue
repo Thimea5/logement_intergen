@@ -288,7 +288,36 @@ export default {
     },
 
     sampleSearch() {
-      console.log("recherche simple");
+      console.log("sample search");
+      /* Méthode pour la recherche simple en fonction de l'adresse, la ville, le code postal */
+
+      // filtre recherche
+      const query = this.searchQuery.trim().toLowerCase();
+      console.log(this.searchQuery);
+      if (query.length == 0) return;
+
+      const decoupage = this.searchQuery.split(", ");
+
+      const ps = useListPostStore();
+
+      this.listDisplay = ps.listPost.filter((ph) => {
+        let matchQuery;
+        if (decoupage.length == 2) {
+          matchQuery =
+            ph.city.toLowerCase().includes(decoupage[0].substring(5).toLowerCase()) ||
+            ph.postalCode.toLowerCase().includes(decoupage[0].substring(0, 5).toLowerCase());
+        } else {
+          // on a la saisie complète
+          matchQuery =
+            ph.address.toLowerCase().includes(decoupage[0].toLowerCase()) ||
+            ph.city.toLowerCase().includes(decoupage[1].substring(0, 5).toLowerCase()) ||
+            ph.postalCode.toLowerCase().includes(decoupage[1].substring(5).toLowerCase());
+        }
+        return matchQuery;
+      });
+
+      console.log(this.listDisplay);
+      console.log(ps.listPost);
     },
   },
 };

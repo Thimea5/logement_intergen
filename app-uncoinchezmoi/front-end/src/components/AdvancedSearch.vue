@@ -17,6 +17,7 @@
         @click:append-inner="performSearch"
         ref="autoCompleteInput"
       ></v-text-field>
+
       <v-list v-if="suggestions.length">
         <v-list-item v-for="(suggestion, index) in suggestions" :key="index" @click="selectSuggestion(suggestion)">
           <v-list-item-title>{{ suggestion.description }}</v-list-item-title>
