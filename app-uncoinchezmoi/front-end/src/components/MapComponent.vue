@@ -1,22 +1,34 @@
 <template>
   <v-main>
-
     <!-- Carte -->
     <l-map :zoom="zoom" :center="center" style="height: 100%" ref="mapRef" @update:bounds="refreshMapWithNearPosts">
-
-      <v-text-field v-model="searchQuery" prepend-inner-icon="mdi-tune" append-inner-icon="mdi-magnify" hide-details
-        single-line placeholder="Rechercher un lieu..." class="custom-toolbar"
-        @click:prepend-inner="navigate('/advanced-search')" @click:append-inner="sampleSearch"
-        @keydown.enter.prevent="sampleSearch">
+      <v-text-field
+        v-model="searchQuery"
+        prepend-inner-icon="mdi-tune"
+        append-inner-icon="mdi-magnify"
+        hide-details
+        single-line
+        placeholder="Rechercher un lieu..."
+        class="custom-toolbar"
+        @click:prepend-inner="navigate('/advanced-search')"
+        @click:append-inner="sampleSearch"
+        @keydown.enter.prevent="sampleSearch"
+      >
       </v-text-field>
 
       <v-list v-if="suggestions.length" class="custom-suggestions-list position-absolute">
-        <v-list-item v-for="(suggestion, index) in suggestions" :key="index" @click="selectSuggestion(suggestion)"
-          class="custom-suggestion-item">
+        <v-list-item
+          v-for="(suggestion, index) in suggestions"
+          :key="index"
+          @click="selectSuggestion(suggestion)"
+          class="custom-suggestion-item"
+        >
           <v-list-item-title>{{ suggestion.description }}</v-list-item-title>
           <v-list-item-subtitle>
-            <span v-if="suggestion.city">Ville : {{ suggestion.city }}</span><br />
-            <span v-if="suggestion.postalCode">Code postal : {{ suggestion.postalCode }}</span><br />
+            <span v-if="suggestion.city">Ville : {{ suggestion.city }}</span
+            ><br />
+            <span v-if="suggestion.postalCode">Code postal : {{ suggestion.postalCode }}</span
+            ><br />
             <span v-if="suggestion.country">Pays : {{ suggestion.country }}</span>
           </v-list-item-subtitle>
         </v-list-item>
@@ -31,8 +43,12 @@
       <l-tile-layer :url="tileLayerUrl" :attribution="attribution" ref="tileLayer" />
 
       <!-- Marqueurs -->
-      <l-marker v-for="post in filteredPosts" :key="post.id" :lat-lng="[post.latitude, post.longitude]"
-        @click="onMarkerClick(post)">
+      <l-marker
+        v-for="post in filteredPosts"
+        :key="post.id"
+        :lat-lng="[post.latitude, post.longitude]"
+        @click="onMarkerClick(post)"
+      >
       </l-marker>
     </l-map>
 
@@ -239,23 +255,33 @@ export default {
     },
 
     sampleSearch() {
+      console.log("sample search");
       /* Méthode pour la recherche simple en fonction de l'adresse, la ville, le code postal */
 
       // filtre recherche
       const query = this.searchQuery.trim().toLowerCase();
       if (query.length == 0) return;
 
+      const decoupage = this.searchQuery.split(", ");
+
       const ps = useListPostStore();
       this.filteredPosts = ps.listPost.filter((ph) => {
-        return (
-          ph.address.toLowerCase().includes(query) ||
-          ph.city.toLowerCase().includes(query) ||
-          ph.postalCode.toLowerCase().includes(query)
-        );
+        let matchQuery;
+        if (decoupage.length == 2) {
+          matchQuery =
+            ph.city.toLowerCase().includes(decoupage[0].substring(5).toLowerCase()) ||
+            ph.postalCode.toLowerCase().includes(decoupage[0].substring(0, 5).toLowerCase());
+        } else {
+          // on a la saisie complète
+          matchQuery =
+            ph.address.toLowerCase().includes(decoupage[0].toLowerCase()) ||
+            ph.city.toLowerCase().includes(decoupage[1].substring(0, 5).toLowerCase()) ||
+            ph.postalCode.toLowerCase().includes(decoupage[1].substring(5).toLowerCase());
+        }
+        return matchQuery;
       });
 
       if (this.filteredPosts.length > 0) {
-        // calcul et déplacement du centre de la carte
         let moyenneLatitude = 0;
         let moyenneLongitude = 0;
         for (let i = 0; i < this.filteredPosts.length; i++) {

@@ -18,9 +18,7 @@
         Messages
       </v-btn>
       <v-btn @click="navigate('/user-profile')">
-        <v-badge dot color="red" v-if="!isComplete">
-          <v-icon>mdi-account-outline</v-icon>
-        </v-badge>
+        <v-icon>mdi-account-outline</v-icon>
         Profil
       </v-btn>
     </v-bottom-navigation>
