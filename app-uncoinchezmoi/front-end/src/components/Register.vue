@@ -18,7 +18,8 @@
               </v-text-field>
 
               <div class="text-end">
-                <v-btn class="rounded-pill" color="#8DA399" id="sendCode" @click="sendCode()" :disabled="disabled">{{
+                <v-btn class="rounded-pill text-light" color="var(--dark-green-color)" id="sendCode"
+                  @click="sendCode()">{{
                   sendCodeLabel
                   }}</v-btn>
               </div>
@@ -48,7 +49,9 @@
               </v-text-field>
             </div>
 
-            <v-btn class="w-100 rounded-pill mb-5" color="#8DA399" @click="validateStep1()">Etape suivante</v-btn>
+            <v-btn class="w-100 rounded-pill mb-5 text-light" color="var(--dark-green-color)"
+              @click="validateStep1()">Etape
+              suivante</v-btn>
 
             <template>
               <v-dialog v-model="step2" transition="dialog-bottom-transition" fullscreen>
@@ -100,7 +103,8 @@
                     </div>
                   </div>
 
-                  <v-btn class="w-100 rounded-pill mb-5" color="#8DA399" @click="validateStep2()">Etape suivante
+                  <v-btn class="w-100 rounded-pill mb-5 text-light" color="var(--dark-green-color)"
+                    @click="validateStep2()">Etape suivante
                   </v-btn>
                 </v-card>
               </v-dialog>
@@ -585,41 +589,41 @@ export default {
     },
 
     validateStep1() {
-      if (!(this.user.mail && this.user.password && this.user.passwordConf)) {
-        //console.log(1);
-        return;
-      }
+      // if (!(this.user.mail && this.user.password && this.user.passwordConf)) {
+      //   //console.log(1);
+      //   return;
+      // }
 
-      if (this.user.password != this.user.passwordConf) {
-        //console.log(2);
-        return;
-      }
+      // if (this.user.password != this.user.passwordConf) {
+      //   //console.log(2);
+      //   return;
+      // }
 
-      if (this.user.code != code) {
-        //console.log(3);
-        return;
-      }
+      // if (this.user.code != code) {
+      //   //console.log(3);
+      //   return;
+      // }
       //console.log("ici ?");
 
       this.step2 = true;
     },
 
     validateStep2() {
-      if (!(this.user.lastName && this.user.firstName && this.user.birthDate && this.user.telephone)) {
-        return;
-      }
+      // if (!(this.user.lastName && this.user.firstName && this.user.birthDate && this.user.telephone)) {
+      //   return;
+      // }
 
-      const phoneRegex = /^[0-9]{10}$/;
-      if (!phoneRegex.test(this.user.telephone)) {
-        return;
-      }
+      // const phoneRegex = /^[0-9]{10}$/;
+      // if (!phoneRegex.test(this.user.telephone)) {
+      //   return;
+      // }
 
-      const birthDate = new Date(this.user.birthDate);
-      const today = new Date();
-      if (birthDate >= today) {
-        return;
-      }
-      console.log("hey !");
+      // const birthDate = new Date(this.user.birthDate);
+      // const today = new Date();
+      // if (birthDate >= today) {
+      //   return;
+      // }
+      // // console.log("hey !");
       this.step3 = true;
     },
 
@@ -698,21 +702,35 @@ export default {
         aServ.push(this.guest.services.includes(this.services[i]));
       }
 
-      const data = {
-        mail: this.user.mail,
-        password: this.user.password,
-        firstName: this.user.firstName,
-        lastName: this.user.lastName,
-        birthDate: this.user.birthDate,
-        telephone: this.user.telephone,
-        gender: this.user.gender,
-        maritalStatus: this.user.maritalStatus,
-        type: this.user.type,
+      // Créer un objet FormData
+      const formData = new FormData();
 
-        services: aServ,
-      };
+      // Ajouter les données utilisateur à FormData
+      formData.append('mail', this.user.mail);
+      formData.append('password', this.user.password);
+      formData.append('firstName', this.user.firstName);
+      formData.append('lastName', this.user.lastName);
+      formData.append('birthDate', this.user.birthDate);
+      formData.append('telephone', this.user.telephone);
+      formData.append('gender', this.user.gender);
+      formData.append('maritalStatus', this.user.maritalStatus);
+      formData.append('type', this.user.type);
 
-      this.registerUser(data);
+      // Ajouter les services à FormData
+      formData.append('services', JSON.stringify(aServ));
+
+      // Si tu veux envoyer des fichiers (comme des photos), tu peux les ajouter ici
+      if (this.guest.imgs && this.guest.imgs.length > 0) {
+        for (let i = 0; i < this.guest.imgs.length; i++) {
+          const file = this.guest.imgs[i];
+          formData.append('photos[]', file);
+        }
+      }
+
+      console.log(formData);
+
+      // Appeler la fonction pour enregistrer l'utilisateur avec FormData
+      this.registerUser(formData);
     },
 
     registerHost() {
