@@ -8,7 +8,7 @@
       <v-carousel hide-delimiters class="w-100 h-100" v-if="imgList.length > 0">
         <v-carousel-item v-for="(imgPath, i) in this.imgList" :key="i">
           <div class="w-100 h-100 m-0 p-0">
-            <v-img :src="getImageSrc(i)" class="fixed-image" @click="zoomDialog = true"></v-img>
+            <v-img :src="getImageSrc(i+1)" class="fixed-image" @click="zoomDialog = true"></v-img>
           </div>
         </v-carousel-item>
       </v-carousel>
@@ -288,9 +288,9 @@ export default {
     },
 
     getImageSrc(index) {
-      // TODO BUG ICI, si aucune image, ça renvoie quand même une url...
       this.currentImageIndex = index;
-      const url = new URL(`${this.imgList[index]}`, import.meta.url).href;
+
+      const url = new URL(`/src/assets/img/host${this.post.idUser}/post/${index}.jpg`, import.meta.url).href;
       if (!url.includes("undefined")) {
         return url;
       } else {

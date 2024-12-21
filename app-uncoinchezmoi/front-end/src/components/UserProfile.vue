@@ -33,7 +33,7 @@
             <v-card
               class="mb-5"
               v-for="res in this.reservations"
-              @click="goToPostDetails(res.post[0].idPost)"
+              @click="goToPostDetails(res.post[0])"
               color="var(--background-color)"
             >
               <v-card-title class="mt-3">
@@ -211,6 +211,7 @@ export default {
       }
     },
     goToPostDetails(listing) {
+    console.log(listing)
       this.$router.push({ name: "PostDetails", params: { id: listing.idPost } });
     },
   },
