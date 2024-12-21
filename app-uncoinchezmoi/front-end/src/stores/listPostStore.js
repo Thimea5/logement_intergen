@@ -63,6 +63,9 @@ export const useListPostStore = defineStore("listPost", {
             console.log(this.listServices);
           })
           .catch((error) => {
+            for (let s of this.listServices) {
+              console.log(s)
+            }
             console.error(error);
           });
       }

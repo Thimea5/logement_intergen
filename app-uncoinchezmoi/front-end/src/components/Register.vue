@@ -142,6 +142,19 @@
 
                   <div class="h-100 d-flex flex-column justify-content-around">
                     <div>
+
+                      <label class="custom-label mb-3" for="address">Adresse</label>
+                      <v-text-field id="address" placeholder="Numéro de rue" rounded="pill" clearable
+                        variant="solo-filled" v-model="searchQuery" :rules="[rules.required]" ref="autoCompleteInput">
+                      </v-text-field>
+
+                      <v-list v-if="suggestions.length">
+                        <v-list-item v-for="(suggestion, index) in suggestions" :key="index"
+                          @click="selectSuggestion(suggestion)">
+                          <v-list-item-title>{{ suggestion.description }}</v-list-item-title>
+                        </v-list-item>
+                      </v-list>
+                      
                       <div class="d-flex justify-content-between">
                         <div class="w-50 me-5">
                           <label class="custom-label mb-3" for="city">Ville</label>
@@ -157,18 +170,6 @@
                           </v-text-field>
                         </div>
                       </div>
-
-                      <label class="custom-label mb-3" for="address">Adresse</label>
-                      <v-text-field id="address" placeholder="Numéro de rue" rounded="pill" clearable
-                        variant="solo-filled" v-model="searchQuery" :rules="[rules.required]" ref="autoCompleteInput">
-                      </v-text-field>
-
-                      <v-list v-if="suggestions.length">
-                        <v-list-item v-for="(suggestion, index) in suggestions" :key="index"
-                          @click="selectSuggestion(suggestion)">
-                          <v-list-item-title>{{ suggestion.description }}</v-list-item-title>
-                        </v-list-item>
-                      </v-list>
 
                     </div>
 
@@ -589,41 +590,41 @@ export default {
     },
 
     validateStep1() {
-      // if (!(this.user.mail && this.user.password && this.user.passwordConf)) {
-      //   //console.log(1);
-      //   return;
-      // }
+      if (!(this.user.mail && this.user.password && this.user.passwordConf)) {
+        //console.log(1);
+        return;
+      }
 
-      // if (this.user.password != this.user.passwordConf) {
-      //   //console.log(2);
-      //   return;
-      // }
+      if (this.user.password != this.user.passwordConf) {
+        //console.log(2);
+        return;
+      }
 
-      // if (this.user.code != code) {
-      //   //console.log(3);
-      //   return;
-      // }
+      if (this.user.code != code) {
+        //console.log(3);
+        return;
+      }
       //console.log("ici ?");
 
       this.step2 = true;
     },
 
     validateStep2() {
-      // if (!(this.user.lastName && this.user.firstName && this.user.birthDate && this.user.telephone)) {
-      //   return;
-      // }
+      if (!(this.user.lastName && this.user.firstName && this.user.birthDate && this.user.telephone)) {
+        return;
+      }
 
-      // const phoneRegex = /^[0-9]{10}$/;
-      // if (!phoneRegex.test(this.user.telephone)) {
-      //   return;
-      // }
+      const phoneRegex = /^[0-9]{10}$/;
+      if (!phoneRegex.test(this.user.telephone)) {
+        return;
+      }
 
-      // const birthDate = new Date(this.user.birthDate);
-      // const today = new Date();
-      // if (birthDate >= today) {
-      //   return;
-      // }
-      // // console.log("hey !");
+      const birthDate = new Date(this.user.birthDate);
+      const today = new Date();
+      if (birthDate >= today) {
+        return;
+      }
+      // console.log("hey !");
       this.step3 = true;
     },
 

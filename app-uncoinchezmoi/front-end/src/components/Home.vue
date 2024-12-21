@@ -41,7 +41,7 @@
       <img src="../assets/logo.png" alt="Logo de l'application" class="m-1" width="100" />
       <h1 class="text-align-center">Bienvenue chez toi !</h1>
 
-      <h3 class="mt-1">Voir mes réservations :</h3>
+      <h3 v-if="user.type === 'guest'" class="mt-1">Voir mes réservations :</h3>
       <v-carousel
         :show-arrows="false"
         height="100%"

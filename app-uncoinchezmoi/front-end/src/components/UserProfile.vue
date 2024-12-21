@@ -2,7 +2,7 @@
   <v-main class="d-flex flex-column justify-content-between align-items-center">
     <v-app-bar :elevation="0">
       <v-btn icon="mdi-keyboard-backspace" variant="plain" size="x-large" @click="goBack()"></v-btn>
-      <v-toolbar-title>Bonjour, {{ user.firstname }} {{ user.lastname }}</v-toolbar-title>
+      <v-toolbar-title>Bonjour, {{ user.firstname }}</v-toolbar-title>
     </v-app-bar>
 
     <v-container class="h-100 d-flex flex-column justify-content-around">
@@ -27,7 +27,7 @@
         </v-card-text>
       </v-card> -->
 
-        <v-card class="my-2" width="100%">
+        <v-card v-if="user.type === 'guest'" class="my-2" width="100%">
           <v-card-title class="headline">Mes réservations</v-card-title>
           <v-card-text @click="goToPostDetails(selectedPost)">
             <v-card
@@ -139,6 +139,8 @@ export default {
     for (let r of this.reservations) {
       r.post = ps.listPost.filter((p) => p.idPost == r.id_post);
     }
+
+    console.log(this.user)
 
     // console.log(this.reservations)
   },
